@@ -1,15 +1,14 @@
 const { ObjectId } = require("mongodb");
 
-const checkIfExists = (array) => {
+const checkIfElementsExists = (array) => {
   array.forEach((element) => {
-    if (element === undefined || element === null)
-      throw `${element} not defined`;
+    if (element === undefined || element === null) throw `Element not defined`;
   });
 };
 
-const checkIfIsString = (array) => {
+const checkIfElementsAreStrings = (array) => {
   array.forEach((element) => {
-    if (typeof element !== "string") throw `${element} not of type string`;
+    if (typeof element !== "string") throw `Element not of type string`;
   });
 };
 
@@ -17,9 +16,9 @@ const checkIfValidObjectId = (id) => {
   if (!ObjectId.isValid(id)) throw "Incorrect Object Id";
 };
 
-const checkIfNotEmptyString = (array) => {
+const checkIfElementNotEmptyString = (array) => {
   array.forEach((element) => {
-    if (element.trim() === "") throw `${element} cannot be empty string`;
+    if (element.trim() === "") throw `Element cannot be empty string`;
   });
 };
 
@@ -38,9 +37,9 @@ const checkIfValidArrayObject = (obj) => {
 };
 
 module.exports = {
-  checkIfExists,
-  checkIfIsString,
+  checkIfElementsExists,
+  checkIfElementsAreStrings,
   checkIfValidObjectId,
-  checkIfNotEmptyString,
+  checkIfElementNotEmptyString,
   checkIfValidArrayObject,
 };

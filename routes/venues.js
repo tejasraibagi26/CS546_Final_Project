@@ -17,21 +17,21 @@ router.get("/:id", async (req, res) => {
   const id = req.params.id;
   let array = [id];
   try {
-    errorHandler.checkIfExists(array);
+    errorHandler.checkIfElementsExists(array);
   } catch (error) {
     res.status(400).json({ err: error });
     return;
   }
 
   try {
-    errorHandler.checkIfIsString(array);
+    errorHandler.checkIfElementsAreStrings(array);
   } catch (error) {
     res.status(400).json({ err: error });
     return;
   }
 
   try {
-    errorHandler.checkIfNotEmptyString(array);
+    errorHandler.checkIfElementNotEmptyString(array);
   } catch (error) {
     res.status(400).json({ err: error });
     return;
@@ -57,7 +57,7 @@ router.post("/create", async (req, res) => {
   let array = [venueName, venueAddress, venueTimings];
 
   try {
-    errorHandler.checkIfExists(array);
+    errorHandler.checkIfElementsExists(array);
   } catch (error) {
     res.status(400).json({ err: error });
     return;
@@ -66,14 +66,14 @@ router.post("/create", async (req, res) => {
   array = [venueName, venueAddress];
 
   try {
-    errorHandler.checkIfIsString(array);
+    errorHandler.checkIfElementsAreStrings(array);
   } catch (error) {
     res.status(400).json({ err: error });
     return;
   }
 
   try {
-    errorHandler.checkIfNotEmptyString(array);
+    errorHandler.checkIfElementNotEmptyString(array);
   } catch (error) {
     res.status(400).json({ err: error });
     return;
@@ -104,21 +104,21 @@ router.post("/search", async (req, res) => {
   let array = [venueName];
 
   try {
-    errorHandler.checkIfExists(array);
+    errorHandler.checkIfElementsExists(array);
   } catch (error) {
     res.status(400).json({ err: error });
     return;
   }
 
   try {
-    errorHandler.checkIfIsString(array);
+    errorHandler.checkIfElementsAreStrings(array);
   } catch (error) {
     res.status(400).json({ err: error });
     return;
   }
 
   try {
-    errorHandler.checkIfNotEmptyString(array);
+    errorHandler.checkIfElementNotEmptyString(array);
   } catch (error) {
     res.status(400).json({ err: error });
     return;

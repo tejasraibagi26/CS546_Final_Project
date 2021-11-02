@@ -16,10 +16,10 @@ const getAllVenues = async () => {
 const getVenueById = async (id) => {
   //Error Handling
   const array = [id];
-  errorHandler.checkIfExists(array);
-  errorHandler.checkIfIsString(array);
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
   errorHandler.checkIfValidObjectId(id);
-  errorHandler.checkIfNotEmptyString(array);
+  errorHandler.checkIfElementNotEmptyString(array);
 
   id = id.trim();
   id = ObjectId(id);
@@ -35,10 +35,10 @@ const getVenueById = async (id) => {
 
 const createNewVenue = async (venueName, venueAddress, venueTimings) => {
   let array = [venueName, venueAddress, venueTimings];
-  errorHandler.checkIfExists(array);
+  errorHandler.checkIfElementsExists(array);
   array = [venueName, venueAddress];
-  errorHandler.checkIfIsString(array);
-  errorHandler.checkIfNotEmptyString(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
   errorHandler.checkIfValidArrayObject(venueTimings);
 
   const create = await venueCollection();
@@ -65,9 +65,9 @@ const createNewVenue = async (venueName, venueAddress, venueTimings) => {
 
 const searchVenue = async (venueName) => {
   let array = [venueName];
-  errorHandler.checkIfExists(array);
-  errorHandler.checkIfIsString(array);
-  errorHandler.checkIfNotEmptyString(array);
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
 
   venueName = venueName.trim();
 
