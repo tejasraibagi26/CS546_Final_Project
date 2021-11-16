@@ -4,6 +4,8 @@ const router = express.Router();
 const data = require("../data");
 const errorHandler = require("../Errors/errorHandler");
 const user = data.user;
+const bcrypt = require("bcrypt");
+const saltRounds = 16;
 
 router.get("/", async (req, res) => {
   try {
@@ -56,12 +58,14 @@ router.post("/create", async (req, res) => {
     return;
   }
 
+  const password = await bcrypt.hash(inputUser.password, saltRounds);
+
   try {
     const createUser = await user.createUser(
       inputUser.firstName,
       inputUser.lastName,
       inputUser.email,
-      inputUser.password,
+      password,
       inputUser.age,
       inputUser.gender,
       inputUser.role
@@ -93,6 +97,33 @@ router.post("/search", async (req, res) => {
     res.status(200).json(returnUser);
   } catch (e) {
     res.status(500).json({ err: e });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  let username = req.body.email;
+  let inputPassword = req.body.password;
+
+  try {
+    const foundUser = await user.getUserByEmail(username);
+  } catch (e) {
+    res.status(401).json({ err: e });
+    return;
+  }
+
+  try {
+    match = await bcrypt.compare(inputPassword, foundUser.password);
+  } catch (e) {
+    res.status(500).json({ err: e });
+    return;
+  }
+
+  if (match) {
+    res.status(200).json({ login: "Success" });
+    return;
+  } else {
+    res.status(401).json({ login: "Failure" });
+    return;
   }
 });
 

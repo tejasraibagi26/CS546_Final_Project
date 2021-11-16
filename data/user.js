@@ -74,7 +74,7 @@ async function searchUsers(firstName, lastName) {
 
   fullName = [firstName.toLowerCase(), lastName.toLowerCase()];
 
-  const users = await userCollection();
+  const users = await getAllUsers();
   let foundUsers = [];
   for (let user of users) {
     if (
@@ -92,9 +92,29 @@ async function searchUsers(firstName, lastName) {
   return foundUsers;
 }
 
+async function getUserByEmail(email) {
+  let emailArray = [email];
+
+  errorHandler.checkIfElementsExists(emailArray);
+  errorHandler.checkIfElementsAreStrings(emailArray);
+  errorHandler.checkIfElementNotEmptyString(emailArray);
+  errorHandler.checkIfValidEmail(email);
+
+  const users = await getAllUsers();
+
+  for (let user of users) {
+    if (user.email == email) {
+      return user;
+    }
+  }
+
+  throw "No user with email found";
+}
+
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
   searchUsers,
+  getUserByEmail,
 };
