@@ -58,7 +58,7 @@
           {{! Loop through the venue data fetched from backend }}
           {{#each venues as |ve|}}
             <div class="venue">
-              <img class="image" alt="{{ve.venueName}}" src="{{ve.img}}" />
+              {{!-- <img class="image" alt="{{ve.venueName}}" src="{{ve.img}}" /> --}}
               <div class="padded">
                 <h1 class="venue-name">{{ve.venueName}}</h1>
                 <div class="details">

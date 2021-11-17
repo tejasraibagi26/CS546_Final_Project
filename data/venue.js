@@ -32,10 +32,24 @@ const getVenueById = async (id) => {
   return venueByIdOrName;
 };
 
-const createNewVenue = async (venueName, venueAddress, venueTimings) => {
-  let array = [venueName, venueAddress, venueTimings];
+const createNewVenue = async (
+  venueName,
+  venueAddress,
+  venueTimings,
+  sports,
+  price,
+  venueImage
+) => {
+  let array = [
+    venueName,
+    venueAddress,
+    venueTimings,
+    sports,
+    price,
+    venueImage,
+  ];
   errorHandler.checkIfElementsExists(array);
-  array = [venueName, venueAddress];
+  array = [venueName, venueAddress, venueImage];
   errorHandler.checkIfElementsAreStrings(array);
   errorHandler.checkIfElementNotEmptyString(array);
   errorHandler.checkIfValidArrayObject(venueTimings);
@@ -46,11 +60,15 @@ const createNewVenue = async (venueName, venueAddress, venueTimings) => {
 
   venueName = venueName.trim();
   venueAddress = venueAddress.trim();
+  venueImage = venueImage.trim();
 
   let createVenueObject = {
     venueName,
     venueAddress,
     venueTimings,
+    sports,
+    price,
+    venueImage,
     venueRating,
     reviews,
   };
@@ -59,10 +77,11 @@ const createNewVenue = async (venueName, venueAddress, venueTimings) => {
 
   if (createVenue.insertedCount === 0) throw "Error inserting venue";
 
-  return { msg: "Venue added!" };
+  return createVenue.insertedId;
 };
 
 const searchVenue = async (sportToFind, min, max, rating) => {
+  console.log(sportToFind);
   let array = [sportToFind];
   min = min || 0;
   max = max || 1000000;

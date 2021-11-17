@@ -6,9 +6,11 @@ const venue = data.venues;
 
 router.get("/", async (req, res) => {
   const searchTerm = req.query.searchTerm;
-  const min = parseInt(req.query.min);
-  const max = parseInt(req.query.max);
+  const min = parseInt(req.query.min) || 0;
+  const max = parseInt(req.query.max) || 1000000;
   let array = [searchTerm];
+
+  console.log(searchTerm);
 
   if (!searchTerm) {
     try {
@@ -128,8 +130,33 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/create", async (req, res) => {
-  const { venueName, venueAddress, venueTimings } = req.body;
-  let array = [venueName, venueAddress, venueTimings];
+  let {
+    venueName,
+    venueAddress,
+    venueTimings,
+    venueImage,
+    venueSlots,
+    sports,
+    price,
+  } = req.body;
+  let venueTimeArrObj = [];
+
+  venueTimings.forEach((time) => {
+    let obj = {};
+    obj.timeSlot = time;
+    obj.slotsAvailable = parseInt(venueSlots);
+    venueTimeArrObj.push(obj);
+  });
+
+  price = parseInt(price);
+  let array = [
+    venueName,
+    venueAddress,
+    venueTimeArrObj,
+    venueImage,
+    sports,
+    price,
+  ];
 
   try {
     errorHandler.checkIfElementsExists(array);
@@ -138,7 +165,7 @@ router.post("/create", async (req, res) => {
     return;
   }
 
-  array = [venueName, venueAddress];
+  array = [venueName, venueAddress, venueImage];
 
   try {
     errorHandler.checkIfElementsAreStrings(array);
@@ -155,7 +182,7 @@ router.post("/create", async (req, res) => {
   }
 
   try {
-    errorHandler.checkIfValidArrayObject(venueTimings);
+    errorHandler.checkIfValidArrayObject(venueTimeArrObj);
   } catch (error) {
     res.status(400).json({ err: error });
     return;
@@ -165,10 +192,17 @@ router.post("/create", async (req, res) => {
     const createVenue = await venue.createNewVenue(
       venueName,
       venueAddress,
-      venueTimings
+      venueTimeArrObj,
+      sports,
+      price,
+      venueImage
     );
 
-    res.status(200).json(createVenue);
+    // res.status(200).json(createVenue);
+    res.render("venue/createSucc", {
+      title: "Venue Created",
+      id: createVenue,
+    });
   } catch (error) {
     res.status(500).json({ err: error });
   }

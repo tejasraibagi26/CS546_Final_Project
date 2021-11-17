@@ -153,6 +153,7 @@
   flex-direction: row;
   margin: 0;
   padding-left: 5px;
+  flex-wrap: wrap;
 }
 
 .container .venue .timings ul li {

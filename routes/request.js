@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
     );
     res.status(200).json(addReq);
   } catch (error) {
-    res.status(404).json({ err: error });
+    res.status(500).json({ err: error });
   }
 });
 
@@ -84,7 +84,7 @@ router.post("/accept", async (req, res) => {
     const addReq = await requestData.acceptUserRequest(requestId, venueId);
     res.status(200).json(addReq);
   } catch (error) {
-    res.status(404).json({ err: error });
+    res.status(500).json({ err: error });
   }
 });
 
