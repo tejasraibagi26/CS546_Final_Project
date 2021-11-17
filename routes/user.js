@@ -1,5 +1,4 @@
 const express = require("express");
-const { user } = require("../data");
 const router = express.Router();
 const data = require("../data");
 const errorHandler = require("../Errors/errorHandler");
@@ -103,15 +102,19 @@ router.post("/search", async (req, res) => {
 router.post("/login", async (req, res) => {
   let username = req.body.email;
   let inputPassword = req.body.password;
-
+  let array = [username, inputPassword];
   try {
-    const foundUser = await user.getUserByEmail(username);
+    errorHandler.checkIfElementsExists(array);
+    errorHandler.checkIfElementsAreStrings(array);
+    errorHandler.checkIfElementNotEmptyString(array);
+    errorHandler.checkIfValidEmail(username);
   } catch (e) {
-    res.status(401).json({ err: e });
+    res.status(400).json({ err: e });
     return;
   }
 
   try {
+    const foundUser = await user.getUserByEmail(username);
     match = await bcrypt.compare(inputPassword, foundUser.password);
   } catch (e) {
     res.status(500).json({ err: e });
