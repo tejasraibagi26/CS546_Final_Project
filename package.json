@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js"
   },
-  "author": "Tejas Raibagi",
+  "author": "Tejas Raibagi, Troy Tomasch",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.23.0",

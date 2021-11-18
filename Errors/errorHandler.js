@@ -36,10 +36,36 @@ const checkIfValidArrayObject = (obj) => {
   });
 };
 
+const checkIfValidEmail = (email) => {
+  let atsign = email.indexOf("@");
+  if (atsign == -1) throw "Invalid email";
+  if (atsign == 0) throw "Invalid email";
+  let domain = email.substring(atsign + 1, email.length);
+  if (domain.length == 0) throw "Invalid email";
+  let dotsign = domain.indexOf(".");
+  if (dotsign == -1) throw "Invalid email";
+  if (dotsign == 0) throw "Invalid email";
+  if (domain.substring(dotsign + 1, domain.length).length == 0)
+    throw "Invalid email";
+};
+
+const checkIfValidAge = (age) => {
+  if (typeof age != "number") throw "Age must be a number";
+  if (age < 0 || age > 122) throw "Invalid age";
+};
+
+const checkIfValidRole = (role) => {
+  let roles = ["user", "admin"];
+  if (!roles.includes(role)) throw "Invalid role";
+};
+
 module.exports = {
   checkIfElementsExists,
   checkIfElementsAreStrings,
   checkIfValidObjectId,
   checkIfElementNotEmptyString,
   checkIfValidArrayObject,
+  checkIfValidEmail,
+  checkIfValidAge,
+  checkIfValidRole,
 };
