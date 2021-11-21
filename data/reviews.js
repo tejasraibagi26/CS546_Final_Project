@@ -5,13 +5,11 @@ const venue = mongoCollections.venue;
 const { ObjectId } = require('mongodb');
 const user1 = require('./user');
 const venue1 = require('./venue');
-//var bodyParser = require('body-parser');
-
-//app.use(bodyParser());
+const bodyParser = require('body-parser');
+const errorHandler = require("../Errors/errorHandler");
 
 
 //---------------------------------------------------------------------------------------------------------
-
 
 async function addReview(userId, venueId, reviewText, rating) {
   const reviewCollection = await reviews();
@@ -24,54 +22,13 @@ async function addReview(userId, venueId, reviewText, rating) {
   const venueThatGotPosted = await venue1.getVenueById(venueId);
   if (!venueThatGotPosted) throw 'Venue not found';
 
-
-  if (!userId || !venueId || !reviewText || !rating) {
-    throw 'All fields need to have valid values';
-  }
-
-  if (typeof (userId) != 'string') {
-    throw 'User ID should be a string';
-  }
-
-  if (typeof (venueId) != 'string') {
-    throw 'Venue ID should be a string';
-  }
-
-  if (typeof (reviewText) != 'string') {
-    throw 'Review Text should be a string';
-  }
-
-  if (typeof (rating) != 'number') {
-    throw 'rating should be a number'
-  }
-  if (rating < 0 || rating > 5) {
-    throw 'rating value should be in between 0 to 5';
-  }
-
-  if (userId.length === 0) {
-    throw 'User ID cannot be a empty string';
-  }
-
-  if (venueId.length === 0) {
-    throw 'Venue ID cannot be a empty string';
-  }
-
-  if (reviewText.length === 0) {
-    throw 'Review text cannot be a empty string';
-  }
-
-  if (userId.trim().length === 0) {
-    throw 'User ID cannot be just empty spaces';
-  }
-
-  if (venueId.trim().length === 0) {
-    throw 'Venue ID cannot be just empty spaces';
-  }
-
-  if (reviewText.trim().length === 0) {
-    throw 'Review Text cannot be just empty spaces';
-  }
-
+  let array1 = [userId, venueId];
+  let array = [userId, venueId, reviewText, rating];
+  let stringInput = [userId, venueId, reviewText]
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(stringInput);
+  errorHandler.checkIfElementNotEmptyString(stringInput);
+  errorHandler.checkIfValidRating(rating);
   try {
     ObjectId(userId);
   } catch (error) {
@@ -101,7 +58,6 @@ async function addReview(userId, venueId, reviewText, rating) {
   const newId = insertInfo.insertedId;
   const review = await this.getReviewById(newId.toString());
   review._id = review._id.toString();
-
 
   const updateInfo = await venueCollection.updateOne(
     { _id: ObjectId(venueId) },
@@ -149,7 +105,6 @@ async function addReview(userId, venueId, reviewText, rating) {
   if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
     throw 'updating venue rating failed';
 
-
   return { msg: "Review Added" };
 }
 
@@ -179,46 +134,10 @@ async function removeReview(id, userId, venueId) {
   const venueThatGotPosted = await venue1.getVenueById(venueId);
   if (!venueThatGotPosted) throw 'Venue not found';
 
-  if (!userId || !venueId || !id) {
-    throw 'All fields need to have valid values';
-  }
-
-  if (typeof (userId) != 'string') {
-    throw 'User ID should be a string';
-  }
-
-  if (typeof (venueId) != 'string') {
-    throw 'Venue ID should be a string';
-  }
-
-  if (typeof (id) != 'string') {
-    throw 'Review ID should be a string';
-  }
-
-  if (userId.length === 0) {
-    throw 'User ID cannot be a empty string';
-  }
-
-  if (venueId.length === 0) {
-    throw 'Venue ID cannot be a empty string';
-  }
-
-  if (id.length === 0) {
-    throw 'Review ID cannot be a empty string';
-  }
-
-  if (userId.trim().length === 0) {
-    throw 'User ID cannot be just empty spaces';
-  }
-
-  if (venueId.trim().length === 0) {
-    throw 'Venue ID cannot be just empty spaces';
-  }
-
-  if (id.trim().length === 0) {
-    throw 'Review ID cannot be just empty spaces';
-  }
-
+  let array = [id, userId, venueId];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
   try {
     ObjectId(userId);
   } catch (error) {
@@ -249,7 +168,6 @@ async function removeReview(id, userId, venueId) {
     throw `Could not delete review with id of ${id}`;
   }
 
-
   const updateInfo = await venueCollection.updateOne(
     { _id: ObjectId(venueId) },
     {
@@ -276,8 +194,6 @@ async function removeReview(id, userId, venueId) {
   if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
     throw 'deleting review from user failed';
 
-
-
   let overallRating1 = 0;
   let reviewCollection1 = await getAllReviews();
   let length = reviewCollection1.length;
@@ -300,10 +216,8 @@ async function removeReview(id, userId, venueId) {
   if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
     throw 'deleting review from user failed';
 
-
   return { msg: "Review removed" };
 }
-
 //---------------------------------------------------------------------------------------------------------
 
 async function updateReviewText(id, userId, venueId, reviewText) {
@@ -327,58 +241,12 @@ async function updateReviewText(id, userId, venueId, reviewText) {
   const venueThatGotPosted = await venue1.getVenueById(venueId);
   if (!venueThatGotPosted) throw 'Venue not found';
 
-  if (!userId || !venueId || !id || !reviewText) {
-    throw 'All fields need to have valid values';
-  }
-
-  if (typeof (userId) != 'string') {
-    throw 'User ID should be a string';
-  }
-
-  if (typeof (venueId) != 'string') {
-    throw 'Venue ID should be a string';
-  }
-
-  if (typeof (id) != 'string') {
-    throw 'Review ID should be a string';
-  }
-
-  if (typeof (reviewText) != 'string') {
-    throw 'Review text should be a string';
-  }
-
-  if (userId.length === 0) {
-    throw 'User ID cannot be a empty string';
-  }
-
-  if (venueId.length === 0) {
-    throw 'Venue ID cannot be a empty string';
-  }
-
-  if (id.length === 0) {
-    throw 'Review ID cannot be a empty string';
-  }
-
-  if (reviewText.length === 0) {
-    throw 'Review text cannot be a empty string';
-  }
-
-  if (userId.trim().length === 0) {
-    throw 'User ID cannot be just empty spaces';
-  }
-
-  if (venueId.trim().length === 0) {
-    throw 'Venue ID cannot be just empty spaces';
-  }
-
-  if (id.trim().length === 0) {
-    throw 'Review ID cannot be just empty spaces';
-  }
-
-  if (reviewText.trim().length === 0) {
-    throw 'Review text cannot be just empty spaces';
-  }
-
+  let array1 = [id, userId, venueId];
+  let array = [id, userId, venueId, reviewText];
+  let stringInput = [id, userId, venueId, reviewText]
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(stringInput);
+  errorHandler.checkIfElementNotEmptyString(stringInput);
   try {
     ObjectId(userId);
   } catch (error) {
@@ -400,7 +268,6 @@ async function updateReviewText(id, userId, venueId, reviewText) {
   const updatedReview = {
     reviewText: reviewText,
   };
-
 
   const updatedInfo = await reviewCollection.updateOne(
     { _id: ObjectId(id) },
@@ -439,56 +306,13 @@ async function updateReviewRating(id, userId, venueId, rating) {
   const venueThatGotPosted = await venue1.getVenueById(venueId);
   if (!venueThatGotPosted) throw 'Venue not found';
 
-  if (!userId || !venueId || !id || !rating) {
-    throw 'All fields need to have valid values';
-  }
-
-  if (typeof (userId) != 'string') {
-    throw 'User ID should be a string';
-  }
-
-  if (typeof (venueId) != 'string') {
-    throw 'Venue ID should be a string';
-  }
-
-  if (typeof (id) != 'string') {
-    throw 'Review ID should be a string';
-  }
-
-  if (typeof (rating) != 'number') {
-    throw 'rating should be a number'
-  }
-
-
-  if (userId.length === 0) {
-    throw 'User ID cannot be a empty string';
-  }
-
-  if (venueId.length === 0) {
-    throw 'Venue ID cannot be a empty string';
-  }
-
-  if (id.length === 0) {
-    throw 'Review ID cannot be a empty string';
-  }
-
-  if (rating < 0 || rating > 5) {
-    throw 'rating value should be in between 0 to 5';
-  }
-
-  if (userId.trim().length === 0) {
-    throw 'User ID cannot be just empty spaces';
-  }
-
-  if (venueId.trim().length === 0) {
-    throw 'Venue ID cannot be just empty spaces';
-  }
-
-  if (id.trim().length === 0) {
-    throw 'Review ID cannot be just empty spaces';
-  }
-
-
+  let array1 = [id, userId, venueId];
+  let array = [id, userId, venueId, rating];
+  let stringInput = [id, userId, venueId]
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(stringInput);
+  errorHandler.checkIfElementNotEmptyString(stringInput);
+  errorHandler.checkIfValidRating(rating);
   try {
     ObjectId(userId);
   } catch (error) {
@@ -511,7 +335,6 @@ async function updateReviewRating(id, userId, venueId, rating) {
     rating: rating
   };
 
-
   const updatedInfo = await reviewCollection.updateOne(
     { _id: ObjectId(id) },
     { $set: updatedReview }
@@ -519,7 +342,6 @@ async function updateReviewRating(id, userId, venueId, rating) {
   if (updatedInfo.modifiedCount === 0) {
     throw 'could not update review rating successfully';
   }
-
 
   let overallRating1 = 0;
   let reviewCollection1 = await getAllReviews();
@@ -547,25 +369,11 @@ async function updateReviewRating(id, userId, venueId, rating) {
 
 async function getReviewById(id) {
 
+  let array1 = [id];
 
-  if (!id) {
-    throw 'Review ID need to be provided';
-  }
-
-  if (typeof (id) != 'string') {
-    throw 'Review ID should be a string';
-  }
-
-  if (id.length === 0) {
-    throw 'Review ID cannot be a empty string';
-  }
-
-
-  if (id.trim().length === 0) {
-    throw 'Review ID cannot be just empty spaces';
-  }
-
-
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
   try {
     ObjectId(id);
   } catch (error) {
@@ -578,7 +386,6 @@ async function getReviewById(id) {
   if (!review) throw 'Review not found';
   return review;
 }
-
 //---------------------------------------------------------------------------------------------------------
 
 async function getAllReviews() {
@@ -595,35 +402,11 @@ async function getAllReviews() {
 async function addCommentToReview(reviewId, commentID) { // function will be called in comments.js
   const reviewCollection = await reviews();
 
+  let array1 = [reviewId, commentID];
 
-  if (!reviewId || !commentID) {
-    throw 'All fields need to have valid values';
-  }
-
-  if (typeof (reviewId) != 'string') {
-    throw 'Review ID should be a string';
-  }
-
-  if (typeof (commentID) != 'string') {
-    throw 'Comment ID should be a string';
-  }
-
-  if (reviewId.length === 0) {
-    throw 'Review ID cannot be a empty string';
-  }
-
-  if (commentID.length === 0) {
-    throw 'Comment ID cannot be a empty string';
-  }
-
-  if (reviewId.trim().length === 0) {
-    throw 'Comment ID cannot be just empty spaces';
-  }
-
-  if (commentID.trim().length === 0) {
-    throw 'Comment ID cannot be just empty spaces';
-  }
-
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
   try {
     ObjectId(reviewId);
   } catch (error) {
@@ -635,7 +418,6 @@ async function addCommentToReview(reviewId, commentID) { // function will be cal
   } catch (error) {
     throw 'Comment ID should be valid ObjectId';
   }
-
 
   const updateInfo = await reviewCollection.updateOne(
     { _id: ObjectId(reviewId) },
@@ -647,35 +429,14 @@ async function addCommentToReview(reviewId, commentID) { // function will be cal
   return { msg: "Comment Added" };
 }
 
-
 //---------------------------------------------------------------------------------------------------------
 async function removeCommentFromReview(reviewId, commentID) { // function will be called in comments.js
 
-  if (!reviewId || !commentID) {
-    throw 'All fields need to have valid values';
-  }
+  let array1 = [reviewId, commentID];
 
-  if (typeof (reviewId) != 'string') {
-    throw 'Review ID should be a string';
-  }
-
-  if (typeof (commentID) != 'string') {
-    throw 'Comment ID should be a string';
-  }
-  if (reviewId.length === 0) {
-    throw 'Review ID cannot be a empty string';
-  }
-
-  if (commentID.length === 0) {
-    throw 'Comment ID cannot be a empty string';
-  }
-  if (reviewId.trim().length === 0) {
-    throw 'Comment ID cannot be just empty spaces';
-  }
-
-  if (commentID.trim().length === 0) {
-    throw 'Comment ID cannot be just empty spaces';
-  }
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
   try {
     ObjectId(reviewId);
   } catch (error) {
@@ -688,7 +449,6 @@ async function removeCommentFromReview(reviewId, commentID) { // function will b
     throw 'Comment ID should be valid ObjectId';
   }
 
-
   const reviewCollection = await reviews();
   const updateInfo = await reviewCollection.updateOne(
     { _id: ObjectId(reviewId) },
@@ -699,41 +459,16 @@ async function removeCommentFromReview(reviewId, commentID) { // function will b
 
   return { msg: "Comment deleted" };
 }
-
-
+//---------------------------------------------------------------------------------------------------------
 async function upVote(reviewId, userId) {
   const userCollection = await user();
   const reviewCollection = await reviews();
 
+  let array1 = [reviewId, userId];
 
-
-
-  if (!userId || !reviewId ) {
-    throw 'All fields need to have valid values';
-  }
-
-  if (typeof (reviewId) != 'string') {
-    throw 'Review ID should be a string';
-  }
-  if (typeof (userId) != 'string') {
-    throw 'User ID should be a string';
-  }
-
-  if (reviewId.length === 0) {
-    throw 'Review ID cannot be a empty string';
-  }
-
-  if (userId.length === 0) {
-    throw 'User ID cannot be a empty string';
-  }
-
-  if (reviewId.trim().length === 0) {
-    throw 'Review ID cannot be just empty spaces';
-  }
-
-  if (userId.trim().length === 0) {
-    throw 'User ID cannot be just empty spaces';
-  }
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
   try {
     ObjectId(userId);
   } catch (error) {
@@ -747,8 +482,8 @@ async function upVote(reviewId, userId) {
   }
 
   const retrivedReview = await reviewCollection.findOne({ _id: ObjectId(reviewId) });
-  if (!retrivedReview){
-  throw 'Review not found';
+  if (!retrivedReview) {
+    throw 'Review not found';
   }
 
   let flag1, flag2, flag3, flag4;
@@ -767,7 +502,7 @@ async function upVote(reviewId, userId) {
       }
     );
     if (!updateInfo10.matchedCount && !updateInfo10.modifiedCount)
-    throw 'updating dummy _id value for upvoted Reviews failed';
+      throw 'updating dummy _id value for upvoted Reviews failed';
 
     const updateInfo9 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
@@ -780,13 +515,12 @@ async function upVote(reviewId, userId) {
       }
     );
     if (!updateInfo9.matchedCount && !updateInfo9.modifiedCount)
-  throw 'updating dummy _id value for downvoted Reviews failed';
+      throw 'updating dummy _id value for downvoted Reviews failed';
   }
-  
 
   const retrivedUser = await userCollection.findOne({ _id: ObjectId(userId) });
   for (let i = 0; i < retrivedUser.upvotedReviews.length; i++) {
-    console.log(retrivedUser.upvotedReviews.length);
+
     if (retrivedUser.upvotedReviews[i].id === reviewId) {
       flag3 = "true";
       break;
@@ -810,7 +544,6 @@ async function upVote(reviewId, userId) {
     throw "already upvoted";
   }
 
-
   if (flag1 === "true" && flag2 === "true") {
     const updateInfo1 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
@@ -824,8 +557,7 @@ async function upVote(reviewId, userId) {
       }
     );
     if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
-    throw 'removing review id from downvotedReviews failed';
-
+      throw 'removing review id from downvotedReviews failed';
 
     const updateInfo2 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
@@ -840,7 +572,7 @@ async function upVote(reviewId, userId) {
     );
 
     if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
-    throw 'removing review id from upvotedReviews failed';
+      throw 'removing review id from upvotedReviews failed';
 
     let votes3 = retrivedReview.votes;
     const updateInfo3 = await reviewCollection.updateOne(
@@ -852,11 +584,8 @@ async function upVote(reviewId, userId) {
       }
     );
     if (!updateInfo3.matchedCount && !updateInfo3.modifiedCount)
-    throw 'Updating vote count failed';
+      throw 'Updating vote count failed';
   }
-
-  
-
 
   if (flag1 === "true" && flag4 === "true") {
     const updateInfo5 = await userCollection.updateOne(
@@ -872,7 +601,7 @@ async function upVote(reviewId, userId) {
     );
 
     if (!updateInfo5.matchedCount && !updateInfo5.modifiedCount)
-    throw 'Adding review id to upvotedReviews failed';
+      throw 'Adding review id to upvotedReviews failed';
 
     let votes2 = retrivedReview.votes;
     const updateInfo4 = await reviewCollection.updateOne(
@@ -884,13 +613,11 @@ async function upVote(reviewId, userId) {
       }
     );
     if (!updateInfo4.matchedCount && !updateInfo4.modifiedCount)
-    throw 'Updating Vote count failed';
+      throw 'Updating Vote count failed';
   }
- 
   return { msg: "Upvote Successful!" }
 
 }
-
 //---------------------------------------------------------------------------------------------------------
 
 async function downVote(reviewId, userId) {
@@ -898,32 +625,11 @@ async function downVote(reviewId, userId) {
   const reviewCollection = await reviews();
 
 
-  if (!userId || !reviewId ) {
-    throw 'All fields need to have valid values';
-  }
+  let array1 = [reviewId, userId];
 
-  if (typeof (reviewId) != 'string') {
-    throw 'Review ID should be a string';
-  }
-  if (typeof (userId) != 'string') {
-    throw 'User ID should be a string';
-  }
-
-  if (reviewId.length === 0) {
-    throw 'Review ID cannot be a empty string';
-  }
-
-  if (userId.length === 0) {
-    throw 'User ID cannot be a empty string';
-  }
-
-  if (reviewId.trim().length === 0) {
-    throw 'Review ID cannot be just empty spaces';
-  }
-
-  if (userId.trim().length === 0) {
-    throw 'User ID cannot be just empty spaces';
-  }
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
   try {
     ObjectId(userId);
   } catch (error) {
@@ -936,11 +642,10 @@ async function downVote(reviewId, userId) {
     throw 'Review Id should be valid ObjectId';
   }
 
-
   const retrivedReview = await reviewCollection.findOne({ _id: ObjectId(reviewId) });
-  if (!retrivedReview){
+  if (!retrivedReview) {
     throw 'Review not found';
-    }
+  }
   let flag1, flag2, flag3, flag4;
   const retrivedUser1 = await userCollection.findOne({ _id: ObjectId(userId) });
   if (!retrivedUser1) throw 'User not found';
@@ -956,7 +661,7 @@ async function downVote(reviewId, userId) {
       }
     );
     if (!updateInfo9.matchedCount && !updateInfo9.modifiedCount)
-    throw 'updating dummy _id value for upvoted Reviews failed';
+      throw 'updating dummy _id value for upvoted Reviews failed';
     const updateInfo10 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
@@ -968,7 +673,7 @@ async function downVote(reviewId, userId) {
       }
     );
     if (!updateInfo10.matchedCount && !updateInfo10.modifiedCount)
-    throw 'updating dummy _id value for downvoted Reviews failed';
+      throw 'updating dummy _id value for downvoted Reviews failed';
   }
   const retrivedUser = await userCollection.findOne({ _id: ObjectId(userId) });
   for (let i = 0; i < retrivedUser.downvotedReviews.length; i++) {
@@ -1009,7 +714,7 @@ async function downVote(reviewId, userId) {
       }
     );
     if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
-    throw 'Removing review id from upvotedReviews failed';
+      throw 'Removing review id from upvotedReviews failed';
 
     const updateInfo2 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
@@ -1022,7 +727,7 @@ async function downVote(reviewId, userId) {
       }
     );
     if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
-    throw 'Adding review id to downvotedReviews failed';
+      throw 'Adding review id to downvotedReviews failed';
 
     let votes = retrivedReview.votes;
     const updateInfo3 = await reviewCollection.updateOne(
@@ -1034,7 +739,7 @@ async function downVote(reviewId, userId) {
       }
     );
     if (!updateInfo3.matchedCount && !updateInfo3.modifiedCount)
-    throw 'Updating vote count failed';
+      throw 'Updating vote count failed';
   }
 
   if (flag1 === "true" && flag4 === "true") {
@@ -1049,7 +754,7 @@ async function downVote(reviewId, userId) {
       }
     );
     if (!updateInfo5.matchedCount && !updateInfo5.modifiedCount)
-    throw 'Adding review id to downvotedReviews failed';
+      throw 'Adding review id to downvotedReviews failed';
 
     let votes1 = retrivedReview.votes;
     const updateInfo4 = await reviewCollection.updateOne(
@@ -1061,41 +766,21 @@ async function downVote(reviewId, userId) {
       }
     );
     if (!updateInfo4.matchedCount && !updateInfo4.modifiedCount)
-    throw 'Updating vote count failed';
+      throw 'Updating vote count failed';
   }
   return { msg: "Downvote Successful!" }
 
 }
 
-async function removeUpvote(reviewId, userId){
+async function removeUpvote(reviewId, userId) {
   const userCollection = await user();
   const reviewCollection = await reviews();
-  if (!userId || !reviewId ) {
-    throw 'All fields need to have valid values';
-  }
 
-  if (typeof (reviewId) != 'string') {
-    throw 'Review ID should be a string';
-  }
-  if (typeof (userId) != 'string') {
-    throw 'User ID should be a string';
-  }
+  let array1 = [reviewId, userId];
 
-  if (reviewId.length === 0) {
-    throw 'Review ID cannot be a empty string';
-  }
-
-  if (userId.length === 0) {
-    throw 'User ID cannot be a empty string';
-  }
-
-  if (reviewId.trim().length === 0) {
-    throw 'Review ID cannot be just empty spaces';
-  }
-
-  if (userId.trim().length === 0) {
-    throw 'User ID cannot be just empty spaces';
-  }
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
   try {
     ObjectId(userId);
   } catch (error) {
@@ -1108,84 +793,61 @@ async function removeUpvote(reviewId, userId){
     throw 'Review Id should be valid ObjectId';
   }
 
-
   const retrivedReview = await reviewCollection.findOne({ _id: ObjectId(reviewId) });
-  if (!retrivedReview){
+  if (!retrivedReview) {
     throw 'Review not found';
-    }
-  let flag3= "false";
+  }
+  let flag3 = "false";
   const retrivedUser = await userCollection.findOne({ _id: ObjectId(userId) });
   for (let i = 0; i < retrivedUser.upvotedReviews.length; i++) {
-    console.log(retrivedUser.upvotedReviews.length);
+
     if (retrivedUser.upvotedReviews[i].id === reviewId) {
       flag3 = "true";
       break;
     }
-}
-if(flag3 ==="false"){
-  throw "Upvote authentication failed";
-}
+  }
+  if (flag3 === "false") {
+    throw "Upvote authentication failed";
+  }
 
-if(flag3==="true"){
-  const updateInfo1 = await userCollection.updateOne(
-    { _id: ObjectId(userId) },
-    {
-      $pull: {
-        upvotedReviews: {
-          id: reviewId
+  if (flag3 === "true") {
+    const updateInfo1 = await userCollection.updateOne(
+      { _id: ObjectId(userId) },
+      {
+        $pull: {
+          upvotedReviews: {
+            id: reviewId
+          }
         }
       }
-    }
-  );
-  if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
-  throw 'Removing review id from upvotedReviews failed';
-  
-  let votes2 = retrivedReview.votes;
-  const updateInfo4 = await reviewCollection.updateOne(
-    { _id: ObjectId(reviewId) },
-    {
-      $set: {
-        votes: votes2 - 1
+    );
+    if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
+      throw 'Removing review id from upvotedReviews failed';
+
+    let votes2 = retrivedReview.votes;
+    const updateInfo4 = await reviewCollection.updateOne(
+      { _id: ObjectId(reviewId) },
+      {
+        $set: {
+          votes: votes2 - 1
+        }
       }
-    }
-  );
-  if (!updateInfo4.matchedCount && !updateInfo4.modifiedCount)
-  throw 'Removing upvote failed';
-
-}
-return { msg: "Remove Upvote Successful!" }
+    );
+    if (!updateInfo4.matchedCount && !updateInfo4.modifiedCount)
+      throw 'Removing upvote failed';
+  }
+  return { msg: "Remove Upvote Successful!" }
 }
 
-
-async function removeDownvote(reviewId, userId){
+async function removeDownvote(reviewId, userId) {
   const userCollection = await user();
   const reviewCollection = await reviews();
-  if (!userId || !reviewId ) {
-    throw 'All fields need to have valid values';
-  }
 
-  if (typeof (reviewId) != 'string') {
-    throw 'Review ID should be a string';
-  }
-  if (typeof (userId) != 'string') {
-    throw 'User ID should be a string';
-  }
+  let array1 = [reviewId, userId];
 
-  if (reviewId.length === 0) {
-    throw 'Review ID cannot be a empty string';
-  }
-
-  if (userId.length === 0) {
-    throw 'User ID cannot be a empty string';
-  }
-
-  if (reviewId.trim().length === 0) {
-    throw 'Review ID cannot be just empty spaces';
-  }
-
-  if (userId.trim().length === 0) {
-    throw 'User ID cannot be just empty spaces';
-  }
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
   try {
     ObjectId(userId);
   } catch (error) {
@@ -1198,54 +860,51 @@ async function removeDownvote(reviewId, userId){
     throw 'Review Id should be valid ObjectId';
   }
 
-
   const retrivedReview = await reviewCollection.findOne({ _id: ObjectId(reviewId) });
-  if (!retrivedReview){
+  if (!retrivedReview) {
     throw 'Review not found';
-    }
-  let flag3= "false";
+  }
+  let flag3 = "false";
   const retrivedUser = await userCollection.findOne({ _id: ObjectId(userId) });
   for (let i = 0; i < retrivedUser.downvotedReviews.length; i++) {
-    console.log(retrivedUser.downvotedReviews.length);
+
     if (retrivedUser.downvotedReviews[i].id === reviewId) {
       flag3 = "true";
       break;
     }
-}
-if(flag3 ==="false"){
-  throw "Downvote authentication failed";
-}
+  }
+  if (flag3 === "false") {
+    throw "Downvote authentication failed";
+  }
 
-if(flag3==="true"){
-  const updateInfo1 = await userCollection.updateOne(
-    { _id: ObjectId(userId) },
-    {
-      $pull: {
-        downvotedReviews: {
-          id: reviewId
+  if (flag3 === "true") {
+    const updateInfo1 = await userCollection.updateOne(
+      { _id: ObjectId(userId) },
+      {
+        $pull: {
+          downvotedReviews: {
+            id: reviewId
+          }
         }
       }
-    }
-  );
-  if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
-  throw 'Removing review id from upvotedReviews failed';
-  
-  let votes2 = retrivedReview.votes;
-  const updateInfo4 = await reviewCollection.updateOne(
-    { _id: ObjectId(reviewId) },
-    {
-      $set: {
-        votes: votes2 + 1
+    );
+    if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
+      throw 'Removing review id from upvotedReviews failed';
+
+    let votes2 = retrivedReview.votes;
+    const updateInfo4 = await reviewCollection.updateOne(
+      { _id: ObjectId(reviewId) },
+      {
+        $set: {
+          votes: votes2 + 1
+        }
       }
-    }
-  );
-  if (!updateInfo4.matchedCount && !updateInfo4.modifiedCount)
-  throw 'Removing Downvote failed';
-
+    );
+    if (!updateInfo4.matchedCount && !updateInfo4.modifiedCount)
+      throw 'Removing Downvote failed';
+  }
+  return { msg: "Remove Downvote Successful!" }
 }
-return { msg: "Remove Downvote Successful!" }
-}
-
 //---------------------------------------------------------------------------------------------------------
 module.exports = {
   addReview,
