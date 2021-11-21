@@ -5,31 +5,40 @@ const resData = data.reviews;
 const userData = data.user;
 const venueData = data.venues;
 const { ObjectId } = require('mongodb');
+const errorHandler = require("../Errors/errorHandler");
 
 //---------------------------------------------------------------------------------------------------------
 router.get('/:id', async (req, res) => {
-    if (!req.params.id) {
-        res.status(400).json({ error: 'You must Supply an Review ID' });
+
+    const id = req.params.id;
+    let array = [id];
+    try {
+        errorHandler.checkIfElementsExists(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (typeof (req.params.id) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
+    try {
+        errorHandler.checkIfElementsAreStrings(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (req.params.id.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
+
+    try {
+        errorHandler.checkIfElementNotEmptyString(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (req.params.id.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
+
     try {
         ObjectId(req.params.id);
     } catch (error) {
         res.status(400).json({ error: 'Id should be valid object ID' });
         return;
     }
+
     try {
         let rest = await resData.getReviewById(req.params.id);
         res.status(200).json(rest);
@@ -52,73 +61,35 @@ router.get('/', async (req, res) => {
 //---------------------------------------------------------------------------------------------------------
 router.put('/text/:id/:userId/:venueId', async (req, res) => {
     let resInfo = req.body;
-    if (!req.params.id) {
-        res.status(400).json({ error: 'You must Supply an Review ID' });
+
+
+    const id = req.params.id;
+    const userId = req.params.userId;
+    const venueId = req.params.venueId;
+    const reviewText = resInfo.reviewText;
+
+    let array = [id, userId, venueId];
+    let inputString = [id, userId, venueId, reviewText];
+    try {
+        errorHandler.checkIfElementsExists(inputString);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (!req.params.userId) {
-        res.status(400).json({ error: 'You must Supply an User ID' });
-        return;
-    }
-    if (!req.params.venueId) {
-        res.status(400).json({ error: 'You must Supply an Venue ID' });
+    try {
+        errorHandler.checkIfElementsAreStrings(inputString);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
 
-
-    if (typeof (req.params.id) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.id.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.id.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
+    try {
+        errorHandler.checkIfElementNotEmptyString(inputString);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
 
-    if (typeof (req.params.userId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.userId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.userId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
-    if (typeof (req.params.venueId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.venueId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.venueId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
-    if (!resInfo.reviewText) {
-        res.status(400).json({ error: 'You must Supply Review text' });
-        return;
-    }
-    if (typeof (resInfo.reviewText) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (resInfo.reviewText.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (resInfo.reviewText.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
     try {
         ObjectId(req.params.id);
     } catch (error) {
@@ -168,68 +139,34 @@ router.put('/text/:id/:userId/:venueId', async (req, res) => {
 
 router.put('/rating/:id/:userId/:venueId', async (req, res) => {
     let resInfo = req.body;
-    if (!req.params.id) {
-        res.status(400).json({ error: 'You must Supply an Review ID' });
+
+    const id = req.params.id;
+    const userId = req.params.userId;
+    const venueId = req.params.venueId;
+    const rating = resInfo.rating;
+
+    let array = [id, userId, venueId];
+    let inputString = [id, userId, venueId, rating];
+    try {
+        errorHandler.checkIfElementsExists(inputString);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (!req.params.userId) {
-        res.status(400).json({ error: 'You must Supply an User ID' });
-        return;
-    }
-    if (!req.params.venueId) {
-        res.status(400).json({ error: 'You must Supply an Venue ID' });
+    try {
+        errorHandler.checkIfElementsAreStrings(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
 
-    if (typeof (req.params.id) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.id.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.id.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
+    try {
+        errorHandler.checkIfElementNotEmptyString(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
 
-    if (typeof (req.params.userId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.userId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.userId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
-    if (typeof (req.params.venueId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.venueId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.venueId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
-    if (!resInfo.rating) {
-        res.status(400).json({ error: 'You must Supply Rating' });
-        return;
-    }
-    if (typeof (resInfo.rating) != 'number') {
-        res.status(400).json({ error: 'Input should be a number' });
-        return;
-    }
-    if (resInfo.rating < 0 || resInfo.rating > 5) {
-        res.status(400).json({ error: 'rating value should be in between 0 to 5' });
-        return;
-    }
     try {
         ObjectId(req.params.id);
     } catch (error) {
@@ -246,6 +183,12 @@ router.put('/rating/:id/:userId/:venueId', async (req, res) => {
         ObjectId(req.params.venueId);
     } catch (error) {
         res.status(400).json({ error: 'Id should be valid object ID' });
+        return;
+    }
+    try {
+        errorHandler.checkIfValidRating(rating);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
 
@@ -278,58 +221,34 @@ router.put('/rating/:id/:userId/:venueId', async (req, res) => {
 
 //---------------------------------------------------------------------------------------------------------
 router.delete('/:id/:userId/:venueId', async (req, res) => {
-    if (!req.params.id) {
-        res.status(400).json({ error: 'You must Supply an Review ID' });
+
+
+    const id = req.params.id;
+    const userId = req.params.userId;
+    const venueId = req.params.venueId;
+
+    let array = [id, userId, venueId];
+
+    try {
+        errorHandler.checkIfElementsExists(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (!req.params.userId) {
-        res.status(400).json({ error: 'You must Supply an User ID' });
-        return;
-    }
-    if (!req.params.venueId) {
-        res.status(400).json({ error: 'You must Supply an Venue ID' });
+    try {
+        errorHandler.checkIfElementsAreStrings(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
 
-
-
-    if (typeof (req.params.id) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.id.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.id.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
+    try {
+        errorHandler.checkIfElementNotEmptyString(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
 
-    if (typeof (req.params.userId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.userId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.userId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
-    if (typeof (req.params.venueId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.venueId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.venueId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
     try {
         ObjectId(req.params.id);
     } catch (error) {
@@ -380,66 +299,35 @@ router.delete('/:id/:userId/:venueId', async (req, res) => {
 //---------------------------------------------------------------------------------------------------------
 router.post('/:userId/:venueId', async (req, res) => {
     let resInfo = req.body;
-    if (!req.params.userId) {
-        res.status(400).json({ error: 'You must Supply an User ID' });
+
+    const userId = req.params.userId;
+    const venueId = req.params.venueId;
+    const reviewText = resInfo.reviewText;
+    const rating = resInfo.rating;
+
+    let array = [userId, venueId];
+    let inputString = [userId, venueId, reviewText];
+    let check = [userId, venueId, reviewText, rating];
+    try {
+        errorHandler.checkIfElementsExists(check);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (!req.params.venueId) {
-        res.status(400).json({ error: 'You must Supply an Venue ID' });
+    try {
+        errorHandler.checkIfElementsAreStrings(inputString);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (typeof (req.params.userId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
+
+    try {
+        errorHandler.checkIfElementNotEmptyString(inputString);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (req.params.userId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.userId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
-    if (typeof (req.params.venueId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.venueId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.venueId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
-    if (!resInfo.reviewText) {
-        res.status(400).json({ error: 'You must Supply Review text' });
-        return;
-    }
-    if (typeof (resInfo.reviewText) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (resInfo.reviewText.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (resInfo.reviewText.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
-    if (!resInfo.rating) {
-        res.status(400).json({ error: 'You must Supply Rating' });
-        return;
-    }
-    if (typeof (resInfo.rating) != 'number') {
-        res.status(400).json({ error: 'Input should be a number' });
-        return;
-    }
-    if (resInfo.rating < 0 || resInfo.rating > 5) {
-        res.status(400).json({ error: 'rating value should be in between 0 to 5' });
-        return;
-    }
+
     try {
         ObjectId(req.params.userId);
     } catch (error) {
@@ -450,6 +338,12 @@ router.post('/:userId/:venueId', async (req, res) => {
         ObjectId(req.params.venueId);
     } catch (error) {
         res.status(400).json({ error: 'Id should be valid object ID' });
+        return;
+    }
+    try {
+        errorHandler.checkIfValidRating(rating);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
     try {
@@ -477,40 +371,32 @@ router.post('/:userId/:venueId', async (req, res) => {
 
 router.put('/upvote/:reviewId/:userId', async (req, res) => {
 
-     if (!req.params.reviewId) {
-        res.status(400).json({ error: 'You must Supply an Review ID' });
+
+    const reviewId = req.params.reviewId;
+    const userId = req.params.userId;
+
+
+    let array = [userId, reviewId];
+    try {
+        errorHandler.checkIfElementsExists(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (!req.params.userId) {
-        res.status(400).json({ error: 'You must Supply an User ID' });
-        return;
-    }
-    
-    if (typeof (req.params.reviewId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.reviewId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.reviewId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
+    try {
+        errorHandler.checkIfElementsAreStrings(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
 
-    if (typeof (req.params.userId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
+    try {
+        errorHandler.checkIfElementNotEmptyString(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (req.params.userId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.userId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
+
     try {
         ObjectId(req.params.reviewId);
     } catch (error) {
@@ -523,7 +409,8 @@ router.put('/upvote/:reviewId/:userId', async (req, res) => {
         res.status(400).json({ error: 'Id should be valid object ID' });
         return;
     }
-   
+
+
 
     try {
         await resData.getReviewById(req.params.reviewId);
@@ -548,40 +435,29 @@ router.put('/upvote/:reviewId/:userId', async (req, res) => {
 
 router.put('/downvote/:reviewId/:userId', async (req, res) => {
 
-    if (!req.params.reviewId) {
-        res.status(400).json({ error: 'You must Supply an Review ID' });
+    const reviewId = req.params.reviewId;
+    const userId = req.params.userId;
+    let array = [userId, reviewId];
+    try {
+        errorHandler.checkIfElementsExists(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (!req.params.userId) {
-        res.status(400).json({ error: 'You must Supply an User ID' });
-        return;
-    }
-    
-    if (typeof (req.params.reviewId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.reviewId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.reviewId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
+    try {
+        errorHandler.checkIfElementsAreStrings(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
 
-    if (typeof (req.params.userId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
+    try {
+        errorHandler.checkIfElementNotEmptyString(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (req.params.userId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.userId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
+
     try {
         ObjectId(req.params.reviewId);
     } catch (error) {
@@ -594,6 +470,7 @@ router.put('/downvote/:reviewId/:userId', async (req, res) => {
         res.status(400).json({ error: 'Id should be valid object ID' });
         return;
     }
+
     try {
         await resData.getReviewById(req.params.reviewId);
     } catch (e) {
@@ -616,40 +493,31 @@ router.put('/downvote/:reviewId/:userId', async (req, res) => {
 });
 
 router.put('/removeup/:reviewId/:userId', async (req, res) => {
-    if (!req.params.reviewId) {
-        res.status(400).json({ error: 'You must Supply an Review ID' });
+
+    const reviewId = req.params.reviewId;
+    const userId = req.params.userId;
+
+    let array = [userId, reviewId];
+    try {
+        errorHandler.checkIfElementsExists(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (!req.params.userId) {
-        res.status(400).json({ error: 'You must Supply an User ID' });
-        return;
-    }
-    
-    if (typeof (req.params.reviewId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.reviewId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.reviewId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
+    try {
+        errorHandler.checkIfElementsAreStrings(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
 
-    if (typeof (req.params.userId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
+    try {
+        errorHandler.checkIfElementNotEmptyString(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (req.params.userId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.userId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
+
     try {
         ObjectId(req.params.reviewId);
     } catch (error) {
@@ -662,6 +530,7 @@ router.put('/removeup/:reviewId/:userId', async (req, res) => {
         res.status(400).json({ error: 'Id should be valid object ID' });
         return;
     }
+
     try {
         await resData.getReviewById(req.params.reviewId);
     } catch (e) {
@@ -683,40 +552,30 @@ router.put('/removeup/:reviewId/:userId', async (req, res) => {
     }
 });
 router.put('/removedown/:reviewId/:userId', async (req, res) => {
-    if (!req.params.reviewId) {
-        res.status(400).json({ error: 'You must Supply an Review ID' });
+
+    const reviewId = req.params.reviewId;
+    const userId = req.params.userId;
+    let array = [userId, reviewId];
+    try {
+        errorHandler.checkIfElementsExists(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (!req.params.userId) {
-        res.status(400).json({ error: 'You must Supply an User ID' });
-        return;
-    }
-    
-    if (typeof (req.params.reviewId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
-        return;
-    }
-    if (req.params.reviewId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.reviewId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
+    try {
+        errorHandler.checkIfElementsAreStrings(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
 
-    if (typeof (req.params.userId) != 'string') {
-        res.status(400).json({ error: 'Input should be a string' });
+    try {
+        errorHandler.checkIfElementNotEmptyString(array);
+    } catch (error) {
+        res.status(400).json({ err: error });
         return;
     }
-    if (req.params.userId.length === 0) {
-        res.status(400).json({ error: 'Input cannot be empty' });
-        return;
-    }
-    if (req.params.userId.trim().length === 0) {
-        res.status(400).json({ error: 'Input cannot be just empty spaces' });
-        return;
-    }
+
     try {
         ObjectId(req.params.reviewId);
     } catch (error) {
@@ -729,6 +588,7 @@ router.put('/removedown/:reviewId/:userId', async (req, res) => {
         res.status(400).json({ error: 'Id should be valid object ID' });
         return;
     }
+
     try {
         await resData.getReviewById(req.params.reviewId);
     } catch (e) {
