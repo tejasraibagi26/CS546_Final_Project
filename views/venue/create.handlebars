@@ -1,0 +1,114 @@
+<section id="create-venue">
+  <div class="container">
+    <h1 class="title">Create New Venue</h1>
+    <form action="/venues/create" method="POST" enctype="multipart/form-data">
+      <div class="field">
+        <div class="input-fields">
+          <label for="venueName" class="label">
+            Name
+            <input
+              class="input"
+              type="text"
+              name="venueName"
+              placeholder="Venue Name"
+              required
+            />
+          </label>
+        </div>
+        <div class="input-fields">
+          <label for="venueAddress" class="label">
+            Address
+            <textarea
+              class="input"
+              type="text"
+              name="venueAddress"
+              placeholder="Address"
+              required
+              draggable="false"
+              rows="30"
+            ></textarea>
+          </label>
+        </div>
+        <div class="input-fields">
+          <label for="venueImage" class="label">
+            Image
+            <input
+              class="input"
+              type="file"
+              name="venueImage"
+              placeholder="Image"
+              required
+            />
+          </label>
+        </div>
+        <div class="input-fields">
+          <label for="sports" class="label">
+            Sports
+            <select class="input" id="sports" name="sports" multiple="multiple">
+            </select>
+            <div class="hint">note: Hold CTRL (windows) or CMD (mac) to select
+              multiple</div>
+          </label>
+        </div>
+        <div class="input-fields">
+          <label for="venueTimings" class="label">
+            Timings
+            <select
+              class="input"
+              id="time"
+              name="venueTimings"
+              multiple="multiple"
+            >
+            </select>
+            <div class="hint">note: Hold CTRL (windows) or CMD (mac) to select
+              multiple</div>
+          </label>
+        </div>
+        <div class="input-fields">
+          <label for="venueSlots" class="label">
+            Default Slots
+            <input
+              class="input"
+              type="number"
+              name="venueSlots"
+              placeholder="Default Available Slots for each time slot"
+              required
+            />
+          </label>
+        </div>
+        <div class="input-fields">
+          <label for="price" class="label">
+            Price per Hr
+            <input
+              class="input"
+              type="number"
+              name="price"
+              placeholder="Price"
+              required
+            />
+          </label>
+        </div>
+        <input
+          id="create-button"
+          type="submit"
+          class="button input"
+          value="Create Venue"
+        />
+      </div>
+    </form>
+  </div>
+</section>
+<script>
+
+  let sports = [ "Badminton", "Basketball", "Baseball", "Cricket", "Cycling",
+  "Football", "Frisbee", "Golf", "Handball","Running", "Soccer", "Squash",
+  "Table Tennis", "Tennis", "Throwball"]; for(let i = 0; i < sports.length; i++)
+  { let option = document.createElement("option"); option.value = sports[i];
+  option.innerHTML = sports[i];
+  document.getElementById("sports").appendChild(option); } let time = [ "06:00",
+  "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00",
+  "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]; for(let i = 0;
+  i < time.length; i++) { let option = document.createElement("option");
+  option.value = time[i]; option.innerHTML = time[i];
+  document.getElementById("time").appendChild(option); }
+</script>

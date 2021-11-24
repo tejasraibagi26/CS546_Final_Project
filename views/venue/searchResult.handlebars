@@ -1,0 +1,101 @@
+<section id="search-results">
+  <div class="container">
+    <div class="left">
+      <div class="search-bar">
+        <form action="/venues" id="search" method="GET" class="form">
+          <input
+            type="text"
+            id="search-input"
+            name="searchTerm"
+            placeholder="Type a sport or click search for all results."
+            value=""
+          />
+          <button class="search-button" id="search-button" type="submit">
+            <i class="fa fa-search"></i>
+          </button>
+        </form>
+      </div>
+      <div class="filters">
+        <div class="cost">
+          <p class="title">Price Range</p>
+          <form
+            action="/venues?searchTerm={{searchTerm}}"
+            method="GET"
+            class="form"
+          >
+            <div class="row">
+              <input
+            
+                type="text"
+                name="searchTerm"
+                class="hidden" 
+                value="{{#if searchTerm}}{{searchTerm}}{{/if}}"
+              />
+              <input id="min" type="number" name="min" placeholder="Min. Price"/>
+              <input id="max" type="number" name="max" placeholder="Max. Price"/>
+              <button class="filter-button">Filter</button>
+            </div>
+          </form>
+        </div>
+        {{!-- <div class="rating">
+          <p class="title">Rating</p>
+          5<input type="checkbox" placeholder="5" />
+          4<input type="checkbox" placeholder="4" />
+          3<input type="checkbox" placeholder="3" />
+          2<input type="checkbox" placeholder="2" />
+          1<input type="checkbox" placeholder="1" />
+        </div> --}}
+      </div>
+    </div>
+    <div class="right">
+      {{#if err}}
+        <div class="err">
+          {{error}}, please try again.
+        </div>
+      {{else}}
+        <div class="resultCount">Results Found: {{count}}</div>
+        <div class="container">
+          {{! Loop through the venue data fetched from backend }}
+          {{#each venues as |ve|}}
+            <div class="venue">
+              {{!-- <img class="image" alt="{{ve.venueName}}" src="{{ve.img}}" /> --}}
+              <div class="padded">
+                <h1 class="venue-name">{{ve.venueName}}</h1>
+                <div class="details">
+                  <h3 class="rating">{{ve.venueRating}}
+                    / 5
+                    <i class="fa fa-star"></i></h3>
+                  <h3 class="cost">US$ {{ve.price}} / Hr</h3>
+                </div>
+                <p class="address"> <span><i class="fa fa-map-marker"></i> </span>  {{ve.venueAddress}}</p>
+                <div class="timings">
+                  <span><i class="fa fa-clock-o" style="padding-right: 5px"></i>{{" x"}}</span> Timings:
+                  <ul>
+                    {{#each ve.venueTimings as |t|}}
+                      <li>{{t.timeSlot}}</li>
+                    {{/each}}
+                  </ul>
+                </div>
+                {{!-- <div class="timings">
+                  Sports:
+                  <ul>
+                    {{#each ve.sports as |s|}}
+                      <li class="bg">{{s}}</li>
+                    {{/each}}
+                  </ul>
+                </div> --}}
+                <a href="/venues/{{ve._id}}">
+                  <button class="book-now">
+                  <p class="bk-text">See Info</p>
+                  <i class="fa fa-arrow-right"></i>
+                  </button>
+                </a>
+                
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</section>
