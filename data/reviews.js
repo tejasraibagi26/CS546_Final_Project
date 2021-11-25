@@ -16,13 +16,18 @@ async function addReview(userId, venueId, reviewText, rating) {
   const userCollection = await user();
   const venueCollection = await venue();
 
+  /* Checking if user exists */
+
   const userThatPosted = await user1.getUserById(userId);
   if (!userThatPosted) throw 'User not found';
+
+  /* Checking if venue exists */
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
   if (!venueThatGotPosted) throw 'Venue not found';
 
-  let array1 = [userId, venueId];
+  /* Error Handling */
+
   let array = [userId, venueId, reviewText, rating];
   let stringInput = [userId, venueId, reviewText]
   errorHandler.checkIfElementsExists(array);
@@ -41,8 +46,9 @@ async function addReview(userId, venueId, reviewText, rating) {
     throw 'Venue Id should be valid ObjectId';
   }
 
+  /* Defining a new Review */
+
   let newReview = {
-    _id: ObjectId(),
     reviewerId: userId,
     venueId: venueId,
     reviewText: reviewText,
@@ -52,12 +58,17 @@ async function addReview(userId, venueId, reviewText, rating) {
 
   };
 
+  /* Checking if review added successfully */
+
   const insertInfo = await reviewCollection.insertOne(newReview);
   if (insertInfo.insertedCount === 0) throw 'Could not add review';
 
   const newId = insertInfo.insertedId;
   const review = await this.getReviewById(newId.toString());
   review._id = review._id.toString();
+
+
+  /* Updating the reviews in venue collection by adding the review Id to the venue */
 
   const updateInfo = await venueCollection.updateOne(
     { _id: ObjectId(venueId) },
@@ -69,8 +80,13 @@ async function addReview(userId, venueId, reviewText, rating) {
       }
     }
   );
+
+  /* Checking if review Id is added to the venue successfully */
+
   if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
     throw 'adding review to venue failed';
+
+  /* Updating the reviewId in user collection by adding the review Id to the user */
 
   const updateInfo1 = await userCollection.updateOne(
     { _id: ObjectId(userId) },
@@ -82,9 +98,13 @@ async function addReview(userId, venueId, reviewText, rating) {
       }
     }
   );
+  /* Checking if review Id is added to the user successfully */
 
   if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
     throw 'adding review to user failed';
+
+
+  /* Updating the overall rating of the venue whenever a new review with a rating is added */
 
   let overallRating1 = 0;
   let reviewCollection1 = await getAllReviews();
@@ -115,24 +135,36 @@ async function removeReview(id, userId, venueId) {
   const userCollection = await user();
   const venueCollection = await venue();
 
+  /* Checking if review exists */
+
   const reviewPosted = await getReviewById(id);
   if (!reviewPosted) {
     throw 'review not found';
   }
 
+  /* Checking if the review belongs to that particular venue or not */
+
   if (reviewPosted.venueId != venueId) {
     throw 'review authentication failed for venue';
   }
+
+  /* Checking if the review belongs to that particular user or not */
 
   if (reviewPosted.reviewerId != userId) {
     throw 'review authentication failed for user';
   }
 
+  /* Checking if user exists */
+
   const userThatPosted = await user1.getUserById(userId);
   if (!userThatPosted) throw 'User not found';
 
+  /* Checking if venue exists */
+
   const venueThatGotPosted = await venue1.getVenueById(venueId);
   if (!venueThatGotPosted) throw 'Venue not found';
+
+  /* Error Handling */
 
   let array = [id, userId, venueId];
   errorHandler.checkIfElementsExists(array);
@@ -163,10 +195,15 @@ async function removeReview(id, userId, venueId) {
     console.log(e);
     return;
   }
+
+  /* Checking if review deletion was successfull ot not */
+
   const deletionInfo = await reviewCollection.deleteOne({ _id: ObjectId(id) });
   if (deletionInfo.deletedCount === 0) {
     throw `Could not delete review with id of ${id}`;
   }
+
+  /* Updating the reviews under venue whenever a review is deleted */
 
   const updateInfo = await venueCollection.updateOne(
     { _id: ObjectId(venueId) },
@@ -181,6 +218,8 @@ async function removeReview(id, userId, venueId) {
   if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
     throw 'deleting review from venue failed';
 
+  /* Updating the reviewId under user whenever a review is deleted */
+
   const updateInfo1 = await userCollection.updateOne(
     { _id: ObjectId(userId) },
     {
@@ -193,6 +232,8 @@ async function removeReview(id, userId, venueId) {
   );
   if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
     throw 'deleting review from user failed';
+
+  /* Updating the overallrating of the venue whenever a review is deleted */
 
   let overallRating1 = 0;
   let reviewCollection1 = await getAllReviews();
@@ -223,25 +264,36 @@ async function removeReview(id, userId, venueId) {
 async function updateReviewText(id, userId, venueId, reviewText) {
   const reviewCollection = await reviews();
 
+  /* Checking if review exists */
+
   const reviewPosted = await getReviewById(id);
   if (!reviewPosted) {
     throw 'review not found';
   }
 
+  /* Checking if review belongs to that particular venue */
+
   if (reviewPosted.venueId != venueId) {
     throw 'review authentication failed for venue';
   }
 
+  /* Checking if review belongs to that particular user */
+
   if (reviewPosted.reviewerId != userId) {
     throw 'review authentication failed for user';
   }
+  /* Checking if user exists*/
+
   const userThatPosted = await user1.getUserById(userId);
   if (!userThatPosted) throw 'User not found';
+
+  /* Checking if venue exists*/
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
   if (!venueThatGotPosted) throw 'Venue not found';
 
-  let array1 = [id, userId, venueId];
+  /* Error Handling */
+
   let array = [id, userId, venueId, reviewText];
   let stringInput = [id, userId, venueId, reviewText]
   errorHandler.checkIfElementsExists(array);
@@ -269,6 +321,8 @@ async function updateReviewText(id, userId, venueId, reviewText) {
     reviewText: reviewText,
   };
 
+  /* Updating the review text */
+
   const updatedInfo = await reviewCollection.updateOne(
     { _id: ObjectId(id) },
     { $set: updatedReview }
@@ -287,26 +341,37 @@ async function updateReviewRating(id, userId, venueId, rating) {
   const venueCollection = await venue();
   const reviewCollection = await reviews();
 
+  /* Checking if review exists */
+
   const reviewPosted = await getReviewById(id);
   if (!reviewPosted) {
     throw 'review not found';
   }
 
+  /* Checking if review belongs to that particular venue */
+
   if (reviewPosted.venueId != venueId) {
     throw 'review authentication failed for venue';
   }
+
+  /* Checking if review belongs to that particular user */
 
   if (reviewPosted.reviewerId != userId) {
     throw 'review authentication failed for user';
   }
 
+  /* Checking if user exists*/
+
   const userThatPosted = await user1.getUserById(userId);
   if (!userThatPosted) throw 'User not found';
+
+  /* Checking if venue exists*/
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
   if (!venueThatGotPosted) throw 'Venue not found';
 
-  let array1 = [id, userId, venueId];
+  /* Error Handling*/
+
   let array = [id, userId, venueId, rating];
   let stringInput = [id, userId, venueId]
   errorHandler.checkIfElementsExists(array);
@@ -331,6 +396,8 @@ async function updateReviewRating(id, userId, venueId, rating) {
     throw 'Review ID Id should be valid ObjectId';
   }
 
+  /* Updating the rating of a venue */
+
   const updatedReview = {
     rating: rating
   };
@@ -342,6 +409,8 @@ async function updateReviewRating(id, userId, venueId, rating) {
   if (updatedInfo.modifiedCount === 0) {
     throw 'could not update review rating successfully';
   }
+
+  /* Updating the overall rating of a venue whenever a individual review rating is updated */
 
   let overallRating1 = 0;
   let reviewCollection1 = await getAllReviews();
@@ -369,6 +438,8 @@ async function updateReviewRating(id, userId, venueId, rating) {
 
 async function getReviewById(id) {
 
+  /* Error Handling */
+
   let array1 = [id];
 
   errorHandler.checkIfElementsExists(array1);
@@ -380,6 +451,8 @@ async function getReviewById(id) {
     throw 'Review id should be valid ObjectId';
   }
 
+  /* Retriving the review by its Id */
+
   const reviewCollection = await reviews();
   const review = await reviewCollection.findOne({ _id: ObjectId(id) });
 
@@ -390,9 +463,13 @@ async function getReviewById(id) {
 
 async function getAllReviews() {
 
+  /* Error Handling */
+
   if (Object.keys(arguments).length !== 0) {
     throw "No arguments allowed";
   }
+
+  /* Getting all reviews from the collection */
 
   const reviewCollection = await reviews();
   return await reviewCollection.find({}).toArray();
@@ -401,6 +478,8 @@ async function getAllReviews() {
 
 async function addCommentToReview(reviewId, commentID) { // function will be called in comments.js
   const reviewCollection = await reviews();
+
+  /* Error Handling */
 
   let array1 = [reviewId, commentID];
 
@@ -418,6 +497,8 @@ async function addCommentToReview(reviewId, commentID) { // function will be cal
   } catch (error) {
     throw 'Comment ID should be valid ObjectId';
   }
+
+  /* Adding comments id to the comments in review */
 
   const updateInfo = await reviewCollection.updateOne(
     { _id: ObjectId(reviewId) },
@@ -432,6 +513,8 @@ async function addCommentToReview(reviewId, commentID) { // function will be cal
 //---------------------------------------------------------------------------------------------------------
 async function removeCommentFromReview(reviewId, commentID) { // function will be called in comments.js
 
+  /* Error Handling */
+
   let array1 = [reviewId, commentID];
 
   errorHandler.checkIfElementsExists(array1);
@@ -448,6 +531,8 @@ async function removeCommentFromReview(reviewId, commentID) { // function will b
   } catch (error) {
     throw 'Comment ID should be valid ObjectId';
   }
+
+  /* Deleting comments id from the comments in review */
 
   const reviewCollection = await reviews();
   const updateInfo = await reviewCollection.updateOne(
@@ -463,6 +548,8 @@ async function removeCommentFromReview(reviewId, commentID) { // function will b
 async function upVote(reviewId, userId) {
   const userCollection = await user();
   const reviewCollection = await reviews();
+
+  /* Error Handling */
 
   let array1 = [reviewId, userId];
 
@@ -481,14 +568,20 @@ async function upVote(reviewId, userId) {
     throw 'Review Id should be valid ObjectId';
   }
 
+  /* Retriving and Checking if review exists */
+
   const retrivedReview = await reviewCollection.findOne({ _id: ObjectId(reviewId) });
   if (!retrivedReview) {
     throw 'Review not found';
   }
 
+  /* Checking if user  exists */
+
   let flag1, flag2, flag3, flag4;
   const retrivedUser1 = await userCollection.findOne({ _id: ObjectId(userId) });
   if (!retrivedUser1) throw 'User not found';
+
+  /* Creating a dummy review in upvotedReviews in user which is not tied upto any user or venue or and its ID set to 0 for initial iteration */
 
   if (retrivedUser1.upvotedReviews.length === 0 && retrivedUser1.downvotedReviews.length === 0) {
     const updateInfo10 = await userCollection.updateOne(
@@ -504,6 +597,8 @@ async function upVote(reviewId, userId) {
     if (!updateInfo10.matchedCount && !updateInfo10.modifiedCount)
       throw 'updating dummy _id value for upvoted Reviews failed';
 
+    /* Creating a dummy review in downvotedReviews in user which is not tied upto any user or venue or and its ID set to 0 for initial iteration */
+
     const updateInfo9 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
@@ -518,33 +613,45 @@ async function upVote(reviewId, userId) {
       throw 'updating dummy _id value for downvoted Reviews failed';
   }
 
+  /* Retriving and checking if the user exists  */
+
   const retrivedUser = await userCollection.findOne({ _id: ObjectId(userId) });
+  if (!retrivedUser) {
+    throw 'User  not found';
+  }
+
+  /* checking if the user already upvoted that particular review  */
+
   for (let i = 0; i < retrivedUser.upvotedReviews.length; i++) {
 
     if (retrivedUser.upvotedReviews[i].id === reviewId) {
-      flag3 = "true";
+      flag3 = true;
       break;
     }
   }
-  if (flag3 != "true") {
-    flag1 = "true";
+  if (flag3 != true) {
+    flag1 = true;
   }
+
+  /* checking if the user already Downvoted that particular review  */
 
   for (let i = 0; i < retrivedUser.downvotedReviews.length; i++) {
     if (retrivedUser.downvotedReviews[i].id === reviewId) {
-      flag2 = "true";
+      flag2 = true;
       break;
     }
   }
-  if (flag2 != "true") {
-    flag4 = "true";
+  if (flag2 != true) {
+    flag4 = true;
   }
 
-  if (flag3 === "true") {
+  if (flag3 === true) {
     throw "already upvoted";
   }
 
-  if (flag1 === "true" && flag2 === "true") {
+  /* If user already downvoted that review and now choose to upvote then downvote is being removed and upvote is being enforced */
+
+  if (flag1 === true && flag2 === true) {
     const updateInfo1 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
@@ -574,6 +681,9 @@ async function upVote(reviewId, userId) {
     if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
       throw 'removing review id from upvotedReviews failed';
 
+
+    /* Updating overall vote count */
+
     let votes3 = retrivedReview.votes;
     const updateInfo3 = await reviewCollection.updateOne(
       { _id: ObjectId(reviewId) },
@@ -587,7 +697,9 @@ async function upVote(reviewId, userId) {
       throw 'Updating vote count failed';
   }
 
-  if (flag1 === "true" && flag4 === "true") {
+  /* If user never downvoted or upvoted that review and now choose to upvote then upvote is being enforced */
+
+  if (flag1 === true && flag4 === true) {
     const updateInfo5 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
@@ -602,6 +714,8 @@ async function upVote(reviewId, userId) {
 
     if (!updateInfo5.matchedCount && !updateInfo5.modifiedCount)
       throw 'Adding review id to upvotedReviews failed';
+
+    /* Updating the overall vote count */
 
     let votes2 = retrivedReview.votes;
     const updateInfo4 = await reviewCollection.updateOne(
@@ -624,7 +738,7 @@ async function downVote(reviewId, userId) {
   const userCollection = await user();
   const reviewCollection = await reviews();
 
-
+  /* Error Handling */
   let array1 = [reviewId, userId];
 
   errorHandler.checkIfElementsExists(array1);
@@ -642,13 +756,21 @@ async function downVote(reviewId, userId) {
     throw 'Review Id should be valid ObjectId';
   }
 
+  /* Checking if review exists */
+
   const retrivedReview = await reviewCollection.findOne({ _id: ObjectId(reviewId) });
   if (!retrivedReview) {
     throw 'Review not found';
   }
   let flag1, flag2, flag3, flag4;
+
+  /*Checking if user exists*/
+
   const retrivedUser1 = await userCollection.findOne({ _id: ObjectId(userId) });
   if (!retrivedUser1) throw 'User not found';
+
+  /* Creating a dummy review in upvotedReviews in user which is not tied upto any user or venue or and its ID set to 0 for initial iteration */
+
   if (retrivedUser1.upvotedReviews.length === 0 && retrivedUser1.downvotedReviews.length === 0) {
     const updateInfo9 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
@@ -660,6 +782,9 @@ async function downVote(reviewId, userId) {
         }
       }
     );
+
+    /* Creating a dummy review in downvotedReviews in user which is not tied upto any user or venue or and its ID set to 0 for initial iteration */
+
     if (!updateInfo9.matchedCount && !updateInfo9.modifiedCount)
       throw 'updating dummy _id value for upvoted Reviews failed';
     const updateInfo10 = await userCollection.updateOne(
@@ -675,34 +800,39 @@ async function downVote(reviewId, userId) {
     if (!updateInfo10.matchedCount && !updateInfo10.modifiedCount)
       throw 'updating dummy _id value for downvoted Reviews failed';
   }
+
+  /* checking if the user already downvoted that particular review  */
+
   const retrivedUser = await userCollection.findOne({ _id: ObjectId(userId) });
   for (let i = 0; i < retrivedUser.downvotedReviews.length; i++) {
     if (retrivedUser.downvotedReviews[i].id === reviewId) {
-      flag3 = "true";
+      flag3 = true;
       break;
     }
   }
-  if (flag3 != "true") {
-    flag1 = "true";
+  if (flag3 != true) {
+    flag1 = true;
   }
+  /* checking if the user already upvoted that particular review  */
 
   for (let i = 0; i < retrivedUser.upvotedReviews.length; i++) {
     if (retrivedUser.upvotedReviews[i].id === reviewId) {
-      flag2 = "true";
+      flag2 = true;
       break;
     }
   }
-  if (flag2 != "true") {
-    flag4 = "true";
+  if (flag2 != true) {
+    flag4 = true;
   }
 
 
-  if (flag3 === "true") {
+  if (flag3 === true) {
     throw "already downvoted";
   }
 
+  /* If user already upvoted that review and now choose to downvote then upvote is being removed and downvote is being enforced */
 
-  if (flag1 === "true" && flag2 === "true") {
+  if (flag1 === true && flag2 === true) {
     const updateInfo1 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
@@ -742,7 +872,9 @@ async function downVote(reviewId, userId) {
       throw 'Updating vote count failed';
   }
 
-  if (flag1 === "true" && flag4 === "true") {
+  /* If user never downvoted or upvoted that review and now choose to downvote then downvote is being enforced */
+
+  if (flag1 === true && flag4 === true) {
     const updateInfo5 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
@@ -755,6 +887,8 @@ async function downVote(reviewId, userId) {
     );
     if (!updateInfo5.matchedCount && !updateInfo5.modifiedCount)
       throw 'Adding review id to downvotedReviews failed';
+
+    /* Updating overall vote count */
 
     let votes1 = retrivedReview.votes;
     const updateInfo4 = await reviewCollection.updateOne(
@@ -776,6 +910,8 @@ async function removeUpvote(reviewId, userId) {
   const userCollection = await user();
   const reviewCollection = await reviews();
 
+  /* Error Handling */
+
   let array1 = [reviewId, userId];
 
   errorHandler.checkIfElementsExists(array1);
@@ -793,16 +929,21 @@ async function removeUpvote(reviewId, userId) {
     throw 'Review Id should be valid ObjectId';
   }
 
+  /* Checking if review exists */
+
   const retrivedReview = await reviewCollection.findOne({ _id: ObjectId(reviewId) });
   if (!retrivedReview) {
     throw 'Review not found';
   }
+
+  /* Checking if user ever upvoted the review in the first place  */
+
   let flag3 = "false";
   const retrivedUser = await userCollection.findOne({ _id: ObjectId(userId) });
   for (let i = 0; i < retrivedUser.upvotedReviews.length; i++) {
 
     if (retrivedUser.upvotedReviews[i].id === reviewId) {
-      flag3 = "true";
+      flag3 = true;
       break;
     }
   }
@@ -810,7 +951,9 @@ async function removeUpvote(reviewId, userId) {
     throw "Upvote authentication failed";
   }
 
-  if (flag3 === "true") {
+  /* If user upvoted in the past and now choose to remove his upvote then upvote is being removed */
+
+  if (flag3 === true) {
     const updateInfo1 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
@@ -823,6 +966,8 @@ async function removeUpvote(reviewId, userId) {
     );
     if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
       throw 'Removing review id from upvotedReviews failed';
+
+    /* Overall vote count is being updated */
 
     let votes2 = retrivedReview.votes;
     const updateInfo4 = await reviewCollection.updateOne(
@@ -843,6 +988,8 @@ async function removeDownvote(reviewId, userId) {
   const userCollection = await user();
   const reviewCollection = await reviews();
 
+  /* Error Handling */
+
   let array1 = [reviewId, userId];
 
   errorHandler.checkIfElementsExists(array1);
@@ -860,24 +1007,31 @@ async function removeDownvote(reviewId, userId) {
     throw 'Review Id should be valid ObjectId';
   }
 
+  /* Checking if review exists */
+
   const retrivedReview = await reviewCollection.findOne({ _id: ObjectId(reviewId) });
   if (!retrivedReview) {
     throw 'Review not found';
   }
-  let flag3 = "false";
+
+  /* Checking if user ever downvoted the review in the first place  */
+
+  let flag3 = false;
   const retrivedUser = await userCollection.findOne({ _id: ObjectId(userId) });
   for (let i = 0; i < retrivedUser.downvotedReviews.length; i++) {
 
     if (retrivedUser.downvotedReviews[i].id === reviewId) {
-      flag3 = "true";
+      flag3 = true;
       break;
     }
   }
-  if (flag3 === "false") {
+  if (flag3 === false) {
     throw "Downvote authentication failed";
   }
 
-  if (flag3 === "true") {
+  /* If user downvoted in the past and now choose to remove his downvote then downvote is being removed */
+
+  if (flag3 === true) {
     const updateInfo1 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
@@ -889,7 +1043,9 @@ async function removeDownvote(reviewId, userId) {
       }
     );
     if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
-      throw 'Removing review id from upvotedReviews failed';
+      throw 'Removing review id from downvotedReviews failed';
+
+    /* Overall vote count is being updated */
 
     let votes2 = retrivedReview.votes;
     const updateInfo4 = await reviewCollection.updateOne(
@@ -920,4 +1076,3 @@ module.exports = {
   removeUpvote,
   removeDownvote
 };
-
