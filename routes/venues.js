@@ -3,18 +3,29 @@ const router = express.Router();
 const data = require("../data");
 const errorHandler = require("../Errors/errorHandler");
 const venue = data.venues;
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/images");
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 router.get("/", async (req, res) => {
   const searchTerm = req.query.searchTerm;
   const min = parseInt(req.query.min) || 0;
   const max = parseInt(req.query.max) || 1000000;
+  const rating = parseInt(req.query.rating) || 0;
   let array = [searchTerm];
-
-  console.log(searchTerm);
 
   if (!searchTerm) {
     try {
-      const getVenues = await venue.getAllVenues();
+      const getVenues = await venue.searchVenue(searchTerm, min, max, rating);
       res.render("venue/searchResult", {
         title: "Search Results",
         venues: getVenues,
@@ -22,12 +33,37 @@ router.get("/", async (req, res) => {
       });
       return;
     } catch (error) {
-      res.status(500).json({ err: error });
+      res.status(404).render("venue/searchResult", {
+        title: "Search Result",
+        err: true,
+        error: error,
+        searchTerm,
+      });
       return;
     }
-  } else if (min && max && searchTerm) {
+  } else if (min && max && rating && searchTerm) {
     try {
-      const fetchVenue = await venue.searchVenue(searchTerm, min, max);
+      errorHandler.checkIfElementsExists(array);
+    } catch (error) {
+      res.status(400).json({ err: error });
+      return;
+    }
+
+    try {
+      errorHandler.checkIfElementsAreStrings(array);
+    } catch (error) {
+      res.status(400).json({ err: error });
+      return;
+    }
+
+    try {
+      errorHandler.checkIfElementNotEmptyString(array);
+    } catch (error) {
+      res.status(400).json({ err: error });
+      return;
+    }
+    try {
+      const fetchVenue = await venue.searchVenue(searchTerm, min, max, rating);
       res.render("venue/searchResult", {
         title: "Search Result",
         venues: fetchVenue,
@@ -47,28 +83,7 @@ router.get("/", async (req, res) => {
   }
 
   try {
-    errorHandler.checkIfElementsExists(array);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-
-  try {
-    errorHandler.checkIfElementsAreStrings(array);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-
-  try {
-    errorHandler.checkIfElementNotEmptyString(array);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-
-  try {
-    const fetchVenue = await venue.searchVenue(searchTerm);
+    const fetchVenue = await venue.searchVenue(searchTerm, min, max, rating);
     res.render("venue/searchResult", {
       title: "Search Result",
       venues: fetchVenue,
@@ -129,18 +144,13 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/create", async (req, res) => {
-  let {
-    venueName,
-    venueAddress,
-    venueTimings,
-    venueImage,
-    venueSlots,
-    sports,
-    price,
-  } = req.body;
-  let venueTimeArrObj = [];
+router.post("/create", upload.single("venueImage"), async (req, res) => {
+  let { venueName, venueAddress, venueTimings, venueSlots, sports, price } =
+    req.body;
 
+  let venueImage = req.file.filename;
+  let venueTimeArrObj = [];
+  let venueApproved = false;
   venueTimings.forEach((time) => {
     let obj = {};
     obj.timeSlot = time;
@@ -195,7 +205,8 @@ router.post("/create", async (req, res) => {
       venueTimeArrObj,
       sports,
       price,
-      venueImage
+      venueImage,
+      venueApproved
     );
 
     // res.status(200).json(createVenue);

@@ -1,3 +1,4 @@
+//! NOT IN USE //
 const form = document.getElementById("cost");
 const minValue = document.getElementById("min");
 const maxValue = document.getElementById("max");
