@@ -1,0 +1,24 @@
+<section id="report">
+  <div class="container">
+    <h1 class="report-header">Reported Details</h1>
+    <p class="title">Reporter Comment: {{report.reportComment}}</p>
+    <p class="ogComment">Original Comment: {{comment.commentText}}</p>
+    <div class="row">
+      <a href="/venues/{{report.reportedId}}" class="og-link">Link to reported
+        content
+        <i
+          class="fas fa-chevron-right"
+          style="text-align: center; margin-left: 10px"
+        ></i></a>
+      <a href="#" class="og-link">Link to reporter profile
+        <i
+          class="fas fa-chevron-right"
+          style="text-align: center; margin-left: 10px"
+        ></i></a>
+    </div>
+    <div class="bottom-fixed options">
+      <a href="/admin/report/{{id}}/approve" class="appr">Approve</a>
+      <a href="/admin/report/{{id}}/decline" class="dcln">Decline</a>
+    </div>
+  </div>
+</section>

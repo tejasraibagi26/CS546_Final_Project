@@ -3,6 +3,8 @@ const user = require("./user");
 const landing = require("./landing");
 const gameReq = require("./request");
 const create = require("./create");
+const admin = require("./admin");
+const notFound = require("./404");
 
 const constructorMethod = (app) => {
   app.use("/", landing);
@@ -10,8 +12,10 @@ const constructorMethod = (app) => {
   app.use("/create", create);
   app.use("/post", gameReq);
   app.use("/user", user);
+  app.use("/admin", admin);
+  app.use("/404", notFound);
   app.use("*", (req, res) => {
-    res.status(404).redirect("/");
+    res.status(404).redirect("/404");
   });
 };
 

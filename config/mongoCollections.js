@@ -22,4 +22,6 @@ module.exports = {
   reviews: getCollectionFn("reviews"),
   comments: getCollectionFn("comments"),
   request: getCollectionFn("requests"),
+  venueRequest: getCollectionFn("venueRequests"),
+  reports: getCollectionFn("reports"),
 };

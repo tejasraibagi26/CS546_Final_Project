@@ -70,6 +70,10 @@ router.post("/create", async (req, res) => {
       inputUser.role
     );
 
+    if (createUser.added) {
+      req.session.user = `${inputUser.firstName} ${inputUser.lastName}`;
+    }
+
     res.status(200).json(createUser);
   } catch (e) {
     res.status(500).json({ err: e });

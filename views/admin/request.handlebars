@@ -1,4 +1,4 @@
-<section id="venue-page">
+<section id="request">
   <div class="container">
     <div class="left"><img
         src="../../public/images/{{venue.venueImage}}"
@@ -18,36 +18,35 @@
           {{venue.venueAddress}}
         </h3>
       </a>
-      <h3 class="venue-rating"><span><i class="fas fa-star size-xl"></i></span>
-        {{venue.venueRating}}
-        ({{reviewCount}}
-        review(s))
-        <a href="#" class="add-rev hint">Add a review.</a>
-      </h3>
       <h3 class="sports">
         <span><i class="fas fa-running"></i></span>
-        Select Sport:
-        <select class="sports-select">
+        Sports Offered:
+        <ul>
           {{#each venue.sports}}
-            <option value="{{this}}">{{this}}</option>
+            <li class="sports-off">{{this}}</li>
           {{/each}}
-        </select>
-        {{! <p class="silent">Note: Each slot is for 1 hour only!</p> }}
+        </ul>
       </h3>
       <h3 class="timings">
         <span><i class="fas fa-clock"></i></span>
-        Timing:
-        <select class="timing-select">
+        Timings Offered:
+        <ul>
           {{#each venue.venueTimings}}
-            <option value="{{timeSlot}}">{{timeSlot}}</option>
+            <li>{{timeSlot}}</li>
           {{/each}}
-        </select>
-        <p class="silent">Note: Each slot is for 1 hour only!</p>
+        </ul>
       </h3>
-      <button class="book-btn" type="submit">Book Now</button>
+      <h3 class="venue-cost"><span><i
+            class="fas fa-dollar-sign size-xl"
+          ></i></span>
+        US$
+        {{venue.price}}
+        / hr
+      </h3>
+      <div class="btn-row">
+        <a href="/admin/request/{{id}}/approve" class="appr-btn">Approve</a>
+        <a href="/admin/request/{{id}}/decline" class="decline-btn">Decline</a>
+      </div>
     </div>
-  </div>
-  <div class="comment">
-    <h1 class="comment-header">Comments</h1>
   </div>
 </section>
