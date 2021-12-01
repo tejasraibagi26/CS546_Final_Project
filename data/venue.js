@@ -5,11 +5,8 @@ const { ObjectId } = require("mongodb");
 
 const getAllVenues = async () => {
   const venue = await venueCollection();
-
   let allVenues = await venue.find({}).toArray();
-
   if (allVenues === null) throw "No venues found.";
-
   return allVenues;
 };
 
@@ -38,7 +35,8 @@ const createNewVenue = async (
   venueTimings,
   sports,
   price,
-  venueImage
+  venueImage,
+  venueApproved
 ) => {
   let array = [
     venueName,
@@ -57,7 +55,7 @@ const createNewVenue = async (
   const create = await venueCollection();
   let reviews = [];
   let venueRating = 0;
-
+  let declineMsg = "";
   venueName = venueName.trim();
   venueAddress = venueAddress.trim();
   venueImage = venueImage.trim();
@@ -71,6 +69,8 @@ const createNewVenue = async (
     venueImage,
     venueRating,
     reviews,
+    venueApproved,
+    declineMsg,
   };
 
   let createVenue = await create.insertOne(createVenueObject);
@@ -81,25 +81,29 @@ const createNewVenue = async (
 };
 
 const searchVenue = async (sportToFind, min, max, rating) => {
-  console.log(sportToFind);
   let array = [sportToFind];
-  min = min || 0;
-  max = max || 1000000;
-  rating = rating || 0;
-  errorHandler.checkIfElementsExists(array);
-  errorHandler.checkIfElementsAreStrings(array);
-  errorHandler.checkIfElementNotEmptyString(array);
-  sportToFind = sportToFind.trim();
+
+  if (sportToFind) {
+    errorHandler.checkIfElementsExists(array);
+    errorHandler.checkIfElementsAreStrings(array);
+    errorHandler.checkIfElementNotEmptyString(array);
+    sportToFind = sportToFind.trim();
+  }
+
   const searchVenueFromDB = await getAllVenues();
   let venueArr = [];
 
-  searchVenueFromDB.forEach((venue) => {
-    venue.sports.forEach((sport) => {
-      if (sport.toLowerCase() === sportToFind.toLowerCase()) {
-        venueArr.push(venue);
-      }
+  if (sportToFind) {
+    searchVenueFromDB.forEach((venue) => {
+      venue.sports.forEach((sport) => {
+        if (sport.toLowerCase() === sportToFind.toLowerCase()) {
+          venueArr.push(venue);
+        }
+      });
     });
-  });
+  } else {
+    venueArr = searchVenueFromDB;
+  }
 
   if (min != null || min != undefined) {
     venueArr = venueArr.filter((venue) => venue.price >= min);
@@ -111,6 +115,8 @@ const searchVenue = async (sportToFind, min, max, rating) => {
   if (rating != null || rating != undefined) {
     venueArr = venueArr.filter((venue) => venue.venueRating >= rating);
   }
+
+  venueArr = venueArr.filter((venue) => venue.venueApproved === true);
 
   if (venueArr.length === 0) throw "No venues found";
   return venueArr;
