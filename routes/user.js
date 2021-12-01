@@ -5,14 +5,60 @@ const errorHandler = require("../Errors/errorHandler");
 const user = data.user;
 const bcrypt = require("bcrypt");
 const saltRounds = 16;
+const xss = require("xss");
 
-router.get("/", async (req, res) => {
-  try {
-    const users = await user.getAllUsers();
-    res.status(200).json(users);
-  } catch (e) {
-    res.status(500).json({ err: e });
+// router.get("/", async (req, res) => {
+//   try {
+//     const users = await user.getAllUsers();
+//     res.status(200).json(users);
+//   } catch (e) {
+//     res.status(500).json({ err: e });
+//   }
+// });
+
+router.get("/login", async (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/user/profile");
   }
+  res.render("user/login", {
+    title: "Login",
+  });
+});
+
+router.get("/register", async (req, res) => {
+  res.render("user/register", {
+    title: "Register",
+  });
+});
+
+router.get("/profile", async (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/user/login");
+  }
+  let currentUser = null;
+  try {
+    currentUser = await user.getUserById(req.session.user.id);
+  } catch (e) {
+    res.json({ err: e });
+    return;
+  }
+  let friends = [];
+  try {
+    friends = await user.getFriends(req.session.user.id);
+  } catch (e) {
+    res.json({ err: e });
+    return;
+  }
+  res.render("user/profile", {
+    title: "Profile",
+    currentUser: currentUser,
+    friends: friends,
+  });
+});
+
+router.get("/logout", async (req, res) => {
+  req.session.destroy();
+  res.redirect("/user/login");
 });
 
 router.get("/:id", async (req, res) => {
@@ -38,12 +84,12 @@ router.get("/:id", async (req, res) => {
 router.post("/create", async (req, res) => {
   let inputUser = req.body;
   let userArray = [
-    inputUser.firstName,
-    inputUser.lastName,
-    inputUser.email,
-    inputUser.password,
-    inputUser.gender,
-    inputUser.role,
+    xss(inputUser.firstName),
+    xss(inputUser.lastName),
+    xss(inputUser.email),
+    xss(inputUser.password),
+    xss(inputUser.gender),
+    xss(inputUser.role),
   ];
   try {
     errorHandler.checkIfElementsExists(userArray);
@@ -51,9 +97,12 @@ router.post("/create", async (req, res) => {
     errorHandler.checkIfElementNotEmptyString(userArray);
     errorHandler.checkIfValidEmail(inputUser.email);
     errorHandler.checkIfValidRole(inputUser.role);
-    errorHandler.checkIfValidAge(inputUser.age);
+    errorHandler.checkIfValidAge(Number(inputUser.age));
   } catch (e) {
-    res.status(400).json({ err: e });
+    res.render("user/register", {
+      title: "Register",
+      error: e,
+    });
     return;
   }
 
@@ -65,20 +114,27 @@ router.post("/create", async (req, res) => {
       inputUser.lastName,
       inputUser.email,
       password,
-      inputUser.age,
+      Number(inputUser.age),
       inputUser.gender,
       inputUser.role
     );
 
-    res.status(200).json(createUser);
+    let currentUser = await user.getUserByEmail(inputUser.email);
+    req.session.user = { id: currentUser._id };
+    res.redirect("/user/profile");
+    return;
   } catch (e) {
-    res.status(500).json({ err: e });
+    res.render("user/register", {
+      title: "Register",
+      error: e,
+    });
+    return;
   }
 });
 
 router.post("/search", async (req, res) => {
   let inputName = req.body;
-  let fullName = [inputName.firstName, inputName.lastName];
+  let fullName = [xss(inputName.firstName), xss(inputName.lastName)];
 
   try {
     errorHandler.checkIfElementsExists(fullName);
@@ -100,8 +156,8 @@ router.post("/search", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  let username = req.body.email;
-  let inputPassword = req.body.password;
+  let username = xss(req.body.email);
+  let inputPassword = xss(req.body.password);
   let array = [username, inputPassword];
   try {
     errorHandler.checkIfElementsExists(array);
@@ -109,23 +165,35 @@ router.post("/login", async (req, res) => {
     errorHandler.checkIfElementNotEmptyString(array);
     errorHandler.checkIfValidEmail(username);
   } catch (e) {
-    res.status(400).json({ err: e });
+    res.render("user/login", {
+      title: "Login",
+      error: e,
+    });
     return;
   }
 
+  let match = false;
+  let foundUser = null;
   try {
-    const foundUser = await user.getUserByEmail(username);
+    foundUser = await user.getUserByEmail(username);
     match = await bcrypt.compare(inputPassword, foundUser.password);
   } catch (e) {
-    res.status(500).json({ err: e });
+    res.render("user/login", {
+      title: "Login",
+      error: e,
+    });
     return;
   }
 
   if (match) {
-    res.status(200).json({ login: "Success" });
+    req.session.user = { id: foundUser._id };
+    res.redirect("/user/profile");
     return;
   } else {
-    res.status(401).json({ login: "Failure" });
+    res.render("user/login", {
+      title: "Login",
+      error: "Incorrect email or password",
+    });
     return;
   }
 });

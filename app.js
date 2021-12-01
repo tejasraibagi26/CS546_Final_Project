@@ -4,11 +4,22 @@ const public = express.static(__dirname + "/public");
 const app = express();
 const configRouter = require("./routes");
 const exphbs = require("express-handlebars");
+const session = require("express-session");
 
 //Set up express app
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", public);
+
+//Set up express session
+app.use(
+  session({
+    name: "LoginCookie",
+    secret: "Cookie used for login",
+    saveUninitialized: true,
+    cookie: { maxAge: 6000000 },
+  })
+);
 
 //Set up handlebars
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
