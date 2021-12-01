@@ -59,6 +59,19 @@ const checkIfValidRole = (role) => {
   if (!roles.includes(role)) throw "Invalid role";
 };
 
+const checkIfItemInRange = (item) => {
+  if (item <= 0) throw "Cannot be 0";
+};
+
+const checkIfCurrentDate = (date) => {
+  let currentDate = new Date().toLocaleDateString();
+  if (date != currentDate) throw "Date must be today";
+};
+
+const checkIfTimePeriodValid = (startTime, endTime) => {
+  if (startTime > endTime) throw "Start time cannot be greater than end time";
+};
+
 module.exports = {
   checkIfElementsExists,
   checkIfElementsAreStrings,
@@ -68,4 +81,7 @@ module.exports = {
   checkIfValidEmail,
   checkIfValidAge,
   checkIfValidRole,
+  checkIfItemInRange,
+  checkIfCurrentDate,
+  checkIfTimePeriodValid,
 };

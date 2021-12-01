@@ -19,7 +19,6 @@
   margin: 0;
   margin-bottom: 20px;
   letter-spacing: -2;
-  text-transform: lowercase;
 }
 
 #create-venue .container form {
@@ -83,3 +82,23 @@
   height: 50px !important;
   margin-bottom: 20px;
 }
+
+/* .modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  width: 75%;
+  border-radius: 5px;
+}
+
+.modal .container {
+  width: 100%;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  padding: 20px 0;
+} */

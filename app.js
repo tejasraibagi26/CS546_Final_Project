@@ -33,6 +33,11 @@ app.use(
 //   }
 // });
 
+app.use("/venues/create", (req, res, next) => {
+  console.log(req.method);
+  req.method = "POST";
+  next();
+});
 //Configure app to the routes
 configRouter(app);
 

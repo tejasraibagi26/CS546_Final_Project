@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const xss = require("xss");
 const data = require("../data");
 const adminReq = data.admin;
 const errorHandler = require("../Errors/errorHandler");

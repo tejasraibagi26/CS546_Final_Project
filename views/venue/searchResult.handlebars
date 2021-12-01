@@ -21,6 +21,7 @@
           action="/venues?searchTerm={{searchTerm}}"
           method="GET"
           class="form"
+          id="filter-form"
         >
           <input
             type="text"
@@ -86,7 +87,9 @@
                 value="1"
               /></p>
           </div>
-
+          <div id="error" hidden>
+            <ul id="err-list"></ul>
+          </div>
           <button class="filter-button">Filter</button>
         </form>
       </div>
@@ -152,4 +155,5 @@
       {{/if}}
     </div>
   </div>
+  <script src="/public/js/searchFilter.js"></script>
 </section>

@@ -4,6 +4,7 @@ const data = require("../data");
 const errorHandler = require("../Errors/errorHandler");
 const venue = data.venues;
 const multer = require("multer");
+const xss = require("xss");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -145,12 +146,18 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/create", upload.single("venueImage"), async (req, res) => {
-  let { venueName, venueAddress, venueTimings, venueSlots, sports, price } =
-    req.body;
-
-  let venueImage = req.file.filename;
+  let venueName = xss(req.body.venueName);
+  let venueAddress = xss(req.body.venueAddress);
+  let venueTimings = xss(req.body.venueTimings);
+  let venueSlots = xss(req.body.venueSlots);
+  let sports = xss(req.body.sports);
+  let price = xss(req.body.price);
+  let venueImage = xss(req.file.filename);
   let venueTimeArrObj = [];
   let venueApproved = false;
+
+  venueTimings = venueTimings.split(",");
+  sports = sports.split(",");
   venueTimings.forEach((time) => {
     let obj = {};
     obj.timeSlot = time;
@@ -209,7 +216,6 @@ router.post("/create", upload.single("venueImage"), async (req, res) => {
       venueApproved
     );
 
-    // res.status(200).json(createVenue);
     res.render("venue/createSucc", {
       title: "Venue Created",
       id: createVenue,
@@ -220,7 +226,7 @@ router.post("/create", upload.single("venueImage"), async (req, res) => {
 });
 
 router.post("/search", async (req, res) => {
-  const { venueName } = req.body;
+  let venueName = xss(req.body.venueName);
   let array = [venueName];
 
   try {
@@ -250,6 +256,63 @@ router.post("/search", async (req, res) => {
   } catch (error) {
     res.status(404).json({ err: error });
     return;
+  }
+});
+
+router.post("/:id/book", async (req, res) => {
+  const bookingUserId = xss(req.body.bookingUserId);
+  const bookedVenueId = req.params.id;
+  const startTime = xss(req.body.startTime);
+  const endTime = xss(req.body.endTime);
+  const date = xss(req.body.date);
+
+  let array = [bookingUserId, bookedVenueId, timing, date];
+  try {
+    errorHandler.checkIfElementsExists(array);
+  } catch (error) {
+    return res.status(400).json({ error: error });
+  }
+  try {
+    errorHandler.checkIfElementsAreStrings(array);
+  } catch (error) {
+    return res.status(400).json({ error: error });
+  }
+  try {
+    errorHandler.checkIfElementNotEmptyString(array);
+  } catch (error) {
+    return res.status(400).json({ error: error });
+  }
+  try {
+    errorHandler.checkIfValidObjectId(bookingUserId);
+  } catch (error) {
+    return res.status(400).json({ error: error });
+  }
+  try {
+    errorHandler.checkIfValidObjectId(bookedVenueId);
+  } catch (error) {
+    return res.status(400).json({ error: error });
+  }
+  try {
+    errorHandler.checkIfCurrentDate(date);
+  } catch (error) {
+    return res.status(400).json({ error: error });
+  }
+  try {
+    errorHandler.checkIfTimePeriodValid(startTime, endTime);
+  } catch (error) {
+    return res.status(400).json({ error: error });
+  }
+
+  try {
+    const booking = await booking.create(
+      bookingUserId,
+      bookedVenueId,
+      startTime,
+      endTime,
+      date
+    );
+  } catch (error) {
+    return res.status(500).json({ error: error });
   }
 });
 
