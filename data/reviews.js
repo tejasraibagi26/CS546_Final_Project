@@ -11,20 +11,11 @@ const errorHandler = require("../Errors/errorHandler");
 
 //---------------------------------------------------------------------------------------------------------
 
-async function addReview(userId, venueId, reviewText, rating) {
+async function addReview(userId, venueId, reviewText, rating, reviewPicture) {
   const reviewCollection = await reviews();
   const userCollection = await user();
   const venueCollection = await venue();
 
-  /* Checking if user exists */
-
-  const userThatPosted = await user1.getUserById(userId);
-  if (!userThatPosted) throw 'User not found';
-
-  /* Checking if venue exists */
-
-  const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
 
   /* Error Handling */
 
@@ -34,6 +25,9 @@ async function addReview(userId, venueId, reviewText, rating) {
   errorHandler.checkIfElementsAreStrings(stringInput);
   errorHandler.checkIfElementNotEmptyString(stringInput);
   errorHandler.checkIfValidRating(rating);
+  if (!reviewPicture || reviewPicture == "") {
+    reviewPicture = "";
+  }
   try {
     ObjectId(userId);
   } catch (error) {
@@ -46,6 +40,22 @@ async function addReview(userId, venueId, reviewText, rating) {
     throw 'Venue Id should be valid ObjectId';
   }
 
+  /* Checking if user exists */
+
+  const userThatPosted = await user1.getUserById(userId);
+  if (!userThatPosted) throw 'User not found';
+
+  /* Checking if venue exists */
+
+  const venueThatGotPosted = await venue1.getVenueById(venueId);
+  if (!venueThatGotPosted) throw 'Venue not found';
+
+  /* Checking if user already reviewd to this particular venue */
+  const retrivedReview = await reviewCollection.findOne({ reviewerId: userId, venueId: venueId });
+  if (retrivedReview) {
+    throw "Already reviewed";
+  }
+
   /* Defining a new Review */
 
   let newReview = {
@@ -53,10 +63,13 @@ async function addReview(userId, venueId, reviewText, rating) {
     venueId: venueId,
     reviewText: reviewText,
     rating: rating,
+    createdAt: new Date(),
     commentId: [],
     votes: 0,
+    reviewPicture: reviewPicture
 
   };
+
 
   /* Checking if review added successfully */
 
@@ -107,10 +120,12 @@ async function addReview(userId, venueId, reviewText, rating) {
   /* Updating the overall rating of the venue whenever a new review with a rating is added */
 
   let overallRating1 = 0;
-  let reviewCollection1 = await getAllReviews();
-  let length = reviewCollection1.length;
+  let venueReviewCollection = await venue1.getVenueById(venueId);
+  let length = venueReviewCollection.reviews.length;
   for (let i = 0; i < length; i++) {
-    overallRating1 = overallRating1 + reviewCollection1[i].rating;
+    let reviewFinal = venueReviewCollection.reviews[i]._id;
+    let reviewCollection1 = await getReviewById(reviewFinal);
+    overallRating1 = overallRating1 + reviewCollection1.rating;
   }
   let overallRating2 = overallRating1 / length;
 
@@ -134,6 +149,30 @@ async function removeReview(id, userId, venueId) {
   const reviewCollection = await reviews();
   const userCollection = await user();
   const venueCollection = await venue();
+
+  /* Error Handling */
+
+  let array = [id, userId, venueId];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
+  try {
+    ObjectId(userId);
+  } catch (error) {
+    throw 'User Id should be valid ObjectId';
+  }
+
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw 'Venue Id should be valid ObjectId';
+  }
+
+  try {
+    ObjectId(id);
+  } catch (error) {
+    throw 'Review ID Id should be valid ObjectId';
+  }
 
   /* Checking if review exists */
 
@@ -163,30 +202,6 @@ async function removeReview(id, userId, venueId) {
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
   if (!venueThatGotPosted) throw 'Venue not found';
-
-  /* Error Handling */
-
-  let array = [id, userId, venueId];
-  errorHandler.checkIfElementsExists(array);
-  errorHandler.checkIfElementsAreStrings(array);
-  errorHandler.checkIfElementNotEmptyString(array);
-  try {
-    ObjectId(userId);
-  } catch (error) {
-    throw 'User Id should be valid ObjectId';
-  }
-
-  try {
-    ObjectId(venueId);
-  } catch (error) {
-    throw 'Venue Id should be valid ObjectId';
-  }
-
-  try {
-    ObjectId(id);
-  } catch (error) {
-    throw 'Review ID Id should be valid ObjectId';
-  }
 
   let review = null;
   try {
@@ -236,14 +251,14 @@ async function removeReview(id, userId, venueId) {
   /* Updating the overallrating of the venue whenever a review is deleted */
 
   let overallRating1 = 0;
-  let reviewCollection1 = await getAllReviews();
-  let length = reviewCollection1.length;
-  let overallRating2;
-
+  let venueReviewCollection = await venue1.getVenueById(venueId);
+  let length = venueReviewCollection.reviews.length;
   for (let i = 0; i < length; i++) {
-    overallRating1 = overallRating1 + reviewCollection1[i].rating;
+    let reviewFinal = venueReviewCollection.reviews[i]._id;
+    let reviewCollection1 = await getReviewById(reviewFinal);
+    overallRating1 = overallRating1 + reviewCollection1.rating;
   }
-  overallRating2 = overallRating1 / length;
+  let overallRating2 = overallRating1 / length;
   if (length < 1) {
     overallRating2 = 0;
   }
@@ -254,6 +269,14 @@ async function removeReview(id, userId, venueId) {
         venueRating: overallRating2
       }
     });
+
+  if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
+    throw 'updating venue rating failed';
+
+
+
+
+
   if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
     throw 'deleting review from user failed';
 
@@ -264,41 +287,12 @@ async function removeReview(id, userId, venueId) {
 async function updateReviewText(id, userId, venueId, reviewText) {
   const reviewCollection = await reviews();
 
-  /* Checking if review exists */
-
-  const reviewPosted = await getReviewById(id);
-  if (!reviewPosted) {
-    throw 'review not found';
-  }
-
-  /* Checking if review belongs to that particular venue */
-
-  if (reviewPosted.venueId != venueId) {
-    throw 'review authentication failed for venue';
-  }
-
-  /* Checking if review belongs to that particular user */
-
-  if (reviewPosted.reviewerId != userId) {
-    throw 'review authentication failed for user';
-  }
-  /* Checking if user exists*/
-
-  const userThatPosted = await user1.getUserById(userId);
-  if (!userThatPosted) throw 'User not found';
-
-  /* Checking if venue exists*/
-
-  const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
-
   /* Error Handling */
 
   let array = [id, userId, venueId, reviewText];
-  let stringInput = [id, userId, venueId, reviewText]
   errorHandler.checkIfElementsExists(array);
-  errorHandler.checkIfElementsAreStrings(stringInput);
-  errorHandler.checkIfElementNotEmptyString(stringInput);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
   try {
     ObjectId(userId);
   } catch (error) {
@@ -317,30 +311,6 @@ async function updateReviewText(id, userId, venueId, reviewText) {
     throw 'Review ID Id should be valid ObjectId';
   }
 
-  const updatedReview = {
-    reviewText: reviewText,
-  };
-
-  /* Updating the review text */
-
-  const updatedInfo = await reviewCollection.updateOne(
-    { _id: ObjectId(id) },
-    { $set: updatedReview }
-  );
-  if (updatedInfo.modifiedCount === 0) {
-    throw 'could not update review text successfully';
-  }
-  const review = await this.getReviewById(id);
-  return { msg: "Updated Review text successfully" };
-}
-
-//---------------------------------------------------------------------------------------------------------
-
-async function updateReviewRating(id, userId, venueId, rating) {
-  const userCollection = await user();
-  const venueCollection = await venue();
-  const reviewCollection = await reviews();
-
   /* Checking if review exists */
 
   const reviewPosted = await getReviewById(id);
@@ -359,7 +329,6 @@ async function updateReviewRating(id, userId, venueId, rating) {
   if (reviewPosted.reviewerId != userId) {
     throw 'review authentication failed for user';
   }
-
   /* Checking if user exists*/
 
   const userThatPosted = await user1.getUserById(userId);
@@ -369,6 +338,30 @@ async function updateReviewRating(id, userId, venueId, rating) {
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
   if (!venueThatGotPosted) throw 'Venue not found';
+
+  const updatedReview = {
+    reviewText: reviewText,
+  };
+
+  /* Updating the review text */
+
+  const updatedInfo = await reviewCollection.updateOne(
+    { _id: ObjectId(id) },
+    { $set: updatedReview }
+  );
+  if (updatedInfo.modifiedCount === 0) {
+    throw 'could not update review text successfully';
+  }
+  //const review = await this.getReviewById(id);
+  return { msg: "Updated Review text successfully" };
+}
+
+//---------------------------------------------------------------------------------------------------------
+
+async function updateReviewRating(id, userId, venueId, rating) {
+  const userCollection = await user();
+  const venueCollection = await venue();
+  const reviewCollection = await reviews();
 
   /* Error Handling*/
 
@@ -396,6 +389,35 @@ async function updateReviewRating(id, userId, venueId, rating) {
     throw 'Review ID Id should be valid ObjectId';
   }
 
+  /* Checking if review exists */
+
+  const reviewPosted = await getReviewById(id);
+  if (!reviewPosted) {
+    throw 'review not found';
+  }
+
+  /* Checking if review belongs to that particular venue */
+
+  if (reviewPosted.venueId != venueId) {
+    throw 'review authentication failed for venue';
+  }
+
+  /* Checking if review belongs to that particular user */
+
+  if (reviewPosted.reviewerId != userId) {
+    throw 'review authentication failed for user';
+  }
+
+  /* Checking if user exists*/
+
+  const userThatPosted = await user1.getUserById(userId);
+  if (!userThatPosted) throw 'User not found';
+
+  /* Checking if venue exists*/
+
+  const venueThatGotPosted = await venue1.getVenueById(venueId);
+  if (!venueThatGotPosted) throw 'Venue not found';
+
   /* Updating the rating of a venue */
 
   const updatedReview = {
@@ -413,10 +435,12 @@ async function updateReviewRating(id, userId, venueId, rating) {
   /* Updating the overall rating of a venue whenever a individual review rating is updated */
 
   let overallRating1 = 0;
-  let reviewCollection1 = await getAllReviews();
-  let length = reviewCollection1.length;
+  let venueReviewCollection = await venue1.getVenueById(venueId);
+  let length = venueReviewCollection.reviews.length;
   for (let i = 0; i < length; i++) {
-    overallRating1 = overallRating1 + reviewCollection1[i].rating;
+    let reviewFinal = venueReviewCollection.reviews[i]._id;
+    let reviewCollection1 = await getReviewById(reviewFinal);
+    overallRating1 = overallRating1 + reviewCollection1.rating;
   }
   let overallRating2 = overallRating1 / length;
 
@@ -431,7 +455,7 @@ async function updateReviewRating(id, userId, venueId, rating) {
   if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
     throw 'updating venue rating failed';
 
-  const review = await this.getReviewById(id);
+  //const review = await this.getReviewById(id);
   return { msg: "Updated review rating successfully" };
 }
 //---------------------------------------------------------------------------------------------------------
@@ -502,7 +526,7 @@ async function addCommentToReview(reviewId, commentID) { // function will be cal
 
   const updateInfo = await reviewCollection.updateOne(
     { _id: ObjectId(reviewId) },
-    { $addToSet: { commentsId: { _id: ObjectId(commentID) } } }
+    { $addToSet: { commentId: { _id: ObjectId(commentID) } } }
   );
   if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
     throw 'Comment Addition failed';
@@ -537,7 +561,7 @@ async function removeCommentFromReview(reviewId, commentID) { // function will b
   const reviewCollection = await reviews();
   const updateInfo = await reviewCollection.updateOne(
     { _id: ObjectId(reviewId) },
-    { $pull: { commentsId: { _id: ObjectId(commentID) } } }
+    { $pull: { commentId: { _id: ObjectId(commentID) } } }
   );
   if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
     throw 'Comment deletion failed';
@@ -905,6 +929,7 @@ async function downVote(reviewId, userId) {
   return { msg: "Downvote Successful!" }
 
 }
+//---------------------------------------------------------------------------------------------------------
 
 async function removeUpvote(reviewId, userId) {
   const userCollection = await user();
@@ -983,6 +1008,7 @@ async function removeUpvote(reviewId, userId) {
   }
   return { msg: "Remove Upvote Successful!" }
 }
+//---------------------------------------------------------------------------------------------------------
 
 async function removeDownvote(reviewId, userId) {
   const userCollection = await user();
@@ -1062,6 +1088,474 @@ async function removeDownvote(reviewId, userId) {
   return { msg: "Remove Downvote Successful!" }
 }
 //---------------------------------------------------------------------------------------------------------
+
+async function sortNewest(venueId) {
+
+  /* Error Handling */
+  let array1 = [venueId];
+
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw 'venue ID should be valid ObjectId';
+  }
+
+  const venueThatGotPosted = await venue1.getVenueById(venueId);
+  if (!venueThatGotPosted) throw 'Venue not found';
+
+  const reviewCollection = await reviews();
+  const content = await venue1.getVenueById(venueId)
+  if (content.reviews.length === 0) {
+    throw "No reviews to filter out";
+  }
+  let venueReviews = [];
+  const sort = { createdAt: -1 }
+  let newArray = await reviewCollection.find().sort(sort).toArray();
+  for (let key of newArray) {
+    if (key.venueId === venueId) {
+      venueReviews.push(key);
+    }
+  }
+  return venueReviews;
+}
+//---------------------------------------------------------------------------------------------------------
+
+async function sortOldest(venueId) {
+  /* Error Handling */
+  let array1 = [venueId];
+
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw 'venue ID should be valid ObjectId';
+  }
+
+  const venueThatGotPosted = await venue1.getVenueById(venueId);
+  if (!venueThatGotPosted) throw 'Venue not found';
+
+  const reviewCollection = await reviews();
+  const content = await venue1.getVenueById(venueId)
+  if (content.reviews.length === 0) {
+    throw "No reviews to filter out";
+  }
+  let venueReviews = [];
+  const sort = { createdAt: 1 }
+  let newArray = await reviewCollection.find().sort(sort).toArray();
+  for (let key of newArray) {
+    if (key.venueId === venueId) {
+      venueReviews.push(key);
+    }
+  }
+  return venueReviews;
+}
+//---------------------------------------------------------------------------------------------------------
+
+async function sortHighestRating(venueId) {
+  /* Error Handling */
+  let array1 = [venueId];
+
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw 'venue ID should be valid ObjectId';
+  }
+
+  const venueThatGotPosted = await venue1.getVenueById(venueId);
+  if (!venueThatGotPosted) throw 'Venue not found';
+
+  const reviewCollection = await reviews();
+  const content = await venue1.getVenueById(venueId)
+  if (content.reviews.length === 0) {
+    throw "No reviews to filter out";
+  }
+  let venueReviews = [];
+  const sort = { rating: -1 }
+  let newArray = await reviewCollection.find().sort(sort).toArray();
+  for (let key of newArray) {
+    if (key.venueId === venueId) {
+      venueReviews.push(key);
+    }
+  }
+  return venueReviews;
+}
+
+//---------------------------------------------------------------------------------------------------------
+
+async function sortLowestRating(venueId) {
+  /* Error Handling */
+  let array1 = [venueId];
+
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw 'venue ID should be valid ObjectId';
+  }
+
+  const venueThatGotPosted = await venue1.getVenueById(venueId);
+  if (!venueThatGotPosted) throw 'Venue not found';
+
+  const reviewCollection = await reviews();
+  const content = await venue1.getVenueById(venueId)
+  if (content.reviews.length === 0) {
+    throw "No reviews to filter out";
+  }
+  let venueReviews = [];
+  const sort = { rating: 1 }
+  let newArray = await reviewCollection.find().sort(sort).toArray();
+  for (let key of newArray) {
+    if (key.venueId === venueId) {
+      venueReviews.push(key);
+    }
+  }
+  return venueReviews;
+}
+
+//---------------------------------------------------------------------------------------------------------
+
+async function filterReviewsByRatings(venueId, rating) {
+  const reviewCollection = await reviews();
+  /* Error Handling */
+  let array2 = [venueId];
+  let array = [venueId, rating];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array2);
+  errorHandler.checkIfElementNotEmptyString(array2);
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw 'venue ID should be valid ObjectId';
+  }
+
+  const venueThatGotPosted = await venue1.getVenueById(venueId);
+  if (!venueThatGotPosted) throw 'Venue not found';
+
+  errorHandler.checkIfValidRating(rating);
+  const content = await venue1.getVenueById(venueId)
+  if (content.reviews.length === 0) {
+    throw "No reviews to filter out";
+  }
+  const sort = { rating: 1 }
+  const filter = await reviewCollection.find({ rating: { $gte: rating } }).sort(sort).toArray();
+
+
+  let venueReviews = [];
+  for (let key of filter) {
+    if (key.venueId === venueId) {
+      venueReviews.push(key);
+    }
+  }
+
+  if (venueReviews.length === 0) {
+    throw "No reviews to filter out with the preferred rating";
+
+  }
+  let percentage = ((venueReviews.length / content.reviews.length) * 100);
+  let array1 = [];
+  array1.push(percentage);
+  array1.push(venueReviews);
+  return array1;
+
+}
+
+//---------------------------------------------------------------------------------------------------------
+
+async function mostUpvoted(venueId) {
+  /* Error Handling */
+  let array1 = [venueId];
+
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw 'venue ID should be valid ObjectId';
+  }
+
+  const venueThatGotPosted = await venue1.getVenueById(venueId);
+  if (!venueThatGotPosted) throw 'Venue not found';
+
+  const reviewCollection = await reviews();
+  const content = await venue1.getVenueById(venueId)
+  if (content.reviews.length === 0) {
+    throw "No reviews to filter out";
+  }
+  let venueReviews = [];
+  const sort = { votes: -1 }
+  let newArray = await reviewCollection.find().sort(sort).toArray();
+  for (let key of newArray) {
+    if (key.venueId === venueId) {
+      venueReviews.push(key);
+    }
+  }
+  return venueReviews;
+}
+//---------------------------------------------------------------------------------------------------------
+
+async function mostDownvoted(venueId) {
+  /* Error Handling */
+  let array1 = [venueId];
+
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw 'venue ID should be valid ObjectId';
+  }
+
+  const venueThatGotPosted = await venue1.getVenueById(venueId);
+  if (!venueThatGotPosted) throw 'Venue not found';
+
+  const reviewCollection = await reviews();
+  const content = await venue1.getVenueById(venueId)
+  if (content.reviews.length === 0) {
+    throw "No reviews to filter out";
+  }
+  let venueReviews = [];
+  const sort = { votes: 1 }
+  let newArray = await reviewCollection.find().sort(sort).toArray();
+  for (let key of newArray) {
+    if (key.venueId === venueId) {
+      venueReviews.push(key);
+    }
+  }
+  return venueReviews;
+}
+//---------------------------------------------------------------------------------------------------------
+async function updateReviewPicture(id, userId, venueId, reviewPicture) {
+
+  const userCollection = await user();
+  const venueCollection = await venue();
+  const reviewCollection = await reviews();
+  /* Error Handling */
+
+  let array = [id, userId, venueId, reviewPicture];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
+  try {
+    ObjectId(userId);
+  } catch (error) {
+    throw 'User Id should be valid ObjectId';
+  }
+
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw 'Venue Id should be valid ObjectId';
+  }
+
+  try {
+    ObjectId(id);
+  } catch (error) {
+    throw 'Review ID Id should be valid ObjectId';
+  }
+
+  /* Checking if user exists */
+  const userThatPosted = await user1.getUserById(userId);
+  if (!userThatPosted) throw 'User not found';
+
+  /* Checking if venue exists*/
+
+  const venueThatGotPosted = await venue1.getVenueById(venueId);
+  if (!venueThatGotPosted) throw 'Venue not found';
+
+  /* Checking if review exists*/
+  const reviewPosted = await getReviewById(id);
+  if (!reviewPosted) {
+    throw 'review not found';
+  }
+
+  /* Checking if review belongs to that particular venue */
+
+  if (reviewPosted.venueId != venueId) {
+    throw 'review authentication failed for venue';
+  }
+
+  /* Checking if review belongs to that particular user */
+
+  if (reviewPosted.reviewerId != userId) {
+    throw 'review authentication failed for user';
+  }
+
+
+
+
+  const updatedReview = {
+    reviewPicture: reviewPicture,
+  };
+
+  /* Updating the review text */
+
+  const updatedInfo = await reviewCollection.updateOne(
+    { _id: ObjectId(id) },
+    { $set: updatedReview }
+  );
+  if (updatedInfo.modifiedCount === 0) {
+    throw 'could not update review picture successfully';
+  }
+  //const review = await this.getReviewById(id);
+  return { msg: "Updated Review picture successfully" };
+}
+
+//---------------------------------------------------------------------------------------------------------
+
+async function deleteReviewPicture(id, userId, venueId) {
+  const userCollection = await user();
+  const venueCollection = await venue();
+  const reviewCollection = await reviews();
+  /* Error Handling */
+
+  let array = [id, userId, venueId];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
+  try {
+    ObjectId(userId);
+  } catch (error) {
+    throw 'User Id should be valid ObjectId';
+  }
+
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw 'Venue Id should be valid ObjectId';
+  }
+
+  try {
+    ObjectId(id);
+  } catch (error) {
+    throw 'Review ID Id should be valid ObjectId';
+  }
+  /* Checking if user exists*/
+
+  const userThatPosted = await user1.getUserById(userId);
+  if (!userThatPosted) throw 'User not found';
+
+  /* Checking if venue exists */
+
+  const venueThatGotPosted = await venue1.getVenueById(venueId);
+  if (!venueThatGotPosted) throw 'Venue not found';
+
+  /* Checking if review exists */
+
+  const reviewPosted = await getReviewById(id);
+  if (!reviewPosted) {
+    throw 'review not found';
+  }
+
+  /* Checking if review belongs to that particular venue */
+
+  if (reviewPosted.venueId != venueId) {
+    throw 'review authentication failed for venue';
+  }
+
+  /* Checking if review belongs to that particular user */
+
+  if (reviewPosted.reviewerId != userId) {
+    throw 'review authentication failed for user';
+  }
+
+
+
+  const updatedReview = {
+    reviewPicture: "",
+  };
+
+  /* Updating the review text */
+
+  const updatedInfo = await reviewCollection.updateOne(
+    { _id: ObjectId(id) },
+    { $set: updatedReview }
+  );
+  if (updatedInfo.modifiedCount === 0) {
+    throw 'could not delete review picture successfully';
+  }
+  //const review = await this.getReviewById(id);
+  return { msg: "Deleted Review picture successfully" };
+}
+
+//---------------------------------------------------------------------------------------------------------
+
+async function getAllReviewsByUserId(userId) {
+  /* Error Handling */
+  let array1 = [userId];
+
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
+  try {
+    ObjectId(userId);
+  } catch (error) {
+    throw 'user ID should be valid ObjectId';
+  }
+  /* Checking if user exists*/
+
+  const userThatPosted = await user1.getUserById(userId);
+  if (!userThatPosted) throw 'User not found';
+
+  let reviewArray = [];
+  let userReviewCollection = await user1.getUserById(userId);
+  let length = userReviewCollection.reviewId.length;
+  if(length === 0){
+    throw "No reviews";
+  }
+  for (let i = 0; i < length; i++) {
+    let reviewFinal = userReviewCollection.reviewId[i]._id;
+    let reviewCollection1 = await getReviewById(reviewFinal);
+    reviewArray.push(reviewCollection1);
+  }
+  return reviewArray;
+}
+
+//---------------------------------------------------------------------------------------------------------
+async function getAllReviewsByvenueId(venueId) {
+
+  /* Error Handling */
+  let array1 = [venueId];
+
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw 'venue ID should be valid ObjectId';
+  }
+
+  /* Checking if venue exists */
+
+  const venueThatGotPosted = await venue1.getVenueById(venueId);
+  if (!venueThatGotPosted) throw 'Venue not found';
+
+  let reviewArray = [];
+  let venueReviewCollection = await venue1.getVenueById(venueId);
+  let length = venueReviewCollection.reviews.length;
+  if(length === 0){
+    throw "no reviews";
+  }
+  for (let i = 0; i < length; i++) {
+    let reviewFinal = venueReviewCollection.reviews[i]._id;
+    let reviewCollection1 = await getReviewById(reviewFinal);
+    reviewArray.push(reviewCollection1);
+  }
+  return reviewArray;
+}
+//---------------------------------------------------------------------------------------------------------
 module.exports = {
   addReview,
   removeReview,
@@ -1074,5 +1568,17 @@ module.exports = {
   upVote,
   downVote,
   removeUpvote,
-  removeDownvote
+  removeDownvote,
+  sortNewest,
+  sortOldest,
+  sortHighestRating,
+  sortLowestRating,
+  filterReviewsByRatings,
+  mostUpvoted,
+  mostDownvoted,
+  updateReviewPicture,
+  deleteReviewPicture,
+  getAllReviewsByUserId,
+  getAllReviewsByvenueId
+
 };
