@@ -86,11 +86,8 @@ module.exports = {
   checkIfValidEmail,
   checkIfValidAge,
   checkIfValidRole,
-<<<<<<< HEAD
   checkIfItemInRange,
   checkIfCurrentDate,
   checkIfTimePeriodValid,
-=======
   checkIfValidRating,
->>>>>>> 217772542f78331dcf31208ae52d01d7a67bb4c8
 };

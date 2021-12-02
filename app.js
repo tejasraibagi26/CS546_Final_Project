@@ -38,6 +38,17 @@ app.use("/venues/create", (req, res, next) => {
   req.method = "POST";
   next();
 });
+
+app.use("/feed/posts/create", (req, res, next) => {
+  //! This is temp variable for testing purposes
+  let user = req.session.user || true;
+  if (!user) {
+    //Redirect to login, for now its "/"
+    return res.redirect("/");
+  }
+  next();
+});
+
 //Configure app to the routes
 configRouter(app);
 

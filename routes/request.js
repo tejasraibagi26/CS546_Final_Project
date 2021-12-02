@@ -3,6 +3,7 @@ const router = express.Router();
 const data = require("../data");
 const requestData = data.request;
 const errorHandler = require("../Errors/errorHandler");
+const xss = require("xss");
 
 router.post("/", async (req, res) => {
   let posterId = xss(req.body.posterId);
