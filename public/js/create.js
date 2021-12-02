@@ -3,7 +3,6 @@ function validate() {
   const ul = document.getElementById("err-list");
   error.hidden = true;
   var title = document.forms["create-post"]["activityTitle"].value;
-  console.log(title);
   var body = document.forms["create-post"]["activityBody"].value;
   var playersReq = parseInt(document.forms["create-post"]["playerReq"].value);
 

@@ -3,6 +3,7 @@ const router = express.Router();
 const errorHandler = require("../Errors/errorHandler");
 const data = require("../data");
 const activity = data.activity;
+const xss = require("xss");
 
 router.get("/", async (req, res) => {
   const activities = await activity.getActivity();

@@ -8,12 +8,10 @@ if (fitlerForm) {
     e.preventDefault();
     let errorList = [];
     errList.innerHTML = "";
-    console.log(e.target.elements[0].value);
     const search = e.target.elements[0].value;
     const min = parseInt(e.target.elements.min.value) || 0;
     const max = parseInt(e.target.elements.max.value) || 0;
     const rating = parseInt(e.target.elements.rating.value) || 0;
-    console.log(min, max);
     if (min < 0) {
       errorList.push("Minimum price must be greater than 0");
     }
@@ -23,8 +21,6 @@ if (fitlerForm) {
     if (max < min) {
       errorList.push("Maximum price must be greater than minimum price");
     }
-
-    console.log(errList);
 
     if (errorList.length > 0) {
       error.hidden = false;
@@ -36,7 +32,6 @@ if (fitlerForm) {
       return;
     }
 
-    //console.log(location);
     location.href = `/venues?searchTerm=${search}&min=${min}&max=${max}&rating=${rating}`;
   });
 }

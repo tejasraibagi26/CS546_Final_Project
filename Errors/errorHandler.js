@@ -54,6 +54,11 @@ const checkIfValidAge = (age) => {
   if (age < 0 || age > 122) throw "Invalid age";
 };
 
+const checkIfValidRating = (rating) => {
+  if (typeof rating != "number") throw "Rating must be a number";
+  if (rating < 0 || rating > 5) throw "Rating should be between 0 to 5";
+};
+
 const checkIfValidRole = (role) => {
   let roles = ["user", "admin"];
   if (!roles.includes(role)) throw "Invalid role";
@@ -81,7 +86,11 @@ module.exports = {
   checkIfValidEmail,
   checkIfValidAge,
   checkIfValidRole,
+<<<<<<< HEAD
   checkIfItemInRange,
   checkIfCurrentDate,
   checkIfTimePeriodValid,
+=======
+  checkIfValidRating,
+>>>>>>> 217772542f78331dcf31208ae52d01d7a67bb4c8
 };

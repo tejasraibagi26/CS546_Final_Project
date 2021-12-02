@@ -69,6 +69,26 @@
   </div>
   <div class="comment">
     <h1 class="comment-header">Comments</h1>
+    <div class="comment-textbox">
+      <form
+        method="post"
+        onsubmit="return validateComment()"
+        id="comment-form"
+        enctype="multipart/form-data"
+      >
+        <label for="comment-text">
+          <textarea
+            name="comment"
+            id="comment-text"
+            placeholder="Add a comment..."
+            class="comment-text"
+          ></textarea>
+        </label>
+        <button type="submit" class="comment-btn">Comment
+          <span><i class="fas fa-paper-plane"></i></span>
+        </button>
+      </form>
+    </div>
   </div>
 </section>
 <script src="/public/js/bookings.js"></script>

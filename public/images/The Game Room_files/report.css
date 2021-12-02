@@ -1,0 +1,107 @@
+#report {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  top: 60px;
+  overflow: hidden !important;
+}
+
+h1 {
+  margin: 0;
+}
+
+#report .container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden !important;
+}
+
+#report .container .title {
+  font-size: 20px;
+  margin: 0 10px;
+  font-weight: normal;
+}
+
+#report .container .row {
+  width: 35%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 20px;
+}
+
+#report .container .report-header {
+  font-size: 3em;
+  margin-bottom: 10px !important;
+  letter-spacing: -1;
+}
+
+#report .container .row a {
+  font-size: 16px;
+  text-decoration: none;
+  transition: 100ms ease-in-out;
+  background-color: whitesmoke;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+#report .container .row a .fas {
+  font-size: 16px;
+}
+
+#report .container .row a:hover {
+  background-color: #0d82df;
+  color: white;
+  transform: scale(1.1);
+}
+
+#report .container .ogComment {
+  font-size: 20px;
+  margin-bottom: 0px;
+}
+
+#report .container .bottom-fixed {
+  width: 100%;
+  height: 50px;
+  position: absolute;
+  bottom: 0px;
+  padding: 10px;
+  background-color: whitesmoke;
+}
+
+#report .container .options {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#report .container .options a {
+  font-size: 18px;
+  text-decoration: none;
+  margin-right: 10px;
+  padding: 5px;
+  border-radius: 6px;
+  transition: 100ms ease-in-out;
+  width: 100px;
+  text-align: center;
+}
+
+#report .container .options .appr {
+  background-color: #0d82df;
+  color: white;
+}
+
+#report .container .options .dcln {
+  background-color: tomato;
+  color: white;
+}
+
+#report .container .options a:hover {
+  transform: scale(1.05);
+}

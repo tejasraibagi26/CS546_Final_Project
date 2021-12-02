@@ -3,6 +3,7 @@ const router = express.Router();
 const errorHandler = require("../Errors/errorHandler");
 const data = require("../data");
 const booking = data.booking;
+const xss = require("xss");
 
 router.post("/book", async (req, res) => {
   const bookingUserId = xss(req.body.bookingUserId);
@@ -49,13 +50,14 @@ router.post("/book", async (req, res) => {
   }
 
   try {
-    const booking = await booking.create(
+    const book = await booking.create(
       bookingUserId,
       bookedVenueId,
       startTime,
       endTime,
       date
     );
+    res.status(200).json(book);
   } catch (error) {
     return res.status(500).json({ error: error });
   }

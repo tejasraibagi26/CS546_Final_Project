@@ -153,7 +153,6 @@ a .venue-address {
 
 .comment-textbox {
   width: 100%;
-  margin-top: 10px;
 }
 
 .comment-textbox form {
@@ -161,12 +160,8 @@ a .venue-address {
   display: flex;
 }
 
-.comment-textbox form label {
+.comment-textbox form textarea {
   width: 50%;
-}
-
-.comment-textbox form label textarea {
-  width: 100%;
   height: 50px;
   border: none;
   background-color: whitesmoke;
@@ -174,17 +169,14 @@ a .venue-address {
   border-radius: 6px;
   font-family: "Source Sans Pro", sans-serif;
   font-size: 22px;
-  resize: none;
 }
 
 .comment-textbox form button {
   background-color: #0d82df;
   border-radius: 6px;
   border: none;
-  padding: 5px 10px;
+
   height: 50px;
   color: white;
-  font-size: 20px;
-  margin-left: 10px;
-  cursor: pointer;
+  font-size: 22px;
 }
