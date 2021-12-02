@@ -33,7 +33,6 @@ async function addComment(userId, reviewId, commentText) {
     throw 'review Id should be valid ObjectId';
   }
 
-
   const reviewCollection = await reviews();
   const userCollection = await user();
   const commentCollection = await comments();
