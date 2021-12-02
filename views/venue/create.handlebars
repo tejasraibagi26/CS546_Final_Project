@@ -18,15 +18,13 @@
         <div class="input-fields">
           <label for="venueAddress" class="label">
             Address
-            <textarea
+            <input
               class="input"
               type="text"
               name="venueAddress"
               placeholder="Address"
               required
-              draggable="false"
-              rows="30"
-            ></textarea>
+            />
           </label>
         </div>
         <div class="input-fields">
@@ -38,6 +36,7 @@
               name="venueImage"
               placeholder="Image"
               required
+              style="height: auto;"
             />
           </label>
         </div>
@@ -98,17 +97,4 @@
     </form>
   </div>
 </section>
-<script>
-
-  let sports = [ "Badminton", "Basketball", "Baseball", "Cricket", "Cycling",
-  "Football", "Frisbee", "Golf", "Handball","Running", "Soccer", "Squash",
-  "Table Tennis", "Tennis", "Throwball"]; for(let i = 0; i < sports.length; i++)
-  { let option = document.createElement("option"); option.value = sports[i];
-  option.innerHTML = sports[i];
-  document.getElementById("sports").appendChild(option); } let time = [ "06:00",
-  "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00",
-  "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]; for(let i = 0;
-  i < time.length; i++) { let option = document.createElement("option");
-  option.value = time[i]; option.innerHTML = time[i];
-  document.getElementById("time").appendChild(option); }
-</script>
+<script src="../../public/js/sports.js"></script>

@@ -63,7 +63,7 @@ async function createUser(
 
   if (insertData.insertedCount == 0) throw "Could not insert user";
 
-  return { msg: "Inserted user" };
+  return { msg: "Inserted user", added: true };
 }
 
 async function searchUsers(firstName, lastName) {

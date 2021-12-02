@@ -1,0 +1,27 @@
+<section id="admin">
+  <div class="container">
+    <h1 class="admin-header">Admin Panel</h1>
+    <div class="row">
+      <div class="cont1">
+        <h1>Venue Request</h1>
+        {{#if hasReq}}
+          {{#each requests}}
+            <a href="/admin/request/{{_id}}">{{venueName}}</a>
+          {{/each}}
+        {{else}}
+          <span class="no-cont">No Request available.</span>
+        {{/if}}
+      </div>
+      <div class="cont1">
+        <h1>Reported content</h1>
+        {{#if hasReport}}
+          {{#each reports}}
+            <a href="/admin/report/{{_id}}">{{reportComment}}</a>
+          {{/each}}
+        {{else}}
+          <span class="no-cont">No Pending Reports.</span>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</section>
