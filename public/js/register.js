@@ -20,6 +20,7 @@ if (registerForm) {
     let ageValue = age.value;
     let genderValue = gender.value;
     let roleValue = role.value;
+    error.hidden = true;
 
     try {
       if (!firstNameValue) throw "Must provide first name";

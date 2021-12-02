@@ -8,6 +8,7 @@ if (loginForm) {
   loginForm.addEventListener("submit", (event) => {
     let emailValue = email.value;
     let passwordValue = password.value;
+    error.hidden = true;
 
     try {
       if (!emailValue) throw "Must provide email";

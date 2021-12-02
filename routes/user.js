@@ -82,22 +82,21 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/create", async (req, res) => {
-  let inputUser = req.body;
-  let userArray = [
-    xss(inputUser.firstName),
-    xss(inputUser.lastName),
-    xss(inputUser.email),
-    xss(inputUser.password),
-    xss(inputUser.gender),
-    xss(inputUser.role),
-  ];
+  let firstName = xss(req.body.firstName);
+  let lastName = xss(req.body.lastName);
+  let email = xss(req.body.email);
+  let password = xss(req.body.password);
+  let gender = xss(req.body.gender);
+  let role = xss(req.body.role);
+
+  let userArray = [firstName, lastName, email, password, gender, role];
   try {
     errorHandler.checkIfElementsExists(userArray);
     errorHandler.checkIfElementsAreStrings(userArray);
     errorHandler.checkIfElementNotEmptyString(userArray);
-    errorHandler.checkIfValidEmail(inputUser.email);
-    errorHandler.checkIfValidRole(inputUser.role);
-    errorHandler.checkIfValidAge(Number(inputUser.age));
+    errorHandler.checkIfValidEmail(email);
+    errorHandler.checkIfValidRole(role);
+    errorHandler.checkIfValidAge(Number(age));
   } catch (e) {
     res.render("user/register", {
       title: "Register",
@@ -106,21 +105,25 @@ router.post("/create", async (req, res) => {
     return;
   }
 
-  const password = await bcrypt.hash(inputUser.password, saltRounds);
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
 
   try {
     const createUser = await user.createUser(
-      inputUser.firstName,
-      inputUser.lastName,
-      inputUser.email,
-      password,
-      Number(inputUser.age),
-      inputUser.gender,
-      inputUser.role
+      firstName,
+      lastName,
+      email,
+      hashedPassword,
+      Number(age),
+      gender,
+      role
     );
 
-    let currentUser = await user.getUserByEmail(inputUser.email);
-    req.session.user = { id: currentUser._id };
+    let currentUser = await user.getUserByEmail(email);
+    req.session.user = {
+      id: currentUser._id,
+      firstName: currentUser.firstName,
+      lastName: currentUser.lastName,
+    };
     res.redirect("/user/profile");
     return;
   } catch (e) {
@@ -133,8 +136,9 @@ router.post("/create", async (req, res) => {
 });
 
 router.post("/search", async (req, res) => {
-  let inputName = req.body;
-  let fullName = [xss(inputName.firstName), xss(inputName.lastName)];
+  let firstName = xss(req.body.firstName);
+  let lastName = xss(req.body.lastName);
+  let fullName = [firstName, lastName];
 
   try {
     errorHandler.checkIfElementsExists(fullName);
@@ -186,7 +190,11 @@ router.post("/login", async (req, res) => {
   }
 
   if (match) {
-    req.session.user = { id: foundUser._id };
+    req.session.user = {
+      id: foundUser._id,
+      firstName: foundUser.firstName,
+      lastName: foundUser.lastName,
+    };
     res.redirect("/user/profile");
     return;
   } else {
