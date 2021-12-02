@@ -12,6 +12,28 @@ const errorHandler = require("../Errors/errorHandler");
 //---------------------------------------------------------------------------------------------------------
 
 async function addComment(userId, reviewId, commentText) {
+  
+  /* Error Handling */
+
+  let array = [userId, reviewId, commentText];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
+  try {
+    ObjectId(userId);
+  } 
+  catch (error) {
+    throw 'User Id should be valid ObjectId';
+  }
+  
+  try {
+    ObjectId(reviewId);
+  } 
+  catch (error) {
+    throw 'review Id should be valid ObjectId';
+  }
+
+
   const reviewCollection = await reviews();
   const userCollection = await user();
   const commentCollection = await comments();
@@ -26,23 +48,6 @@ async function addComment(userId, reviewId, commentText) {
   const reviewThatGotPosted = await review.getReviewById(reviewId);
   if (!reviewThatGotPosted) throw 'Review not found';
 
-  /* Error Handling */
-
-  let array = [userId, reviewId, commentText];
-  errorHandler.checkIfElementsExists(array);
-  errorHandler.checkIfElementsAreStrings(array);
-  errorHandler.checkIfElementNotEmptyString(array);
-  try {
-    ObjectId(userId);
-  } catch (error) {
-    throw 'User Id should be valid ObjectId';
-  }
-
-  try {
-    ObjectId(reviewId);
-  } catch (error) {
-    throw 'review Id should be valid ObjectId';
-  }
 
   /* Defining a new Comment */
 
@@ -91,6 +96,31 @@ async function addComment(userId, reviewId, commentText) {
 //---------------------------------------------------------------------------------------------------------
 
 async function removeComment(id, userId, reviewId) {
+  
+  /* Error Handling */
+
+  let array = [id, userId, reviewId];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
+  try {
+    ObjectId(userId);
+  } catch (error) {
+    throw 'User Id should be valid ObjectId';
+  }
+
+  try {
+    ObjectId(reviewId);
+  } catch (error) {
+    throw 'review Id should be valid ObjectId';
+  }
+
+  try {
+    ObjectId(id);
+  } catch (error) {
+    throw 'comment ID Id should be valid ObjectId';
+  }
+  
   const reviewCollection = await reviews();
   const userCollection = await user();
   const commentCollection = await comments();
@@ -124,29 +154,6 @@ async function removeComment(id, userId, reviewId) {
   const reviewThatGotPosted = await review.getReviewById(reviewId);
   if (!reviewThatGotPosted) throw 'Review not found';
 
-  /* Error Handling */
-
-  let array = [id, userId, reviewId];
-  errorHandler.checkIfElementsExists(array);
-  errorHandler.checkIfElementsAreStrings(array);
-  errorHandler.checkIfElementNotEmptyString(array);
-  try {
-    ObjectId(userId);
-  } catch (error) {
-    throw 'User Id should be valid ObjectId';
-  }
-
-  try {
-    ObjectId(reviewId);
-  } catch (error) {
-    throw 'review Id should be valid ObjectId';
-  }
-
-  try {
-    ObjectId(id);
-  } catch (error) {
-    throw 'comment ID Id should be valid ObjectId';
-  }
 
   let comment = null;
   try {
@@ -187,6 +194,31 @@ async function removeComment(id, userId, reviewId) {
 //---------------------------------------------------------------------------------------------------------
 
 async function updateCommentText(id, userId, reviewId, commentText) {
+  
+  /* Error Handling */
+
+  let array = [id, userId, reviewId, commentText];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
+  try {
+    ObjectId(userId);
+  } catch (error) {
+    throw 'User Id should be valid ObjectId';
+  }
+
+  try {
+    ObjectId(reviewId);
+  } catch (error) {
+    throw 'Venue Id should be valid ObjectId';
+  }
+
+  try {
+    ObjectId(id);
+  } catch (error) {
+    throw 'comment ID Id should be valid ObjectId';
+  }
+
   const commentCollection = await comments();
 
   /* Checking if comment exists */
@@ -217,29 +249,6 @@ async function updateCommentText(id, userId, reviewId, commentText) {
   const reviewThatGotPosted = await review.getReviewById(reviewId);
   if (!reviewThatGotPosted) throw 'Review not found';
 
-  /* Error Handling */
-
-  let array = [id, userId, reviewId, commentText];
-  errorHandler.checkIfElementsExists(array);
-  errorHandler.checkIfElementsAreStrings(array);
-  errorHandler.checkIfElementNotEmptyString(array);
-  try {
-    ObjectId(userId);
-  } catch (error) {
-    throw 'User Id should be valid ObjectId';
-  }
-
-  try {
-    ObjectId(reviewId);
-  } catch (error) {
-    throw 'Venue Id should be valid ObjectId';
-  }
-
-  try {
-    ObjectId(id);
-  } catch (error) {
-    throw 'comment ID Id should be valid ObjectId';
-  }
 
   const updatedComment = {
     commentText: commentText,
@@ -302,9 +311,7 @@ async function getAllComments() {
 //---------------------------------------------------------------------------------------------------------
 
 async function upVote(commentId, userId) {
-  const userCollection = await user();
-  const commentCollection = await comments();
-
+  
   /* Error Handling */
 
   let array1 = [commentId, userId];
@@ -323,6 +330,9 @@ async function upVote(commentId, userId) {
   } catch (error) {
     throw 'comment Id should be valid ObjectId';
   }
+  
+  const userCollection = await user();
+  const commentCollection = await comments();
 
   /* Retriving and Checking if review exists */
 
@@ -491,9 +501,7 @@ async function upVote(commentId, userId) {
 //---------------------------------------------------------------------------------------------------------
 
 async function downVote(commentId, userId) {
-  const userCollection = await user();
-  const commentCollection = await comments();
-
+  
   /* Error Handling */
   let array1 = [commentId, userId];
 
@@ -511,6 +519,9 @@ async function downVote(commentId, userId) {
   } catch (error) {
     throw 'comment Id should be valid ObjectId';
   }
+
+  const userCollection = await user();
+  const commentCollection = await comments();
 
   /* Checking if review exists */
 
@@ -663,9 +674,7 @@ async function downVote(commentId, userId) {
 }
 
 async function removeUpvote(commentId, userId) {
-  const userCollection = await user();
-  const commentCollection = await comments();
-
+  
   /* Error Handling */
 
   let array1 = [commentId, userId];
@@ -684,6 +693,10 @@ async function removeUpvote(commentId, userId) {
   } catch (error) {
     throw 'comment Id should be valid ObjectId';
   }
+  
+  const userCollection = await user();
+  const commentCollection = await comments();
+
 
     /* Checking if review exists */
 
@@ -741,9 +754,7 @@ async function removeUpvote(commentId, userId) {
 }
 
 async function removeDownvote(commentId, userId) {
-  const userCollection = await user();
-  const commentCollection = await comments();
-
+  
   /* Error Handling */
 
   let array1 = [commentId, userId];
@@ -762,6 +773,9 @@ async function removeDownvote(commentId, userId) {
   } catch (error) {
     throw 'comment Id should be valid ObjectId';
   }
+  
+  const userCollection = await user();
+  const commentCollection = await comments();
 
   /* Checking if review exists */
 
@@ -818,6 +832,67 @@ async function removeDownvote(commentId, userId) {
   return { msg: "Remove Downvote Successful!" }
 }
 //---------------------------------------------------------------------------------------------------------
+
+async function mostUpvoted(reviewId) {
+  let array1 = [reviewId];
+
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
+  try {
+    ObjectId(reviewId);
+  } catch (error) {
+    throw 'review ID should be valid ObjectId';
+  }
+
+  const commentCollection = await comments();
+  const content = await review.getReviewById(reviewId)
+  if (content.comments.length === 0) {
+    throw "No comments to filter out";
+  }
+  let venueComments = [];
+  const sort = { votes: -1 }
+  let newArray = await commentCollection.find().sort(sort).toArray();
+  for (let key of newArray) {
+    if (key.reviewId === reviewId) {
+      venueComments.push(key);
+    }
+  }
+  return venueComments;
+}
+
+//---------------------------------------------------------------------------------------------------------
+
+
+async function mostDownvoted(reviewId) {
+  let array1 = [reviewId];
+
+  errorHandler.checkIfElementsExists(array1);
+  errorHandler.checkIfElementsAreStrings(array1);
+  errorHandler.checkIfElementNotEmptyString(array1);
+  try {
+    ObjectId(reviewId);
+  } catch (error) {
+    throw 'review ID should be valid ObjectId';
+  }
+
+  const commentCollection = await comments();
+  const content = await review.getReviewById(reviewId)
+  if (content.comments.length === 0) {
+    throw "No comments to filter out";
+  }
+  let venueComments = [];
+  const sort = { votes: 1 }
+  let newArray = await commentCollection.find().sort(sort).toArray();
+  for (let key of newArray) {
+    if (key.reviewId === reviewId) {
+      venueComments.push(key);
+    }
+  }
+  return venueComments;
+}
+
+
 module.exports = {
   addComment,
   removeComment,
@@ -827,5 +902,7 @@ module.exports = {
   upVote,
   downVote,
   removeUpvote,
-  removeDownvote
+  removeDownvote,
+  mostUpvoted,
+  mostDownvoted
 };
