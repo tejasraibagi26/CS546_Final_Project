@@ -96,7 +96,7 @@ const searchVenue = async (sportToFind, min, max, rating) => {
   if (sportToFind) {
     searchVenueFromDB.forEach((venue) => {
       venue.sports.forEach((sport) => {
-        if (sport.toLowerCase() === sportToFind.toLowerCase()) {
+        if (sport.toLowerCase().includes(sportToFind.toLowerCase())) {
           venueArr.push(venue);
         }
       });

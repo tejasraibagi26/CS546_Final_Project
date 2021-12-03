@@ -22,6 +22,10 @@ if (fitlerForm) {
       errorList.push("Maximum price must be greater than minimum price");
     }
 
+    if (min === max) {
+      errorList.push("Minimum price and maximum price must be different");
+    }
+
     if (errorList.length > 0) {
       error.hidden = false;
       errorList.forEach((err) => {

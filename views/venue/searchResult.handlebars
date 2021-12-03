@@ -125,7 +125,7 @@
                   <span><i
                       class="fas fa-clock"
                       style="padding-right: 5px"
-                    ></i>{{" x"}}</span>
+                    ></i></span>
                   Timings:
                   <ul>
                     {{#each ve.venueTimings as |t|}}
@@ -133,14 +133,18 @@
                     {{/each}}
                   </ul>
                 </div>
-                {{!-- <div class="timings">
+                <div class="timings">
+                  <span>
+                    <i class="fas fa-running" style="padding-right: 5px"></i>
+                  </span>
+                  {{ve.venuePhone}}
                   Sports:
                   <ul>
                     {{#each ve.sports as |s|}}
-                      <li class="bg">{{s}}</li>
+                      <li>{{s}}</li>
                     {{/each}}
                   </ul>
-                </div> --}}
+                </div>
                 <a href="/venues/{{ve._id}}">
                   <button class="book-now">
                     <p class="bk-text">See Info</p>
