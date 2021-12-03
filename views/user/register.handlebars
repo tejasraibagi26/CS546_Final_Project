@@ -1,0 +1,45 @@
+<div id="register-page">
+  <h1 id="registerTitle">Register</h1>
+  <h3 id="registerError" hidden></h3>
+  <h3 id="registerError"> {{error}}</h3>
+  <form action="/user/create" name="create" method="post" id="registerForm">
+    <label class="registerLabel">First name:
+      <input id="firstName" name="firstName" class="registerInput" />
+    </label>
+    <label class="registerLabel">Last name:
+      <input id="lastName" name="lastName" class="registerInput" />
+    </label>
+    <label class="registerLabel">Email:
+      <input id="emailRegister" name="email" class="registerInput" />
+    </label>
+    <label class="registerLabel">Password:
+      <input
+        id="firstPassword"
+        type="password"
+        name="password"
+        class="registerInput"
+      />
+    </label>
+    <label class="registerLabel">Confirm Password:
+      <input id="confirmPassword" type="password" class="registerInput" />
+    </label>
+    <label class="registerLabel">Age:
+      <input id="age" type="number" name="age" class="registerInput" />
+    </label>
+    <label class="registerLabel">Gender:
+      <select id="gender" name="gender">
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+        <option>Prefer not to say</option>
+      </select>
+    </label>
+    <label class="registerLabel">Role:
+      <select id="role" name="role">
+        <option>User</option>
+        <option>Owner</option>
+      </select>
+    </label>
+    <label><input type="submit" id="registerSubmit" value="Register" /></label>
+  </form>
+</div>
