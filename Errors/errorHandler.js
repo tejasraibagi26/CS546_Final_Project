@@ -60,7 +60,7 @@ const checkIfValidRating = (rating) => {
 };
 
 const checkIfValidRole = (role) => {
-  let roles = ["user", "admin"];
+  let roles = ["User", "Owner", "Admin"];
   if (!roles.includes(role)) throw "Invalid role";
 };
 

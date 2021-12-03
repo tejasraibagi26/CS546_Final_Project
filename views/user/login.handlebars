@@ -1,0 +1,29 @@
+<div id="login-page">
+  <h1 id="loginTitle">Login</h1>
+  <h3 id="loginError" hidden>Hey</h3>
+  <h3 id="loginError"> {{error}}</h3>
+  <form action="/user/login" name="login" method="post" id="loginForm">
+    <label class="loginLabel">Email:
+      <input
+        placeholder="Email"
+        name="email"
+        class="loginInput"
+        id="loginEmail"
+      />
+    </label>
+    <label class="loginLabel">Password:
+      <input
+        type="password"
+        placeholder="Password"
+        name="password"
+        class="loginInput"
+        id="loginPassword"
+      />
+    </label>
+    <label id="loginSubmitLabel">
+      <input type="submit" id="loginSubmit" value="Login" />
+    </label>
+  </form>
+  <a href="/user/register" id="signupLink">Don't have an account? Click here to
+    signup!</a>
+</div>

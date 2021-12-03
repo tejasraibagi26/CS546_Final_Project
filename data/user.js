@@ -49,7 +49,7 @@ async function createUser(
     firstName: firstName,
     lastName: lastName,
     email: email,
-    passsword: password,
+    password: password,
     age: age,
     gender: gender,
     postId: [],
@@ -57,6 +57,9 @@ async function createUser(
     commentId: [],
     friends: [],
     role: role,
+    upvotedReviews: [],
+    downvotedReviews: [],
+    biography: "",
   };
 
   let insertData = await users.insertOne(newUser);
@@ -111,10 +114,32 @@ async function getUserByEmail(email) {
   throw "No user with email found";
 }
 
+async function getFriends(id) {
+  let array = [id];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
+  errorHandler.checkIfValidObjectId(id);
+
+  const currentUser = await getUserById(id);
+  const friendsIds = currentUser.friends;
+  const allUsers = await getAllUsers();
+  const friends = [];
+
+  for (let user of allUsers) {
+    if (friendsIds.includes(user._id)) {
+      friends.push(user);
+    }
+  }
+
+  return friends;
+}
+
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
   searchUsers,
   getUserByEmail,
+  getFriends,
 };

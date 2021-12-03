@@ -11,6 +11,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", public);
 
+//Set up express session
+app.use(
+  session({
+    name: "LoginCookie",
+    secret: "Cookie used for login",
+    saveUninitialized: true,
+    cookie: { maxAge: 6000000 },
+  })
+);
+
 //Set up handlebars
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
