@@ -24,7 +24,14 @@
       <input id="confirmPassword" type="password" class="registerInput" />
     </label>
     <label class="registerLabel">Age:
-      <input id="age" type="number" name="age" class="registerInput" />
+      <input
+        id="age"
+        type="number"
+        min="1"
+        max="128"
+        name="age"
+        class="registerInput"
+      />
     </label>
     <label class="registerLabel">Gender:
       <select id="gender" name="gender">
