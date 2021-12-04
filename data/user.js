@@ -59,6 +59,8 @@ async function createUser(
     role: role,
     upvotedReviews: [],
     downvotedReviews: [],
+    upvotedComments: [],
+    downvotedComments: [],
     biography: "",
   };
 
