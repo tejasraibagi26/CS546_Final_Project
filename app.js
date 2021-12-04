@@ -18,6 +18,7 @@ app.use(
     secret: "Cookie used for login",
     saveUninitialized: true,
     resave: true,
+    cookie: { maxAge: 600000 },
   })
 );
 

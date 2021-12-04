@@ -17,7 +17,6 @@ router.get("/", async (req, res) => {
   for (let i = 0; i < activities.length; i++) {
     activities[i].userName = users[i];
   }
-  console.log(activities);
   res.status(200).render("entry/activity", {
     title: "Feed",
     posts: activities,
@@ -38,7 +37,6 @@ router.post("/posts/create", async (req, res) => {
   let activityBody = xss(req.body.activityBody);
   let playerReq = parseInt(xss(req.body.playerReq));
   let creatorId = req.session.user.id;
-  console.log(creatorId);
   let array = [activityTitle, activityBody, playerReq, creatorId];
   try {
     errorHandler.checkIfElementsExists(array);
@@ -74,7 +72,7 @@ router.post("/posts/create", async (req, res) => {
       playerReq,
       creatorId
     );
-    return res.rendirect("/feed");
+    return res.redirect("/feed");
   } catch (error) {
     return res.status(500).json({ error: error });
   }
