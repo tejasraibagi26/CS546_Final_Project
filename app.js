@@ -26,15 +26,6 @@ app.use(
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-app.use(
-  session({
-    name: "AuthCookie",
-    secret: "some secret string!",
-    resave: false,
-    saveUninitialized: true,
-  })
-);
-
 app.use("/create", async (req, res, next) => {
   if (!req.session.user) {
     //Redirect to login page as user is not authorized to create venue
