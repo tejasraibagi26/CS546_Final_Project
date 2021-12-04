@@ -1,0 +1,51 @@
+<section id="create-post">
+  <div class="container">
+    <h1 class="title">Create New Post</h1>
+    <form
+      action="/feed/posts/create"
+      onsubmit="return validate()"
+      id="create-post"
+      method="POST"
+    >
+      <div class="form-group">
+        <label for="activityTitle">Title</label>
+        <input
+          type="text"
+          class="form-control"
+          id="activityTitle"
+          name="activityTitle"
+          placeholder="Title"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="activityBody">Body</label>
+        <textarea
+          class="form-control"
+          id="activityBody"
+          name="activityBody"
+          rows="3"
+          cols="50"
+          placeholder="Body"
+          required
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="playerReq">Number of Players Required</label>
+        <input
+          type="number"
+          class="form-control"
+          id="playerReq"
+          name="playerReq"
+          placeholder="Players Required"
+          required
+        />
+      </div>
+      <div id="error" hidden>
+        <ul id="err-list"></ul>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</section>
+<script src="/public/js/create.js"></script>

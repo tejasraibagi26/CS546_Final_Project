@@ -1,0 +1,23 @@
+<section id="rStat">
+  <div class="container">
+    {{#if succ}}
+      <lottie-player
+        src="https://assets9.lottiefiles.com/packages/lf20_01bh9ld2.json"
+        background="transparent"
+        speed="1"
+        style="width: 500px; height: 500px;"
+        autoplay
+      ></lottie-player>
+    {{else}}
+      <lottie-player
+        src="https://assets1.lottiefiles.com/packages/lf20_imrP4H.json"
+        background="transparent"
+        speed="1"
+        style="width: 500px; height: 500px;"
+        autoplay
+      ></lottie-player>
+    {{/if}}
+    <h1 class="header">{{status}}</h1>
+    <a href="/admin">Back to admin.</a>
+  </div>
+</section>
