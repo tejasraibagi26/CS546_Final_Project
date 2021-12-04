@@ -17,7 +17,7 @@ app.use(
     name: "LoginCookie",
     secret: "Cookie used for login",
     saveUninitialized: true,
-    cookie: { maxAge: 6000000 },
+    resave: true,
   })
 );
 
@@ -34,14 +34,14 @@ app.use(
   })
 );
 
-// app.use("/create", async (req, res, next) => {
-//   if (!req.session.user) {
-//     //Redirect to login page as user is not authorized to create venue
-//     return res.redirect("/");
-//   } else {
-//     next();
-//   }
-// });
+app.use("/create", async (req, res, next) => {
+  if (!req.session.user) {
+    //Redirect to login page as user is not authorized to create venue
+    return res.redirect("/user/login");
+  } else {
+    next();
+  }
+});
 
 app.use("/venues/create", (req, res, next) => {
   console.log(req.method);
@@ -50,11 +50,10 @@ app.use("/venues/create", (req, res, next) => {
 });
 
 app.use("/feed/posts/create", (req, res, next) => {
-  //! This is temp variable for testing purposes
-  let user = req.session.user || true;
+  let user = req.session.user;
   if (!user) {
     //Redirect to login, for now its "/"
-    return res.redirect("/");
+    return res.redirect("/user/login");
   }
   next();
 });

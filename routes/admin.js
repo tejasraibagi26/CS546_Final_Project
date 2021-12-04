@@ -14,6 +14,7 @@ router.get("/", async (req, res) => {
     reports: getReport,
     hasReq: getReq.length > 0 ? true : false,
     hasReport: getReport.length > 0 ? true : false,
+    isLoggedIn: req.session.user ? true : false,
   });
 });
 
@@ -51,6 +52,7 @@ router.get("/request/:id", async (req, res) => {
     title: "Admin",
     venue: getReq,
     id: id,
+    isLoggedIn: req.session.user ? true : false,
   });
 });
 
@@ -83,12 +85,14 @@ router.get("/request/:id/approve", async (req, res) => {
       title: updateReq.updated ? "Approved" : "Error",
       status: "Venue request successfully approved.",
       succ: updateReq.updated ? true : false,
+      isLoggedIn: req.session.user ? true : false,
     });
   } catch (error) {
     res.render("admin/requestStat", {
       title: "Error",
       status: "Error updating venue request.",
       succ: false,
+      isLoggedIn: req.session.user ? true : false,
     });
   }
 });
@@ -122,12 +126,14 @@ router.get("/request/:id/decline", async (req, res) => {
       title: updateReq.updated ? "Declined" : "Error",
       status: "Venue request successfully declined.",
       succ: updateReq.updated ? true : false,
+      isLoggedIn: req.session.user ? true : false,
     });
   } catch (error) {
     res.render("admin/requestStat", {
       title: "Error",
       status: "Error updating venue request.",
       succ: updateReq.updated ? true : false,
+      isLoggedIn: req.session.user ? true : false,
     });
   }
 });
@@ -167,6 +173,7 @@ router.get("/report/:id", async (req, res) => {
     report: getReport.reported,
     comment: getReport.reportedComment,
     id: id,
+    isLoggedIn: req.session.user ? true : false,
   });
 });
 
@@ -199,12 +206,14 @@ router.get("/report/:id/approve", async (req, res) => {
       title: updateReq.updated ? "Approved" : "Error",
       status: "Report successfully approved.",
       succ: updateReq.updated ? true : false,
+      isLoggedIn: req.session.user ? true : false,
     });
   } catch (error) {
     res.render("admin/requestStat", {
       title: "Error",
       status: "Error updating report.",
       succ: false,
+      isLoggedIn: req.session.user ? true : false,
     });
   }
 });
@@ -238,12 +247,14 @@ router.get("/report/:id/decline", async (req, res) => {
       title: updateReq.updated ? "Approved" : "Error",
       status: "Report successfully declined.",
       succ: updateReq.updated ? true : false,
+      isLoggedIn: req.session.user ? true : false,
     });
   } catch (error) {
     res.render("admin/requestStat", {
       title: "Error",
       status: "Error updating report.",
       succ: false,
+      isLoggedIn: req.session.user ? true : false,
     });
   }
 });

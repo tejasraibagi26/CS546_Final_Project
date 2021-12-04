@@ -20,7 +20,12 @@ const getActivityById = async (id) => {
   return activityList;
 };
 
-const createActivity = async (activityTitle, activityBody, playersReq) => {
+const createActivity = async (
+  activityTitle,
+  activityBody,
+  playersReq,
+  creatorId
+) => {
   let array = [activityTitle, activityBody, playersReq];
   playersReq = parseInt(playersReq);
   errorHandler.checkIfElementsExists(array);
@@ -30,7 +35,7 @@ const createActivity = async (activityTitle, activityBody, playersReq) => {
   errorHandler.checkIfItemInRange(playersReq);
 
   let playersFilled = 0;
-  let createdBy = "617310bd50b4d0d56abef917";
+  let createdBy = creatorId;
   let playerAccepted = [];
   let creationDateTime = new Date().toLocaleString();
   const activity = await activityCollection();

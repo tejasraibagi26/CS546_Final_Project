@@ -31,6 +31,7 @@ router.get("/", async (req, res) => {
         title: "Search Results",
         venues: getVenues,
         count: getVenues.length,
+        isLoggedIn: req.session.user ? true : false,
       });
       return;
     } catch (error) {
@@ -70,6 +71,7 @@ router.get("/", async (req, res) => {
         venues: fetchVenue,
         count: fetchVenue.length,
         searchTerm: searchTerm,
+        isLoggedIn: req.session.user ? true : false,
       });
       return;
     } catch (error) {
@@ -78,6 +80,7 @@ router.get("/", async (req, res) => {
         err: true,
         error: error,
         searchTerm,
+        isLoggedIn: req.session.user ? true : false,
       });
       return;
     }
@@ -90,6 +93,7 @@ router.get("/", async (req, res) => {
       venues: fetchVenue,
       count: fetchVenue.length,
       searchTerm: searchTerm,
+      isLoggedIn: req.session.user ? true : false,
     });
     return;
   } catch (error) {
@@ -98,6 +102,7 @@ router.get("/", async (req, res) => {
       err: true,
       error: error,
       searchTerm,
+      isLoggedIn: req.session.user ? true : false,
     });
   }
 });
@@ -219,6 +224,7 @@ router.post("/create", upload.single("venueImage"), async (req, res) => {
     res.render("venue/createSucc", {
       title: "Venue Created",
       id: createVenue,
+      isLoggedIn: req.session.user ? true : false,
     });
   } catch (error) {
     res.status(500).json({ err: error });

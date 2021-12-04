@@ -3,25 +3,43 @@ const router = express.Router();
 const errorHandler = require("../Errors/errorHandler");
 const data = require("../data");
 const activity = data.activity;
+const user = data.user;
 const xss = require("xss");
 
 router.get("/", async (req, res) => {
-  const activities = await activity.getActivity();
-  res
-    .status(200)
-    .render("entry/activity", { title: "Feed", posts: activities });
+  let activities = await activity.getActivity();
+  let users = [];
+  for (let i = 0; i < activities.length; i++) {
+    let userData = await user.getUserById(activities[i].createdBy);
+    let userName = `${userData.firstName} ${userData.lastName}`;
+    users.push(userName);
+  }
+  for (let i = 0; i < activities.length; i++) {
+    activities[i].userName = users[i];
+  }
+  console.log(activities);
+  res.status(200).render("entry/activity", {
+    title: "Feed",
+    posts: activities,
+    isLoggedIn: req.session.user ? true : false,
+  });
 });
 
 router.get("/posts/create", (req, res) => {
-  res.render("entry/create", { title: "Create Post" });
+  res.render("entry/create", {
+    title: "Create Post",
+    isLoggedIn: req.session.user ? true : false,
+  });
 });
 
 router.post("/posts/create", async (req, res) => {
+  console.log(req.body);
   let activityTitle = xss(req.body.activityTitle);
   let activityBody = xss(req.body.activityBody);
   let playerReq = parseInt(xss(req.body.playerReq));
-
-  let array = [activityTitle, activityBody, playerReq];
+  let creatorId = req.session.user.id;
+  console.log(creatorId);
+  let array = [activityTitle, activityBody, playerReq, creatorId];
   try {
     errorHandler.checkIfElementsExists(array);
   } catch (error) {
@@ -43,14 +61,20 @@ router.post("/posts/create", async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: error });
   }
+  try {
+    errorHandler.checkIfValidObjectId(creatorId);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
 
   try {
     const create = await activity.createActivity(
       activityTitle,
       activityBody,
-      playerReq
+      playerReq,
+      creatorId
     );
-    return res.status(200).json({ create });
+    return res.rendirect("/feed");
   } catch (error) {
     return res.status(500).json({ error: error });
   }

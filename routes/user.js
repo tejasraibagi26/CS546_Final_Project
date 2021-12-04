@@ -53,6 +53,7 @@ router.get("/profile", async (req, res) => {
     title: "Profile",
     currentUser: currentUser,
     friends: friends,
+    isLoggedIn: true,
   });
 });
 
