@@ -1,24 +1,3 @@
-//Dynamically creating gender options
-const typeOfGenders = [
-  "Male",
-  "Female",
-  "Binary",
-  "Non Binary",
-  "Trans",
-  "Gay",
-  "Bisexual",
-  "Prefer not to respond",
-];
-
-const select = document.getElementById("gender");
-
-typeOfGenders.forEach((gender) => {
-  let option = document.createElement("option");
-  option.value = gender;
-  option.innerText = gender;
-  select.appendChild(option);
-});
-
 const registerForm = document.getElementById("registerForm");
 
 if (registerForm) {
@@ -33,6 +12,7 @@ if (registerForm) {
   const error = document.getElementById("registerError");
 
   registerForm.addEventListener("submit", (event) => {
+    e.preventDefault();
     let firstNameValue = firstName.value;
     let lastNameValue = lastName.value;
     let emailValue = email.value;
@@ -144,7 +124,6 @@ if (registerForm) {
     } catch (e) {
       error.innerHTML = e;
       error.hidden = false;
-      event.preventDefault();
       return;
     }
   });
