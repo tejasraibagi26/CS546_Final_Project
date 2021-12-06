@@ -1,0 +1,18 @@
+<div id="profile-page">
+  <h1>{{currentUser.firstName}} {{currentUser.lastName}}</h1>
+  <h2>Age: {{currentUser.age}}</h2>
+  <h2>Gender: {{currentUser.gender}}</h2>
+  <div class="friends">
+    <h2>Friends</h2>
+    {{#if friends}}
+      {{#each friends}}
+        <div class="friend">
+          <h3>{{this.firstName}} {{this.lastName}}</h3>
+        </div>
+      {{/each}}
+    {{else}}
+      <h3>You have not added any friends yet!</h3>
+    {{/if}}
+  </div>
+  <a href="/user/logout" id="logoutLink">Logout</a>
+</div>

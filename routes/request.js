@@ -3,9 +3,15 @@ const router = express.Router();
 const data = require("../data");
 const requestData = data.request;
 const errorHandler = require("../Errors/errorHandler");
+const xss = require("xss");
 
 router.post("/", async (req, res) => {
-  let { posterId, venueId, requestText, date, time } = req.body;
+  let posterId = xss(req.body.posterId);
+  let venueId = xss(req.body.venueId);
+  let requestText = xss(req.body.requestText);
+  let date = xss(req.body.date);
+  let time = xss(req.body.time);
+
   let array = [posterId, venueId, requestText, date, time];
   try {
     errorHandler.checkIfElementsExists(array);
@@ -43,7 +49,9 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/accept", async (req, res) => {
-  let { requestId, venueId } = req.body;
+  let requestId = xss(req.body.requestId);
+  let venueId = xss(req.body.venueId);
+
   let array = [requestId, venueId];
   try {
     errorHandler.checkIfElementsExists(array);

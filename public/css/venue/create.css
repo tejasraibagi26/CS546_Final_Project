@@ -19,7 +19,6 @@
   margin: 0;
   margin-bottom: 20px;
   letter-spacing: -2;
-  text-transform: lowercase;
 }
 
 #create-venue .container form {
@@ -39,8 +38,8 @@
   height: 50px;
   border: none;
   border-radius: 6px;
-  background-color: white;
-  padding: 0 10px;
+  background-color: whitesmoke;
+  padding: 10px;
   margin-top: 5px;
   font-family: "Source Sans Pro", sans-serif;
   font-size: 16px;
@@ -50,9 +49,9 @@
 }
 
 #create-venue .container textarea {
-  height: 60px !important;
   resize: none;
   padding: 0 10px !important;
+  vertical-align: center;
 }
 
 #create-venue .container select {
@@ -71,6 +70,7 @@
 }
 
 #create-venue .container .field .button {
+  cursor: pointer;
   background-color: #0d82df !important;
   color: white;
   font-weight: 900;
@@ -78,7 +78,27 @@
   text-transform: lowercase;
   letter-spacing: -1;
   text-align: center;
-  margin-top: 10px;
+  margin-top: 20px;
   height: 50px !important;
   margin-bottom: 20px;
 }
+
+/* .modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  width: 75%;
+  border-radius: 5px;
+}
+
+.modal .container {
+  width: 100%;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  padding: 20px 0;
+} */

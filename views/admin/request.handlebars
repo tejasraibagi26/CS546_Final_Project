@@ -1,0 +1,52 @@
+<section id="request">
+  <div class="container">
+    <div class="left"><img
+        src="../../public/images/{{venue.venueImage}}"
+        alt="{{venue.name}}"
+        class="img"
+      /></div>
+    <div class="right">
+      <h1 class="venue-title">{{venue.venueName}}</h1>
+      <a
+        class="map-hyperlink"
+        href="https://maps.google.com/?q={{venue.venueAddress}}"
+        target="_blank"
+      >
+        <h3 class="venue-address"><span><i
+              class="fas fa-map-pin size-xl"
+            ></i></span>
+          {{venue.venueAddress}}
+        </h3>
+      </a>
+      <h3 class="sports">
+        <span><i class="fas fa-running"></i></span>
+        Sports Offered:
+        <ul>
+          {{#each venue.sports}}
+            <li class="sports-off">{{this}}</li>
+          {{/each}}
+        </ul>
+      </h3>
+      <h3 class="timings">
+        <span><i class="fas fa-clock"></i></span>
+        Timings Offered:
+        <ul>
+          {{#each venue.venueTimings}}
+            <li>{{timeSlot}}</li>
+          {{/each}}
+        </ul>
+      </h3>
+      <h3 class="venue-cost"><span><i
+            class="fas fa-dollar-sign size-xl"
+          ></i></span>
+        US$
+        {{venue.price}}
+        / hr
+      </h3>
+      <div class="btn-row">
+        <a href="/admin/request/{{id}}/approve" class="appr-btn">Approve</a>
+        <a href="/admin/request/{{id}}/decline" class="decline-btn">Decline</a>
+      </div>
+    </div>
+  </div>
+</section>

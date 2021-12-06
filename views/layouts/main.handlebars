@@ -10,14 +10,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/public/css/main.css" />
     <link rel="stylesheet" href="/public/css/landing/main.css" />
+    <link rel="stylesheet" href="/public/css/landing/act.css" />
+    <link rel="stylesheet" href="/public/css/landing/create.css" />
     <link rel="stylesheet" href="/public/css/venue/venue.css" />
     <link rel="stylesheet" href="/public/css/venue/venuepage.css" />
     <link rel="stylesheet" href="/public/css/venue/create.css" />
     <link rel="stylesheet" href="/public/css/venue/createS.css" />
+    <link rel="stylesheet" href="/public/css/user/login.css" />
+    <link rel="stylesheet" href="/public/css/user/profile.css" />
+    <link rel="stylesheet" href="/public/css/user/register.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <link rel="stylesheet" href="/public/css/admin/index.css" />
+    <link rel="stylesheet" href="/public/css/admin/request.css" />
+    <link rel="stylesheet" href="/public/css/admin/report.css" />
+    <link rel="stylesheet" href="/public/css/notfound/404.css" />
+    <script
+      src="https://kit.fontawesome.com/8ab0f0c537.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <nav>
@@ -27,16 +40,32 @@
         </a>
         <ul>
           <li>
-            <a href="/login">Login</a>
+            <a href="/feed">Feed</a>
           </li>
-          <li>
-            <a href="/register">Register</a>
-          </li>
+          {{#if isLoggedIn}}
+            <li>
+              <a href="/user/profile">Profile</a>
+            </li>
+            <li>
+              <a href="/user/logout">Logout</a>
+            </li>
+          {{else}}
+            <li>
+              <a href="/user/login">Login</a>
+            </li>
+            <li>
+              <a href="/user/register">Register</a>
+            </li>
+          {{/if}}
         </ul>
       </div>
     </nav>
     {{{body}}}
     {{! Add JS scripts below }}
     {{! <script src="/public/JS/venue.js"></script> }}
+    <script src="/public/js/login.js"></script>
+    <script
+      src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
+    ></script>
   </body>
 </html>

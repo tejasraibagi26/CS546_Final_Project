@@ -1,7 +1,6 @@
 #search-results {
   position: relative;
   top: 60px;
-  background-color: whitesmoke;
 }
 
 /* New CSS HERE */
@@ -18,8 +17,43 @@
   background-color: white;
 }
 
+.fadeIn {
+  animation: fadeInRight 300ms ease-in-out;
+}
+
 .container .left .filters {
   margin: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.container .left .filters form {
+  display: block;
+}
+
+.container .left .filters form .cost {
+  background-color: whitesmoke;
+  height: 30px;
+  width: 49%;
+  border: none;
+  border-radius: 6px;
+  padding: 5px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-size: 18px;
+}
+
+.container .left .filters form .rating {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.container .left .filters form .rating p {
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
 }
 
 .title {
@@ -27,9 +61,31 @@
   font-weight: bold;
 }
 
-.container .left .filters .cost .row {
+.container .left .filters form .filter-button {
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+  height: 50px;
+  font-size: 22px;
+  border-radius: 6px;
+  background-color: #0d82df;
+  color: white;
+  font-weight: bold;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.container .left .filters form .filter-button:focus {
+  outline: none;
+}
+
+.container .left .filters form .filter-button:hover {
+  background-color: #0b63ab;
+}
+
+/* .container .left .filters .cost .row {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   align-self: start;
 }
@@ -38,9 +94,9 @@
   border: none;
   cursor: pointer;
   border-radius: 6px;
-}
+} */
 
-.container .left .filters .cost input {
+/* .container .left .filters .cost input {
   width: 40%;
   border: none;
   height: 30px;
@@ -51,7 +107,7 @@
 
 .container .left .filters .cost input:focus {
   outline: none;
-}
+} */
 
 .container .right {
   position: relative;
@@ -103,7 +159,7 @@
   max-width: 500px;
   margin-left: 20px;
   margin-bottom: 20px;
-  background-color: white;
+  background-color: whitesmoke;
   flex: content;
   border-radius: 6px;
 }
@@ -246,4 +302,15 @@
 
 .hidden {
   display: none;
+}
+
+@keyframes fadInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

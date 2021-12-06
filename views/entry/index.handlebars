@@ -10,7 +10,7 @@
           placeholder="Type a sport or click search for all results."
         />
         <button class="search-button" id="search-button" type="submit">
-          <i class="fa fa-search"></i>
+          <i class="fas fa-search"></i>
         </button>
       </form>
     </div>
@@ -21,28 +21,55 @@
     <h1 class="what-header">What we offer</h1>
     <div class="what-we-do-container">
       <div class="col">
-        <i class="fa fa-users" class="icon" style="color: #0d82df;"></i>
+        {{! <i class="fas fa-users" class="icon" style="color: #0d82df;"></i> }}
+        <lottie-player
+          src="https://assets3.lottiefiles.com/packages/lf20_xyadoh9h.json"
+          background="transparent"
+          speed="1"
+          style="width: 200px; height: 200px;"
+          class="fas"
+          loop
+          autoplay
+        ></lottie-player>
         <h2>Let you find your favourite sport and team up with other players!</h2>
       </div>
       <div class="col">
-        <i class="fa fa-money" class="icon" style="color: green;"></i>
+        {{! <i class="fas fa-wallet" class="icon" style="color: green;"></i> }}
+        <lottie-player
+          src="https://assets2.lottiefiles.com/private_files/lf30_BU51PH.json"
+          background="transparent"
+          speed="1"
+          style="width: 200px; height: 200px;"
+          class="fas"
+          loop
+          autoplay
+        ></lottie-player>
         <h2>Book your playground directly without any hidden charges.</h2>
       </div>
       <div class="col">
-        <i class="fa fa-trophy" class="icon" style="color:goldenrod;"></i>
+        {{! <i class="fas fa-award" class="icon" style="color:goldenrod;"></i> }}
+        <lottie-player
+          src="https://assets2.lottiefiles.com/packages/lf20_stozcwgt.json"
+          background="transparent"
+          speed="1"
+          style="width: 200px; height: 200px;"
+          class="fas"
+          loop
+          autoplay
+        ></lottie-player>
         <h2>Post game request to match with players within your skill range.</h2>
       </div>
     </div>
   </div>
+  <footer id="footer" class="footer">
+    <span class="madeby">Developed By</span>
+    <div class="devs">
+      <ul id="list" class="dev-list">
+        <li>Tejas Raibagi</li>
+        <li>Troy Tomasch</li>
+        <li>Pinak Pathak</li>
+        <li>Varun G</li>
+      </ul>
+    </div>
+  </footer>
 </section>
-{{! <footer id="footer" class="footer">
-  <span class="madeby">Developed By</span>
-  <div class="devs">
-    <ul id="list" class="dev-list">
-      <li>Tejas Raibagi</li>
-      <li>Troy Tomasch</li>
-      <li>Pinak Pathak</li>
-      <li>Varun G</li>
-    </ul>
-  </div>
-</footer> }}
