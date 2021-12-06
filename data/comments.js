@@ -33,7 +33,8 @@ async function addComment(userId, reviewId, commentText) {
     throw 'review Id should be valid ObjectId';
   }
 
-  const reviewCollection = await reviews();
+
+  //const reviewCollection = await reviews();
   const userCollection = await user();
   const commentCollection = await comments();
 
@@ -120,7 +121,7 @@ async function removeComment(id, userId, reviewId) {
     throw 'comment ID Id should be valid ObjectId';
   }
   
-  const reviewCollection = await reviews();
+  //const reviewCollection = await reviews();
   const userCollection = await user();
   const commentCollection = await comments();
 
@@ -158,8 +159,7 @@ async function removeComment(id, userId, reviewId) {
   try {
     comment = await this.getCommentById((id));
   } catch (e) {
-    console.log(e);
-    return;
+    throw e;
   }
 
   /* Checking if comment deletion was successfull ot not */
@@ -262,7 +262,7 @@ async function updateCommentText(id, userId, reviewId, commentText) {
   if (updatedInfo.modifiedCount === 0) {
     throw 'could not update comment text successfully';
   }
-  const comment = await this.getCommentById(id);
+  //const comment = await this.getCommentById(id);
   return { msg: "Updated Comment text successfully" };
 }
 
