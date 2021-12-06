@@ -22,7 +22,8 @@
         {{venue.venueRating}}
         ({{reviewCount}}
         review(s))
-        <a href="#" class="add-rev hint">Add a review.</a>
+        <a href="/reviews/{{userId}}/{{venue._id}}" class="add-rev hint">Add a
+          review.</a>
       </h3>
       <form
         action="/bookings/book"
