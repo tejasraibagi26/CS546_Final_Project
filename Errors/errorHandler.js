@@ -70,8 +70,7 @@ const checkIfItemInRange = (item) => {
 
 const checkIfCurrentDate = (date) => {
   let currentDate = new Date().toLocaleDateString();
-  if (Date.parse(date) - Date.parse(currentDate) < 0)
-    throw "Date cannot be in the past";
+  if (date != currentDate) throw "Date must be today";
 };
 
 const checkIfTimePeriodValid = (startTime, endTime) => {

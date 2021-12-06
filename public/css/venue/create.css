@@ -66,12 +66,12 @@
 }
 
 #create-venue .container input:focus {
-  outline: #0079d1 solid;
+  outline: #0d82df solid;
 }
 
 #create-venue .container .field .button {
   cursor: pointer;
-  background-color: #0079d1 !important;
+  background-color: #0d82df !important;
   color: white;
   font-weight: 900;
   font-size: 26px;

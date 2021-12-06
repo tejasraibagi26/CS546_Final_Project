@@ -24,27 +24,15 @@ const createActivity = async (
   activityTitle,
   activityBody,
   playersReq,
-  creatorId,
-  venueReq,
-  bookingId
+  creatorId
 ) => {
-  let array = [
-    activityTitle,
-    activityBody,
-    playersReq,
-    creatorId,
-    venueReq,
-    bookingId,
-  ];
+  let array = [activityTitle, activityBody, playersReq];
   playersReq = parseInt(playersReq);
   errorHandler.checkIfElementsExists(array);
   array = [activityTitle, activityBody];
   errorHandler.checkIfElementsAreStrings(array);
   errorHandler.checkIfElementNotEmptyString(array);
   errorHandler.checkIfItemInRange(playersReq);
-  errorHandler.checkIfValidObjectId(creatorId);
-  errorHandler.checkIfValidObjectId(venueReq);
-  errorHandler.checkIfValidObjectId(bookingId);
 
   let playersFilled = 0;
   let createdBy = creatorId;
@@ -59,8 +47,6 @@ const createActivity = async (
     playerAccepted,
     createdBy,
     creationDateTime,
-    venueReq,
-    bookingId,
   };
   const insertInfo = await activity.insertOne(newActivity);
   if (insertInfo.insertedCount === 0) throw "Could not add activity";

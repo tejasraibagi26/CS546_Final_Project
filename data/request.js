@@ -1,5 +1,5 @@
 const mongoCollections = require("../config/mongoCollections");
-const requestCollection = mongoCollections.activity;
+const requestCollection = mongoCollections.request;
 const errorHandler = require("../Errors/errorHandler");
 const { ObjectId } = require("mongodb");
 
@@ -42,28 +42,10 @@ const acceptUserRequest = async (requestId, userId) => {
   requestId = ObjectId(requestId);
 
   const request = await requestCollection();
-  const getRequest = await request.findOne({ _id: requestId });
-  if (getRequest.playersFilled === getRequest.playersReq) {
-    throw { code: 100 };
-  }
-  if (userId === getRequest.createdBy) {
-    throw { code: 101 };
-  }
-
-  if (getRequest.playerAccepted.includes(userId)) {
-    throw { code: 102 };
-  }
-
   const acceptRequest = await request.updateOne(
     { _id: requestId },
-    { $push: { playerAccepted: userId }, $inc: { playersFilled: 1 } }
+    { $push: { acceptedUsers: userId } }
   );
-
-  if (acceptRequest.modifiedCount === 0) {
-    throw { code: 103 };
-  }
-
-  return { userAdded: true };
 };
 
 module.exports = {

@@ -220,6 +220,7 @@ router.put("/rating/:id/:userId/:venueId", async (req, res) => {
     );
     res.status(200).json(updatedReview);
   } catch (e) {
+    console.log(e);
     res.status(500).json({ error: e });
   }
 });
@@ -428,6 +429,7 @@ router.put("/upvote/:reviewId/:userId", async (req, res) => {
     const updatedReview = await resData.upVote(reviewId, userId);
     res.status(200).json(updatedReview);
   } catch (e) {
+    console.log(e);
     res.status(500).json({ error: e });
   }
 });
@@ -486,6 +488,7 @@ router.put("/downvote/:reviewId/:userId", async (req, res) => {
     const updatedReview = await resData.downVote(reviewId, userId);
     res.status(200).json(updatedReview);
   } catch (e) {
+    console.log(e);
     res.status(500).json({ error: e });
   }
 });
@@ -545,6 +548,7 @@ router.put("/removeup/:reviewId/:userId", async (req, res) => {
     const updatedReview = await resData.removeUpvote(reviewId, userId);
     res.status(200).json(updatedReview);
   } catch (e) {
+    console.log(e);
     res.status(500).json({ error: e });
   }
 });
@@ -603,6 +607,7 @@ router.put("/removedown/:reviewId/:userId", async (req, res) => {
     const updatedReview = await resData.removeDownvote(reviewId, userId);
     res.status(200).json(updatedReview);
   } catch (e) {
+    console.log(e);
     res.status(500).json({ error: e });
   }
 });
@@ -649,6 +654,7 @@ router.get("/newest/:venueId", async (req, res) => {
     const getNewest = await resData.sortNewest(id);
     res.status(200).json(getNewest);
   } catch (e) {
+    console.log(e);
     res.status(500).json({ error: e });
   }
 }),
@@ -695,6 +701,7 @@ router.get("/newest/:venueId", async (req, res) => {
       const getOldest = await resData.sortOldest(id);
       res.status(200).json(getOldest);
     } catch (e) {
+      console.log(e);
       res.status(500).json({ error: e });
     }
   }),
@@ -741,6 +748,7 @@ router.get("/newest/:venueId", async (req, res) => {
       const getHigest = await resData.sortHighestRating(id);
       res.status(200).json(getHigest);
     } catch (e) {
+      console.log(e);
       res.status(500).json({ error: e });
     }
   }),
@@ -787,6 +795,7 @@ router.get("/newest/:venueId", async (req, res) => {
       const getLowest = await resData.sortLowestRating(id);
       res.status(200).json(getLowest);
     } catch (e) {
+      console.log(e);
       res.status(500).json({ error: e });
     }
   }),
@@ -833,6 +842,7 @@ router.get("/newest/:venueId", async (req, res) => {
       const mostUpvoted = await resData.mostUpvoted(id);
       res.status(200).json(mostUpvoted);
     } catch (e) {
+      console.log(e);
       res.status(500).json({ error: e });
     }
   }),
@@ -879,6 +889,7 @@ router.get("/newest/:venueId", async (req, res) => {
       const mostDownvoted = await resData.mostDownvoted(id);
       res.status(200).json(mostDownvoted);
     } catch (e) {
+      console.log(e);
       res.status(500).json({ error: e });
     }
   }),
@@ -930,6 +941,7 @@ router.get("/newest/:venueId", async (req, res) => {
       );
       res.status(200).json(filterReview);
     } catch (e) {
+      console.log(e);
       res.status(500).json({ error: e });
     }
   });

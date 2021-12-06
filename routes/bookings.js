@@ -6,14 +6,13 @@ const booking = data.booking;
 const xss = require("xss");
 
 router.post("/book", async (req, res) => {
-  const bookedVenueId = xss(req.body.bookingVenueId);
+  const bookingUserId = xss(req.body.bookingUserId);
+  const bookedVenueId = xss(req.body.bookedVenueId);
   const startTime = xss(req.body.startTime);
-  const endTime = xss(req.body.endTime);
+  let endTime = xss(req.body.endTime);
   const date = xss(req.body.date);
-  const bookedUserId = req.session.user.id;
-  const cost = xss(req.body.cost);
 
-  let array = [bookedVenueId, bookedUserId, startTime, endTime, date, cost];
+  let array = [bookingUserId, bookedVenueId, timing, date];
   try {
     errorHandler.checkIfElementsExists(array);
   } catch (error) {
@@ -30,12 +29,12 @@ router.post("/book", async (req, res) => {
     return res.status(400).json({ error: error });
   }
   try {
-    errorHandler.checkIfValidObjectId(bookedVenueId);
+    errorHandler.checkIfValidObjectId(bookingUserId);
   } catch (error) {
     return res.status(400).json({ error: error });
   }
   try {
-    errorHandler.checkIfValidObjectId(bookedUserId);
+    errorHandler.checkIfValidObjectId(bookedVenueId);
   } catch (error) {
     return res.status(400).json({ error: error });
   }
@@ -52,12 +51,11 @@ router.post("/book", async (req, res) => {
 
   try {
     const book = await booking.create(
+      bookingUserId,
       bookedVenueId,
-      bookedUserId,
       startTime,
       endTime,
-      date,
-      cost
+      date
     );
     res.status(200).json(book);
   } catch (error) {

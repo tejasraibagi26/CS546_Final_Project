@@ -25,10 +25,10 @@
         <a href="#" class="add-rev hint">Add a review.</a>
       </h3>
       <form
-        action="/bookings/book"
         method="post"
         onsubmit="return validate()"
         id="book-form"
+        enctype="multipart/form-data"
       >
         <h3 class="sports">
           <span><i class="fas fa-running"></i></span>
@@ -60,22 +60,8 @@
           </select>
           <p class="silent">Note: Each slot is for 1 hour only!</p>
         </h3>
-        <lable>
-          <input name="bookingVenueId" value="{{venue._id}}" hidden />
-        </lable>
-        <lable>
-          <input id="costVal" name="cost" hidden />
-        </lable>
-        <h3
-          id="cost"
-          name="cost"
-          style="font-weight: normal; margin-bottom: 0px"
-        ></h3>
         <button type="submit" class="book-btn">Book Now</button>
       </form>
-      <lable>
-        <input id="price" name="costPHr" value="{{venue.price}}" hidden />
-      </lable>
       <div id="error" hidden>
         <ul id="err-list"></ul>
       </div>

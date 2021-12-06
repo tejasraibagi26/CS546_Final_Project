@@ -55,7 +55,7 @@ h1 {
 }
 
 #report .container .row a:hover {
-  background-color: #0079d1;
+  background-color: #0d82df;
   color: white;
   transform: scale(1.1);
 }
@@ -93,7 +93,7 @@ h1 {
 }
 
 #report .container .options .appr {
-  background-color: #0079d1;
+  background-color: #0d82df;
   color: white;
 }
 
