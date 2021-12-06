@@ -89,7 +89,7 @@ router.post("/create", async (req, res) => {
   let password = xss(req.body.password);
   let gender = xss(req.body.gender);
   let role = xss(req.body.role);
-
+  let age = xss(req.body.age);
   let userArray = [firstName, lastName, email, password, gender, role];
   try {
     errorHandler.checkIfElementsExists(userArray);

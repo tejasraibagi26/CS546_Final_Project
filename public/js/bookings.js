@@ -1,3 +1,32 @@
+const cost = document.getElementById("cost");
+const startTime = document.forms["book-form"]["startTime"];
+const endTime = document.forms["book-form"]["endTime"];
+const price = document.getElementById("price");
+const costVal = document.getElementById("costVal");
+
+let sT = startTime.value.split(":")[0];
+let eT = endTime.value.split(":")[0];
+let total = 0;
+
+startTime.addEventListener("change", (e) => {
+  sT = e.target.value.split(":")[0];
+  updateCost();
+});
+
+endTime.addEventListener("change", (e) => {
+  eT = e.target.value.split(":")[0];
+  updateCost();
+});
+
+function updateCost() {
+  total = (eT - sT) * price.value;
+  console.log(total);
+  if (total > 0) {
+    cost.innerText = `Total cost: $${total}.00`;
+    costVal.value = total;
+  }
+}
+
 function validate() {
   const error = document.getElementById("error");
   const ul = document.getElementById("err-list");
@@ -9,7 +38,7 @@ function validate() {
 
   let currentDate = new Date().toLocaleDateString();
 
-  if (date == null) {
+  if (date == null || date == "") {
     errors.push("Please select a date");
   }
 
@@ -37,6 +66,5 @@ function validate() {
     return false;
   }
 
-  return false;
-  //location.href = "/bookings/create";
+  return true;
 }
