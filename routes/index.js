@@ -1,6 +1,7 @@
 const venues = require("./venues");
 const user = require("./user");
 const reviews = require("./reviews");
+const comments = require("./comments");
 const landing = require("./landing");
 const gameReq = require("./request");
 const create = require("./create");
@@ -16,6 +17,7 @@ const constructorMethod = (app) => {
   app.use("/post", gameReq);
   app.use("/user", user);
   app.use("/reviews", reviews);
+  app.use("/comments",comments);
   app.use("/admin", admin);
   app.use("/404", notFound);
   app.use("/feed", feed);
