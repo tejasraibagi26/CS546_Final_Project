@@ -18,12 +18,13 @@ body {
 #venue-page .container .left {
   background-color: transparent;
   width: 100%;
-  height: 100%;
+  height: 50%;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: flex-start;
   padding: 20px;
+  position: absolute;
 }
 
 a .venue-address {
@@ -116,7 +117,7 @@ a .venue-address {
   background-color: #0d82df;
   border-radius: 6px;
   border: none;
-  width: 25%;
+  width: 50%;
   height: 40px;
   color: white;
   font-weight: bold;
@@ -141,4 +142,50 @@ a .venue-address {
   font-size: 3em;
   margin: 0;
   letter-spacing: -2;
+}
+
+.date {
+  border: none;
+  background-color: whitesmoke;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.comment-textbox {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.comment-textbox form {
+  width: 100%;
+  display: flex;
+}
+
+.comment-textbox form label {
+  width: 50%;
+}
+
+.comment-textbox form label textarea {
+  width: 100%;
+  height: 50px;
+  border: none;
+  background-color: whitesmoke;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 22px;
+  resize: none;
+}
+
+.comment-textbox form button {
+  background-color: #0d82df;
+  border-radius: 6px;
+  border: none;
+  padding: 5px 10px;
+  height: 50px;
+  color: white;
+  font-size: 20px;
+  margin-left: 10px;
+  cursor: pointer;
 }

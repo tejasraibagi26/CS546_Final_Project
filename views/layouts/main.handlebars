@@ -10,6 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/public/css/main.css" />
     <link rel="stylesheet" href="/public/css/landing/main.css" />
+    <link rel="stylesheet" href="/public/css/landing/act.css" />
+    <link rel="stylesheet" href="/public/css/landing/create.css" />
     <link rel="stylesheet" href="/public/css/venue/venue.css" />
     <link rel="stylesheet" href="/public/css/venue/venuepage.css" />
     <link rel="stylesheet" href="/public/css/venue/create.css" />
@@ -38,21 +40,30 @@
         </a>
         <ul>
           <li>
-            <a href="/user/profile">Profile</a>
+            <a href="/feed">Feed</a>
           </li>
-          <li>
-            <a href="/user/login">Login</a>
-          </li>
-          <li>
-            <a href="/user/register">Register</a>
-          </li>
+          {{#if isLoggedIn}}
+            <li>
+              <a href="/user/profile">Profile</a>
+            </li>
+            <li>
+              <a href="/user/logout">Logout</a>
+            </li>
+          {{else}}
+            <li>
+              <a href="/user/login">Login</a>
+            </li>
+            <li>
+              <a href="/user/register">Register</a>
+            </li>
+          {{/if}}
         </ul>
       </div>
     </nav>
     {{{body}}}
     {{! Add JS scripts below }}
     {{! <script src="/public/JS/venue.js"></script> }}
-    <script
+<script
       src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
     ></script>
     <script
@@ -69,3 +80,4 @@
     <script src="/public/js/register.js"></script>
   </body>
 </html>
+    

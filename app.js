@@ -17,7 +17,8 @@ app.use(
     name: "LoginCookie",
     secret: "Cookie used for login",
     saveUninitialized: true,
-    cookie: { maxAge: 6000000 },
+    resave: true,
+    cookie: { maxAge: 600000 },
   })
 );
 
@@ -25,23 +26,29 @@ app.use(
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-app.use(
-  session({
-    name: "AuthCookie",
-    secret: "some secret string!",
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+app.use("/create", async (req, res, next) => {
+  if (!req.session.user) {
+    //Redirect to login page as user is not authorized to create venue
+    return res.redirect("/user/login");
+  } else {
+    next();
+  }
+});
 
-// app.use("/create", async (req, res, next) => {
-//   if (!req.session.user) {
-//     //Redirect to login page as user is not authorized to create venue
-//     return res.redirect("/");
-//   } else {
-//     next();
-//   }
-// });
+app.use("/venues/create", (req, res, next) => {
+  console.log(req.method);
+  req.method = "POST";
+  next();
+});
+
+app.use("/feed/posts/create", (req, res, next) => {
+  let user = req.session.user;
+  if (!user) {
+    //Redirect to login, for now its "/"
+    return res.redirect("/user/login");
+  }
+  next();
+});
 
 //Configure app to the routes
 configRouter(app);

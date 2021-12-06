@@ -24,30 +24,71 @@
         review(s))
         <a href="#" class="add-rev hint">Add a review.</a>
       </h3>
-      <h3 class="sports">
-        <span><i class="fas fa-running"></i></span>
-        Select Sport:
-        <select class="sports-select">
-          {{#each venue.sports}}
-            <option value="{{this}}">{{this}}</option>
-          {{/each}}
-        </select>
-        {{! <p class="silent">Note: Each slot is for 1 hour only!</p> }}
-      </h3>
-      <h3 class="timings">
-        <span><i class="fas fa-clock"></i></span>
-        Timing:
-        <select class="timing-select">
-          {{#each venue.venueTimings}}
-            <option value="{{timeSlot}}">{{timeSlot}}</option>
-          {{/each}}
-        </select>
-        <p class="silent">Note: Each slot is for 1 hour only!</p>
-      </h3>
-      <button class="book-btn" type="submit">Book Now</button>
+      <form
+        method="post"
+        onsubmit="return validate()"
+        id="book-form"
+        enctype="multipart/form-data"
+      >
+        <h3 class="sports">
+          <span><i class="fas fa-running"></i></span>
+          Select Sport:
+          <select class="sports-select" name="sport">
+            {{#each venue.sports}}
+              <option value="{{this}}">{{this}}</option>
+            {{/each}}
+          </select>
+          {{! <p class="silent">Note: Each slot is for 1 hour only!</p> }}
+        </h3>
+        <h3 class="sports"><span><i class="fas fa-calendar-alt"></i></span>
+          Date:
+          <input type="date" name="date" class="date" />
+        </h3>
+        <h3 class="timings">
+          <span><i class="fas fa-clock"></i></span>
+          Start Timing:
+          <select class="timing-select" name="startTime">
+            {{#each venue.venueTimings}}
+              <option value="{{timeSlot}}">{{timeSlot}}</option>
+            {{/each}}
+          </select>
+          End Timing:
+          <select class="timing-select" name="endTime">
+            {{#each venue.venueTimings}}
+              <option value="{{timeSlot}}">{{timeSlot}}</option>
+            {{/each}}
+          </select>
+          <p class="silent">Note: Each slot is for 1 hour only!</p>
+        </h3>
+        <button type="submit" class="book-btn">Book Now</button>
+      </form>
+      <div id="error" hidden>
+        <ul id="err-list"></ul>
+      </div>
     </div>
   </div>
   <div class="comment">
     <h1 class="comment-header">Comments</h1>
+    <div class="comment-textbox">
+      <form
+        method="post"
+        onsubmit="return validateComment()"
+        id="comment-form"
+        enctype="multipart/form-data"
+      >
+        <label for="comment-text">
+          <textarea
+            name="comment"
+            id="comment-text"
+            placeholder="Add a comment..."
+            class="comment-text"
+          ></textarea>
+        </label>
+        <button type="submit" class="comment-btn">Comment
+          <span><i class="fas fa-paper-plane"></i></span>
+        </button>
+      </form>
+    </div>
   </div>
 </section>
+<script src="/public/js/bookings.js"></script>
