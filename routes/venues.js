@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
   const max = parseInt(req.query.max) || 1000000;
   const rating = parseInt(req.query.rating) || 0;
   let array = [searchTerm];
-
+  
   if (!searchTerm) {
     try {
       const getVenues = await venue.searchVenue(searchTerm, min, max, rating);
@@ -144,6 +144,8 @@ router.get("/:id", async (req, res) => {
       title: getVenue.venueName,
       venue: getVenue,
       reviewCount: getVenue.reviews.length,
+      isLoggedIn: req.session.user ? true : false,
+      userId: req.session.user ? req.session.user.id : "",
     });
   } catch (error) {
     res.status(404).json({ err: error });
