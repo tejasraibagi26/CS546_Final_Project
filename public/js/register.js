@@ -12,7 +12,6 @@ if (registerForm) {
   const error = document.getElementById("registerError");
 
   registerForm.addEventListener("submit", (event) => {
-    e.preventDefault();
     let firstNameValue = firstName.value;
     let lastNameValue = lastName.value;
     let emailValue = email.value;
