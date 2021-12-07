@@ -89,6 +89,7 @@
   min-width: 50%;
   display: flex;
   justify-content: start;
+  align-items: flex-start;
 }
 
 #activity .container .posts .card .card-header .row .user {
@@ -106,6 +107,7 @@
   color: gray;
   padding: 0;
   margin: 0;
+  height: auto !important;
 }
 
 #activity .container .posts .card .card-header .row img {

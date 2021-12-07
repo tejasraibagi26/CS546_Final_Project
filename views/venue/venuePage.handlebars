@@ -6,17 +6,63 @@
         class="img"
       /></div>
     <div class="right">
-      <h1 class="venue-title">{{venue.venueName}}</h1>
+      <div class="row">
+        <h1 class="venue-title">{{venue.venueName}}</h1>
+        <span class="report"><i class="fa fa-flag" id="reportButton"></i>
+          <div class="report-container" id="reportDiv" hidden>
+            <form
+              id="reportForm"
+              method="post"
+              action="/report/{{venue._id}}/venue"
+              onsubmit="return validate()"
+            >
+              <div class="input-fields">
+                <label for="reportComment" class="label">
+                  Problem
+                  <textarea
+                    class="input"
+                    type="text"
+                    name="reportComment"
+                    placeholder="Describe the problem"
+                    required
+                  ></textarea>
+                </label>
+                <label
+                  for="reportContentType"
+                  class="label"
+                  style="margin-top: 10px;"
+                >
+                  Report Type
+                  <select
+                    class="input"
+                    style="background-color: white;"
+                    name="reportContentType"
+                    id="reportType"
+                    required
+                  >
+                  </select>
+                </label>
+                <button
+                  type="submit"
+                  class="book-btn"
+                  style="margin-top: 10px; width:100%"
+                >Report</button>
+              </div>
+            </form>
+          </div>
+        </span>
+
+      </div>
       <a
         class="map-hyperlink"
         href="https://maps.google.com/?q={{venue.venueAddress}}"
         target="_blank"
       >
-        <h3 class="venue-address"><span><i
+        <h2 class="venue-address"><span><i
               class="fas fa-map-pin size-xl"
             ></i></span>
           {{venue.venueAddress}}
-        </h3>
+        </h2>
       </a>
       <h3 class="venue-rating"><span><i class="fas fa-star size-xl"></i></span>
         {{venue.venueRating}}
@@ -107,3 +153,4 @@
   </div>
 </section>
 <script src="/public/js/bookings.js"></script>
+<script src="/public/js/report.js"></script>

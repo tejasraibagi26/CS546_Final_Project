@@ -67,6 +67,13 @@ app.use("/bookings", (req, res, next) => {
   next();
 });
 
+app.use("/report", (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("/user/login");
+  }
+  next();
+});
+
 //Configure app to the routes
 configRouter(app);
 
