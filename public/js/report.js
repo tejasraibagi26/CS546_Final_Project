@@ -3,12 +3,10 @@ const reportTypes = ["Abusive", "Hate", "Rude", "Sexual", "Other"];
 const select = document.getElementById("reportType");
 const reportDiv = document.getElementsByClassName("reportDiv");
 const reportButton = document.getElementsByClassName("reportButton");
-console.log(reportButton);
-console.log(reportDiv);
+
 if (reportDiv) {
   for (let i = 0; i < reportButton.length; i++) {
     reportButton[i].addEventListener("click", () => {
-      console.log("clicked");
       reportDiv[i].hidden = !reportDiv[i].hidden;
     });
   }

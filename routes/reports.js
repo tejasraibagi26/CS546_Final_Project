@@ -14,8 +14,6 @@ router.post("/:venueId/:type", async (req, res) => {
 
   let array = [venueId, userId, reportComment, reportContentType, reportType];
 
-  console.log(array);
-
   try {
     errorHandler.checkIfElementsExists(array);
   } catch (error) {
