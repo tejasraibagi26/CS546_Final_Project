@@ -124,6 +124,7 @@ if (registerForm) {
     } catch (e) {
       error.innerHTML = e;
       error.hidden = false;
+      event.preventDefault();
       return;
     }
   });
