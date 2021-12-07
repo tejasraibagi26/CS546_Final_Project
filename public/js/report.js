@@ -1,15 +1,17 @@
 const reportTypes = ["Abusive", "Hate", "Rude", "Sexual", "Other"];
 
 const select = document.getElementById("reportType");
-const reportDiv = document.getElementById("reportDiv");
-const reportButton = document.getElementById("reportButton");
+const reportDiv = document.getElementsByClassName("reportDiv");
+const reportButton = document.getElementsByClassName("reportButton");
 console.log(reportButton);
 console.log(reportDiv);
 if (reportDiv) {
-  reportButton.addEventListener("click", () => {
-    console.log("clicked");
-    reportDiv.hidden = !reportDiv.hidden;
-  });
+  for (let i = 0; i < reportButton.length; i++) {
+    reportButton[i].addEventListener("click", () => {
+      console.log("clicked");
+      reportDiv[i].hidden = !reportDiv[i].hidden;
+    });
+  }
 }
 
 if (select) {
@@ -21,7 +23,7 @@ if (select) {
   });
 }
 
-function validate() {
+function validateReport() {
   const reportComment = document.forms["reportForm"]["reportComment"].value;
   const reportContentType =
     document.forms["reportForm"]["reportContentType"].value;
