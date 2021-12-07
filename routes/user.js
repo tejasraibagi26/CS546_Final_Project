@@ -170,8 +170,8 @@ router.post("/login", async (req, res) => {
     errorHandler.checkIfElementNotEmptyString(array);
     errorHandler.checkIfValidEmail(username);
   } catch (e) {
-    res.render("user/login", {
-      title: "Login",
+    res.json({
+      auth: false,
       error: e,
     });
     return;
@@ -183,8 +183,8 @@ router.post("/login", async (req, res) => {
     foundUser = await user.getUserByEmail(username);
     match = await bcrypt.compare(inputPassword, foundUser.password);
   } catch (e) {
-    res.render("user/login", {
-      title: "Login",
+    res.json({
+      auth: false,
       error: e,
     });
     return;
@@ -195,13 +195,16 @@ router.post("/login", async (req, res) => {
       id: foundUser._id,
       firstName: foundUser.firstName,
       lastName: foundUser.lastName,
+      role: foundUser.role,
     };
-    res.redirect("/user/profile");
+    res.json({
+      auth: true,
+    });
     return;
   } else {
-    res.render("user/login", {
-      title: "Login",
-      error: "Incorrect email or password",
+    res.json({
+      auth: false,
+      error: "Email or password is incorrect",
     });
     return;
   }

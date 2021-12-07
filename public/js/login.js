@@ -2,13 +2,16 @@
   let loginForm = $("#loginForm"),
     email = $("#loginEmail"),
     password = $("#loginPassword"),
-    error = $("#loginError");
+    error = $("#loginError"),
+    loading = $("#spinnerDiv"),
+    button = $("#loginSubmitLabel");
 
   loginForm.submit(function (event) {
     let emailValue = email.val();
     let passwordValue = password.val();
     error.val("");
     error.hide();
+    event.preventDefault();
 
     try {
       if (!emailValue) throw "Must provide email";
@@ -29,7 +32,6 @@
       error.text(e);
       error.show();
       email.focus();
-      event.preventDefault();
       return;
     }
 
@@ -41,8 +43,27 @@
       error.text(e);
       error.show();
       password.focus();
-      event.preventDefault();
       return;
     }
+    let data = {
+      email: emailValue,
+      password: passwordValue,
+    };
+
+    loading.show();
+    button.hide();
+
+    $.post("/user/login", data, function (data) {
+      if (data.auth == true) {
+        window.location.href = "/feed";
+      } else {
+        password.val("");
+        error.text(data.error);
+        error.show();
+        password.focus();
+        loading.hide();
+        button.show();
+      }
+    });
   });
 })(window.jQuery);
