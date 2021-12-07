@@ -1,8 +1,7 @@
 <div id="login-page">
   <div class="login-container">
     <h1 id="loginTitle">Login</h1>
-    {{! <h3 id="loginError" hidden>Hey</h3> }}
-    <h3 id="loginError"> {{error}}</h3>
+    <h2 id="loginError"> {{error}}</h2>
     <form action="/user/login" name="login" method="post" id="loginForm">
       <label class="loginLabel">Email:
         <input
@@ -25,6 +24,9 @@
         <input type="submit" id="loginSubmit" value="Login" />
       </label>
     </form>
+    <div id="spinnerDiv" hidden>
+      <div class="spin"></div>
+    </div>
     <a href="/user/register" id="signupLink">Don't have an account? Click here
       to signup!</a>
   </div>
