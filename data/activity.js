@@ -61,7 +61,6 @@ removeActivityOnExpire.start();
 const getActivity = async () => {
   const activity = await activityCollection();
   const activityList = await activity.find({ postVisible: true }).toArray();
-  console.log(activityList);
   return activityList;
 };
 
