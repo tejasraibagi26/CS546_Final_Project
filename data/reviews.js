@@ -24,7 +24,7 @@ async function addReview(userId, venueId, reviewText, rating, reviewPicture) {
   errorHandler.checkIfElementsExists(array);
   errorHandler.checkIfElementsAreStrings(stringInput);
   errorHandler.checkIfElementNotEmptyString(stringInput);
-  errorHandler.checkIfValidRating(rating);
+  //errorHandler.checkIfValidRating(rating);
   if (!reviewPicture || reviewPicture == "") {
     reviewPicture = "";
   }
@@ -63,6 +63,7 @@ async function addReview(userId, venueId, reviewText, rating, reviewPicture) {
     venueId: venueId,
     reviewText: reviewText,
     rating: rating,
+    createdAt1: new Date().toLocaleString(),
     createdAt: new Date(),
     commentId: [],
     votes: 0,
