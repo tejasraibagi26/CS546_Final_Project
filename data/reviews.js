@@ -1538,7 +1538,7 @@ async function getAllReviewsByvenueId(venueId) {
   let venueReviewCollection = await venue1.getVenueById(venueId);
   let length = venueReviewCollection.reviews.length;
   if (length === 0) {
-    throw "no reviews";
+    return false;
   }
   for (let i = 0; i < length; i++) {
     let reviewFinal = venueReviewCollection.reviews[i]._id;

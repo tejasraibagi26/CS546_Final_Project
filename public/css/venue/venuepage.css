@@ -256,3 +256,39 @@ a .venue-address {
   margin-left: 10px;
   cursor: pointer;
 }
+
+.user-review {
+  width: 50%;
+  background-color: whitesmoke;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: 6px;
+}
+
+.user-review .username,
+.user-review .reviewText {
+  margin: 0;
+}
+
+.user-review .reviewText {
+  margin: 10px 0;
+}
+
+.user-review .username {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-review .username .date-time {
+  font-size: 14px;
+  color: gray;
+  font-weight: normal;
+  text-align: center;
+}
+
+.no-reviews {
+  font-size: 22px;
+  margin: 10px 0;
+}

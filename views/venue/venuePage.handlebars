@@ -132,8 +132,8 @@
     </div>
   </div>
   <div class="comment">
-    <h1 class="comment-header">Comments</h1>
-    <div class="comment-textbox">
+    <h1 class="comment-header">Reviews</h1>
+    {{! <div class="comment-textbox">
       <form
         method="post"
         onsubmit="return validateComment()"
@@ -152,7 +152,19 @@
           <span><i class="fas fa-paper-plane"></i></span>
         </button>
       </form>
-    </div>
+    </div> }}
+    {{#if reviews}}
+      {{#each reviews}}
+        <div class="user-review">
+          <h2 class="username"><a href="/user/{{userId}}">{{username}}</a>
+            <span class="date-time">Posted On: {{createdAt1}}</span>
+          </h2>
+          <p class="reviewText">{{reviewText}}</p>
+        </div>
+      {{/each}}
+    {{else}}
+      <p class="no-reviews">Be the first one to leave a review!</p>
+    {{/if}}
   </div>
 </section>
 <script src="/public/js/bookings.js"></script>
