@@ -78,3 +78,10 @@ nav .nav-wrapper ul li:hover {
   text-align: start;
   border-radius: 5px;
 }
+
+.brand-logo {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}

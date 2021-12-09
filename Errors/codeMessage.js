@@ -8,6 +8,8 @@ const getMessageForCode = (code) => {
       return "Request already accepted";
     case "103":
       return "Could not accept request";
+    case "200":
+      return "Report successfully submitted";
     default:
       return "Unknown error";
   }

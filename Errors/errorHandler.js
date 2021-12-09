@@ -78,6 +78,12 @@ const checkIfTimePeriodValid = (startTime, endTime) => {
   if (startTime > endTime) throw "Start time cannot be greater than end time";
 };
 
+const checkReportType = (reportType) => {
+  let reportTypes = ["post", "comment", "venue"];
+  if (!reportTypes.includes(reportType.toLowerCase()))
+    throw "Invalid report type";
+};
+
 module.exports = {
   checkIfElementsExists,
   checkIfElementsAreStrings,
@@ -91,4 +97,5 @@ module.exports = {
   checkIfCurrentDate,
   checkIfTimePeriodValid,
   checkIfValidRating,
+  checkReportType,
 };

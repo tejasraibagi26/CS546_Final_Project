@@ -3,6 +3,8 @@ const router = express.Router();
 const data = require("../data");
 const errorHandler = require("../Errors/errorHandler");
 const venue = data.venues;
+const review = data.reviews;
+const user = data.user;
 const multer = require("multer");
 const xss = require("xss");
 
@@ -140,9 +142,23 @@ router.get("/:id", async (req, res) => {
 
   try {
     const getVenue = await venue.getVenueById(id);
+    let getReviews = await review.getAllReviewsByvenueId(id);
+
+    let maxReviews = 5;
+    if (getReviews.length > maxReviews) {
+      getReviews = getReviews.slice(0, maxReviews);
+    }
+    for (let i = 0; i < getReviews.length; i++) {
+      const username = await user.getUserById(getReviews[i].reviewerId);
+      let reviewUser = `${username.firstName} ${username.lastName}`;
+      getReviews[i].username = reviewUser;
+      getReviews[i].userId = getReviews[i].reviewerId;
+    }
+
     res.status(200).render("venue/venuePage", {
       title: getVenue.venueName,
       venue: getVenue,
+      reviews: getReviews,
       reviewCount: getVenue.reviews.length,
       isLoggedIn: req.session.user ? true : false,
       userId: req.session.user ? req.session.user.id : "",

@@ -162,10 +162,16 @@
   background-color: whitesmoke;
   flex: content;
   border-radius: 6px;
+  display: flex;
+  flex-direction: column;
 }
 
 .container .padded {
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1 1 auto;
 }
 
 .container .venue .details {

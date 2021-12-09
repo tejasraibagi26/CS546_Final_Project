@@ -18,8 +18,8 @@
   align-items: center;
 }
 
-#activity .container .btn:focus{
-  background-color:green;
+#activity .container .btn:focus {
+  background-color: green;
 }
 
 #activity .container .row .act-title {
@@ -44,7 +44,7 @@
   transform: scale(1.05);
 }
 
-#beta .btn:hover{
+#beta .btn:hover {
   transform: scale(1.05);
 }
 #activity .container .btn:hover {
@@ -138,7 +138,7 @@
 #activity .container .posts .card .card-footer {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   padding-left: 10px;
   padding-top: 10px;
@@ -147,4 +147,16 @@
 
 #activity .container .posts .card .card-footer .btn {
   font-size: 18px;
+}
+.btn1 {
+  margin-right: 20px;
+  align-items: center;
+}
+
+.liked {
+  color: #0d82df;
+}
+
+.disliked {
+  color: tomato;
 }

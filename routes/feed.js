@@ -19,6 +19,8 @@ router.get("/", async (req, res) => {
   let message;
   if (error) {
     message = eCodeToMsg.getMessageForCode(eCode);
+  } else if (success && eCode) {
+    message = eCodeToMsg.getMessageForCode(eCode);
   } else {
     message = "Invite joined!";
   }
