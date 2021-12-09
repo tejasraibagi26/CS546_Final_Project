@@ -39,10 +39,13 @@
           <div class="">StevenSports</div>
         </a>
         <ul>
-          <li>
-            <a href="/feed">Feed</a>
-          </li>
           {{#if isLoggedIn}}
+            <li>
+              <a href="/venues">search</a>
+            </li>
+            <li>
+              <a href="/feed">Feed</a>
+            </li>
             <li>
               <a href="/user/profile">Profile</a>
             </li>
@@ -83,6 +86,7 @@
       integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
       crossorigin="anonymous"
     ></script>
+    <script src="/public/js/login.js"></script>
     <script src="/public/js/register.js"></script>
   </body>
 </html>

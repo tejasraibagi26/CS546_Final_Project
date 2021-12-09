@@ -144,7 +144,8 @@ router.get("/:id", async (req, res) => {
       title: getVenue.venueName,
       venue: getVenue,
       reviewCount: getVenue.reviews.length,
-      isLoggedIn: req.session.user,
+      isLoggedIn: req.session.user ? true : false,
+      userId: req.session.user ? req.session.user.id : "",
     });
   } catch (error) {
     res.status(404).json({ err: error });
