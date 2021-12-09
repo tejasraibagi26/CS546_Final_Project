@@ -1,6 +1,6 @@
 const reportTypes = ["Abusive", "Hate", "Rude", "Sexual", "Other"];
 
-const select = document.getElementById("reportType");
+const select = document.getElementsByClassName("reportType");
 const reportDiv = document.getElementsByClassName("reportDiv");
 const reportButton = document.getElementsByClassName("reportButton");
 
@@ -13,12 +13,14 @@ if (reportDiv) {
 }
 
 if (select) {
-  reportTypes.forEach((type) => {
-    const option = document.createElement("option");
-    option.text = type;
-    option.value = type;
-    select.appendChild(option);
-  });
+  for (let i = 0; i < select.length; i++) {
+    reportTypes.forEach((type) => {
+      const option = document.createElement("option");
+      option.text = type;
+      option.value = type;
+      select[i].appendChild(option);
+    });
+  }
 }
 
 function validateReport() {

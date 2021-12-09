@@ -37,7 +37,7 @@
                 >
                   Report Type
                   <select
-                    class="input"
+                    class="input reportType"
                     style="background-color: white;"
                     name="reportContentType"
                     id="reportType"
@@ -69,10 +69,15 @@
       </a>
       <h3 class="venue-rating"><span><i class="fas fa-star size-xl"></i></span>
         {{venue.venueRating}}
-        ({{reviewCount}}
-        review(s))
-        <a href="/reviews/{{userId}}/{{venue._id}}" class="add-rev hint">Add a
-          review.</a>
+        <a
+          href="/reviews/venuereviews/{{venue._id}}"
+          style="font-size: 18px;"
+        >({{reviewCount}}
+          review(s))</a>
+        <a
+          href="/reviews/addreview/{{userId}}/{{venue._id}}"
+          class="add-rev hint"
+        >Add a review.</a>
       </h3>
       <form
         action="/bookings/book"

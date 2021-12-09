@@ -303,9 +303,9 @@ router.delete("/:id/:userId/:venueId", async (req, res) => {
 router.get("/addreview/:userId/:venueId", async (req, res) => {
   res.render("reviews/createReview", {
     title: "add Review",
-    userId : req.params.userId,
-    venueId : req.params.venueId,
-
+    userId: req.params.userId,
+    venueId: req.params.venueId,
+    isLoggedIn: req.session.user ? true : false,
   });
 });
 
@@ -316,7 +316,6 @@ router.post("/:userId/:venueId", async (req, res) => {
   const reviewText = req.body.reviewText;
   let rating = req.body.rating;
   rating = parseInt(rating);
-  
 
   let inputString = [userId, venueId, reviewText];
   let check = [userId, venueId, reviewText, rating];
@@ -372,20 +371,21 @@ router.post("/:userId/:venueId", async (req, res) => {
       reviewText,
       rating
     );
-     res.render("reviews/createReview", {
-        title: "Success",
-        error2: "Reviewed Successfully",
-        userId : req.params.userId,
-        venueId : req.params.venueId,
-      });
-  }
-    catch (e) {
-      res.render("reviews/createReview", {
-        title: "Error",
-        error1: e,
-        userId : req.params.userId,
-        venueId : req.params.venueId,
-      });
+    res.render("reviews/createReview", {
+      title: "Success",
+      error2: "Reviewed Successfully",
+      userId: req.params.userId,
+      venueId: req.params.venueId,
+      isLoggedIn: req.session.user ? true : false,
+    });
+  } catch (e) {
+    res.render("reviews/createReview", {
+      title: "Error",
+      error1: e,
+      userId: req.params.userId,
+      venueId: req.params.venueId,
+      isLoggedIn: req.session.user ? true : false,
+    });
   }
 });
 
@@ -443,9 +443,9 @@ router.get("/upvote/:reviewId/:userId", async (req, res) => {
   }
   try {
     const updatedReview = await resData.upVote(reviewId, userId);
-    res.redirect('back');
+    res.redirect("back");
   } catch (e) {
-    res.redirect('/reviews/removeup/'+reviewId+'/'+userId);
+    res.redirect("/reviews/removeup/" + reviewId + "/" + userId);
   }
 });
 //---------------------------------------------------------------------------------------------------------
@@ -501,9 +501,9 @@ router.get("/downvote/:reviewId/:userId", async (req, res) => {
   }
   try {
     const updatedReview = await resData.downVote(reviewId, userId);
-    res.redirect('back');
+    res.redirect("back");
   } catch (e) {
-    res.redirect('/reviews/removedown/'+reviewId+'/'+userId);
+    res.redirect("/reviews/removedown/" + reviewId + "/" + userId);
   }
 });
 //---------------------------------------------------------------------------------------------------------
@@ -560,7 +560,7 @@ router.get("/removeup/:reviewId/:userId", async (req, res) => {
   }
   try {
     const updatedReview = await resData.removeUpvote(reviewId, userId);
-    res.redirect('back');
+    res.redirect("back");
   } catch (e) {
     res.status(500).json({ error: e });
   }
@@ -618,7 +618,7 @@ router.get("/removedown/:reviewId/:userId", async (req, res) => {
   }
   try {
     const updatedReview = await resData.removeDownvote(reviewId, userId);
-    res.redirect('back');
+    res.redirect("back");
   } catch (e) {
     res.status(500).json({ error: e });
   }
@@ -664,21 +664,26 @@ router.get("/newest/:venueId", async (req, res) => {
 
   try {
     const getNewest = await resData.sortNewest(id);
-    for(let i=0;i<getNewest.length;i++){
+    for (let i = 0; i < getNewest.length; i++) {
       getNewest[i].venueId = getNewest[i].reviewerId;
-      getNewest[i].reviewerId = await userData.getUserById(getNewest[i].reviewerId);
-      getNewest[i].reviewerId = getNewest[i].reviewerId.firstName.concat(" ",getNewest[i].reviewerId.lastName);
+      getNewest[i].reviewerId = await userData.getUserById(
+        getNewest[i].reviewerId
+      );
+      getNewest[i].reviewerId = getNewest[i].reviewerId.firstName.concat(
+        " ",
+        getNewest[i].reviewerId.lastName
+      );
       getNewest[i]._id = getNewest[i]._id.toString();
-    
     }
-    let venueDetails =  await venueData.getVenueById(id);
+    let venueDetails = await venueData.getVenueById(id);
     let venuename = venueDetails.venueName;
     let venueid = venueDetails._id.toString();
     res.render("reviews/filter", {
       title: "Filtered",
-      venueReview : getNewest,
-      venueName : venuename,
-      venueid : venueid,
+      venueReview: getNewest,
+      venueName: venuename,
+      venueid: venueid,
+      isLoggedIn: req.session.user ? true : false,
     });
   } catch (e) {
     res.status(500).json({ error: e });
@@ -725,21 +730,26 @@ router.get("/newest/:venueId", async (req, res) => {
 
     try {
       const getOldest = await resData.sortOldest(id);
-      for(let i=0;i<getOldest.length;i++){
+      for (let i = 0; i < getOldest.length; i++) {
         getOldest[i].venueId = getOldest[i].reviewerId;
-        getOldest[i].reviewerId = await userData.getUserById(getOldest[i].reviewerId);
-        getOldest[i].reviewerId = getOldest[i].reviewerId.firstName.concat(" ",getOldest[i].reviewerId.lastName);
+        getOldest[i].reviewerId = await userData.getUserById(
+          getOldest[i].reviewerId
+        );
+        getOldest[i].reviewerId = getOldest[i].reviewerId.firstName.concat(
+          " ",
+          getOldest[i].reviewerId.lastName
+        );
         getOldest[i]._id = getOldest[i]._id.toString();
-      
       }
-      let venueDetails =  await venueData.getVenueById(id);
+      let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
       let venueid = venueDetails._id.toString();
       res.render("reviews/filter", {
         title: "Filtered",
-        venueReview : getOldest,
-        venueName : venuename,
-        venueid : venueid,
+        venueReview: getOldest,
+        venueName: venuename,
+        venueid: venueid,
+        isLoggedIn: req.session.user ? true : false,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -786,23 +796,28 @@ router.get("/newest/:venueId", async (req, res) => {
 
     try {
       const getHigest = await resData.sortHighestRating(id);
-      for(let i=0;i<getHigest.length;i++){
+      for (let i = 0; i < getHigest.length; i++) {
         getHigest[i].venueId = getHigest[i].reviewerId;
-        getHigest[i].reviewerId = await userData.getUserById(getHigest[i].reviewerId);
-        getHigest[i].reviewerId = getHigest[i].reviewerId.firstName.concat(" ",getHigest[i].reviewerId.lastName);
+        getHigest[i].reviewerId = await userData.getUserById(
+          getHigest[i].reviewerId
+        );
+        getHigest[i].reviewerId = getHigest[i].reviewerId.firstName.concat(
+          " ",
+          getHigest[i].reviewerId.lastName
+        );
         getHigest[i]._id = getHigest[i]._id.toString();
-      
       }
-      let venueDetails =  await venueData.getVenueById(id);
+      let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
       let venueid = venueDetails._id.toString();
       res.render("reviews/filter", {
         title: "Filtered",
-        venueReview : getHigest,
-        venueName : venuename,
-        venueid : venueid,
+        venueReview: getHigest,
+        venueName: venuename,
+        venueid: venueid,
+        isLoggedIn: req.session.user ? true : false,
       });
-    } catch 
+    } catch (e) {
       res.status(500).json({ error: e });
     }
   }),
@@ -847,21 +862,26 @@ router.get("/newest/:venueId", async (req, res) => {
 
     try {
       const getLowest = await resData.sortLowestRating(id);
-      for(let i=0;i<getLowest.length;i++){
+      for (let i = 0; i < getLowest.length; i++) {
         getLowest[i].venueId = getLowest[i].reviewerId;
-        getLowest[i].reviewerId = await userData.getUserById(getLowest[i].reviewerId);
-        getLowest[i].reviewerId = getLowest[i].reviewerId.firstName.concat(" ",getLowest[i].reviewerId.lastName);
+        getLowest[i].reviewerId = await userData.getUserById(
+          getLowest[i].reviewerId
+        );
+        getLowest[i].reviewerId = getLowest[i].reviewerId.firstName.concat(
+          " ",
+          getLowest[i].reviewerId.lastName
+        );
         getLowest[i]._id = getLowest[i]._id.toString();
-      
       }
-      let venueDetails =  await venueData.getVenueById(id);
+      let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
       let venueid = venueDetails._id.toString();
       res.render("reviews/filter", {
         title: "Filtered",
-        venueReview : getLowest,
-        venueName : venuename,
-        venueid : venueid,
+        venueReview: getLowest,
+        venueName: venuename,
+        venueid: venueid,
+        isLoggedIn: req.session.user ? true : false,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -908,21 +928,26 @@ router.get("/newest/:venueId", async (req, res) => {
 
     try {
       const mostUpvoted = await resData.mostUpvoted(id);
-      for(let i=0;i<mostUpvoted.length;i++){
+      for (let i = 0; i < mostUpvoted.length; i++) {
         mostUpvoted[i].venueId = mostUpvoted[i].reviewerId;
-        mostUpvoted[i].reviewerId = await userData.getUserById(mostUpvoted[i].reviewerId);
-        mostUpvoted[i].reviewerId = mostUpvoted[i].reviewerId.firstName.concat(" ",mostUpvoted[i].reviewerId.lastName);
+        mostUpvoted[i].reviewerId = await userData.getUserById(
+          mostUpvoted[i].reviewerId
+        );
+        mostUpvoted[i].reviewerId = mostUpvoted[i].reviewerId.firstName.concat(
+          " ",
+          mostUpvoted[i].reviewerId.lastName
+        );
         mostUpvoted[i]._id = mostUpvoted[i]._id.toString();
-      
       }
-      let venueDetails =  await venueData.getVenueById(id);
+      let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
       let venueid = venueDetails._id.toString();
       res.render("reviews/filter", {
         title: "Filtered",
-        venueReview : mostUpvoted,
-        venueName : venuename,
-        venueid : venueid,
+        venueReview: mostUpvoted,
+        venueName: venuename,
+        venueid: venueid,
+        isLoggedIn: req.session.user ? true : false,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -969,21 +994,28 @@ router.get("/newest/:venueId", async (req, res) => {
 
     try {
       const mostDownvoted = await resData.mostDownvoted(id);
-      for(let i=0;i<mostDownvoted.length;i++){
+      for (let i = 0; i < mostDownvoted.length; i++) {
         mostDownvoted[i].venueId = mostDownvoted[i].reviewerId;
-        mostDownvoted[i].reviewerId = await userData.getUserById(mostDownvoted[i].reviewerId);
-        mostDownvoted[i].reviewerId = mostDownvoted[i].reviewerId.firstName.concat(" ",mostDownvoted[i].reviewerId.lastName);
+        mostDownvoted[i].reviewerId = await userData.getUserById(
+          mostDownvoted[i].reviewerId
+        );
+        mostDownvoted[i].reviewerId = mostDownvoted[
+          i
+        ].reviewerId.firstName.concat(
+          " ",
+          mostDownvoted[i].reviewerId.lastName
+        );
         mostDownvoted[i]._id = mostDownvoted[i]._id.toString();
-      
       }
-      let venueDetails =  await venueData.getVenueById(id);
+      let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
       let venueid = venueDetails._id.toString();
       res.render("reviews/filter", {
         title: "Filtered",
-        venueReview : mostDownvoted,
-        venueName : venuename,
-        venueid : venueid,
+        venueReview: mostDownvoted,
+        venueName: venuename,
+        venueid: venueid,
+        isLoggedIn: req.session.user ? true : false,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -1287,23 +1319,44 @@ router.get("/venuereviews/:venueId", async (req, res) => {
   }
   try {
     const venueReviews = await resData.getAllReviewsByvenueId(venueId);
-    for(let i=0;i<venueReviews.length;i++){
-      venueReviews[i].reviewerId = await userData.getUserById(venueReviews[i].reviewerId);
+    for (let i = 0; i < venueReviews.length; i++) {
+      venueReviews[i].reviewerId = await userData.getUserById(
+        venueReviews[i].reviewerId
+      );
+      const likedUser = await userData.getUserById(req.session.user.id);
+      for (let j = 0; j < likedUser.upvotedReviews.length; j++) {
+        if (likedUser.upvotedReviews[j].id == venueReviews[i]._id) {
+          venueReviews[i].upvoted = true;
+        }
+      }
+      for (let j = 0; j < likedUser.downvotedReviews.length; j++) {
+        if (likedUser.downvotedReviews[j].id == venueReviews[i]._id) {
+          venueReviews[i].downvoted = true;
+        }
+      }
       venueReviews[i].venueId = req.session.user.id;
-      venueReviews[i].reviewerId = venueReviews[i].reviewerId.firstName.concat(" ",venueReviews[i].reviewerId.lastName);
+      venueReviews[i].reviewerId = venueReviews[i].reviewerId.firstName.concat(
+        " ",
+        venueReviews[i].reviewerId.lastName
+      );
       venueReviews[i]._id = venueReviews[i]._id.toString();
     }
-    let venueDetails =  await venueData.getVenueById(venueId);
+    let venueDetails = await venueData.getVenueById(venueId);
     let venuename = venueDetails.venueName;
     let venueid = venueDetails._id.toString();
+
     res.render("reviews/VenueReview", {
       title: "All Reviews",
-      venueReview : venueReviews,
-      venueName : venuename,
-      venueid : venueid,
+      venueReview: venueReviews,
+      venueName: venuename,
+      venueid: venueid,
+      isLoggedIn: req.session.user ? true : false,
     });
   } catch (e) {
-    res.render("reviews/VenueReview",{ error: e });
+    res.render("reviews/VenueReview", {
+      error: e,
+      isLoggedIn: req.session.user ? true : false,
+    });
   }
 });
 

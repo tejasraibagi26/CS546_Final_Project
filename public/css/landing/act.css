@@ -192,3 +192,7 @@
 .report {
   cursor: pointer;
 }
+
+.font {
+  font-family: "Source Sans Pro", sans-serif;
+}
