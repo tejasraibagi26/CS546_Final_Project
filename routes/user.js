@@ -42,7 +42,7 @@ router.get("/profile/:id", async (req, res) => {
   try {
     userById = await user.getUserById(id);
   } catch (e) {
-    res.status(500).json({ err: e });
+    res.status(404).redirect("/404");
     return;
   }
 
