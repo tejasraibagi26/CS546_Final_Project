@@ -3,6 +3,7 @@ const userData = require("./user");
 const reviewData = require("./reviews");
 const commentData = require("./comments");
 const request = require("./request");
+const report = require("./reports");
 const admin = require("./admin");
 const activity = require("./activity");
 const booking = require("./booking");
@@ -16,4 +17,5 @@ module.exports = {
   admin: admin,
   activity: activity,
   booking: booking,
+  report: report,
 };
