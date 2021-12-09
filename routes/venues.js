@@ -31,7 +31,7 @@ router.get("/", async (req, res) => {
         title: "Search Results",
         venues: getVenues,
         count: getVenues.length,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
       return;
     } catch (error) {
@@ -71,7 +71,7 @@ router.get("/", async (req, res) => {
         venues: fetchVenue,
         count: fetchVenue.length,
         searchTerm: searchTerm,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
       return;
     } catch (error) {
@@ -80,7 +80,7 @@ router.get("/", async (req, res) => {
         err: true,
         error: error,
         searchTerm,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
       return;
     }
@@ -93,7 +93,7 @@ router.get("/", async (req, res) => {
       venues: fetchVenue,
       count: fetchVenue.length,
       searchTerm: searchTerm,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
     return;
   } catch (error) {
@@ -102,7 +102,7 @@ router.get("/", async (req, res) => {
       err: true,
       error: error,
       searchTerm,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
   }
 });
@@ -144,6 +144,7 @@ router.get("/:id", async (req, res) => {
       title: getVenue.venueName,
       venue: getVenue,
       reviewCount: getVenue.reviews.length,
+      isLoggedIn: req.session.user,
     });
   } catch (error) {
     res.status(404).json({ err: error });
@@ -224,7 +225,7 @@ router.post("/create", upload.single("venueImage"), async (req, res) => {
     res.render("venue/createSucc", {
       title: "Venue Created",
       id: createVenue,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
   } catch (error) {
     res.status(500).json({ err: error });

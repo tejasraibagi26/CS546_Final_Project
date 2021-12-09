@@ -20,14 +20,14 @@ router.get("/", async (req, res) => {
   res.status(200).render("entry/activity", {
     title: "Feed",
     posts: activities,
-    isLoggedIn: req.session.user ? true : false,
+    isLoggedIn: req.session.user,
   });
 });
 
 router.get("/posts/create", (req, res) => {
   res.render("entry/create", {
     title: "Create Post",
-    isLoggedIn: req.session.user ? true : false,
+    isLoggedIn: req.session.user,
   });
 });
 
