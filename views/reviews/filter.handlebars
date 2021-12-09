@@ -1,0 +1,71 @@
+<link rel="stylesheet" href="/public/css/reviews/venueReview.css" />
+<section id="activity">
+  <div class="container">
+    <div class="row">
+      {{#if venueReview}}
+      <h1 class="act-title">Reviews for {{venueName}}</h1>
+      <a href="/venues/{{venueid}}" id="open-add-modal" class="btn">
+        Back to Venue</a>
+       <a href="/reviews/venuereviews/{{venueid}}" id="open-add-modal" class="btn">
+        <i class="fa fa-plus"></i>
+        Clear Filters</a>
+       {{else}}
+        <h3 class="act-title">No Reviews to display for {{venueName}}</h3>
+        {{/if}}
+    </div><br>
+     {{#if venueReview}}
+    <div id="beta">
+       <a href="/reviews/oldest/{{venueid}}" id="open-add-modal" class="btn">
+        <i class="fa fa-plus"></i>
+       Oldest </a>
+        <a href="/reviews/newest/{{venueid}}" id="open-add-modal" class="btn">
+        <i class="fa fa-plus"></i>
+        Newest </a>
+        <a href="/reviews/mostupvote/{{venueid}}" id="open-add-modal" class="btn">
+        <i class="fa fa-plus"></i>
+        Most Upvoted</a>
+        <a href="/reviews/mostdownvote/{{venueid}}" id="open-add-modal" class="btn">
+        <i class="fa fa-plus"></i>
+        Most Downvoted</a>
+        <a href="/reviews/highest/{{venueid}}" id="open-add-modal" class="btn">
+        <i class="fa fa-plus"></i>
+        Positive Reviews</a>
+        <a href="/reviews/lowest/{{venueid}}" id="open-add-modal" class="btn">
+        <i class="fa fa-plus"></i>
+        Critical Reviews</a>
+    </div><br>
+     {{/if}}
+    <div class="posts">
+      {{#each venueReview}}
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <img src="/public/images/user.png" alt="avatar" class="avatar" />
+            <div class="user">
+              <h2 class="name">{{this.reviewerId}}</h2>
+              <p class="date">Posted on (Eastern Standard Time)     : {{this.createdAt1}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="stat">
+            <p class="stat-chip">Rating : {{this.rating}}</p>
+            <p class="stat-chip">Votes : {{this.votes}}</p>
+          </div>
+            <p class="desc">{{this.reviewText}}
+            </p>
+          </div>
+          <div class="card-footer">
+            <a href="/reviews/upvote/{{this._id}}/{{this.venueId}}" class="btn1">
+              <i class="fa fa-thumbs-up"></i>
+              </a>
+            <a href="/reviews/downvote/{{this._id}}/{{this.venueId}}" class="btn1">
+              <i class="fa fa-thumbs-down"></i>
+              </a>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+</section>
