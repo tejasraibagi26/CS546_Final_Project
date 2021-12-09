@@ -144,7 +144,7 @@ async function getActiveGames(id) {
   errorHandler.checkIfElementNotEmptyString(array);
   errorHandler.checkIfValidObjectId(id);
 
-  const allActivities = await activity.getActivity();
+  const allActivities = await activity.getAllActivity();
   let activeGames = [];
   let pastGames = [];
   let currentBooking = null;
