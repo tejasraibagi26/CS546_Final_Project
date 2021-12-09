@@ -1,0 +1,33 @@
+<div id="login-page">
+  <div class="login-container">
+    <h1 id="loginTitle">Login</h1>
+    <h2 id="loginError"> {{error}}</h2>
+    <form action="/user/login" name="login" method="post" id="loginForm">
+      <label class="loginLabel">Email:
+        <input
+          placeholder="Email"
+          name="email"
+          class="loginInput"
+          id="loginEmail"
+        />
+      </label>
+      <label class="loginLabel">Password:
+        <input
+          type="password"
+          placeholder="Password"
+          name="password"
+          class="loginInput"
+          id="loginPassword"
+        />
+      </label>
+      <label id="loginSubmitLabel">
+        <input type="submit" id="loginSubmit" value="Login" />
+      </label>
+    </form>
+    <div id="spinnerDiv" hidden>
+      <div class="spin"></div>
+    </div>
+    <a href="/user/register" id="signupLink">Don't have an account? Click here
+      to signup!</a>
+  </div>
+</div>

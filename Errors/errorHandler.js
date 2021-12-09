@@ -60,8 +60,22 @@ const checkIfValidRating = (rating) => {
 };
 
 const checkIfValidRole = (role) => {
-  let roles = ["user", "admin"];
+  let roles = ["User", "Owner", "Admin"];
   if (!roles.includes(role)) throw "Invalid role";
+};
+
+const checkIfItemInRange = (item) => {
+  if (item <= 0) throw "Cannot be 0";
+};
+
+const checkIfCurrentDate = (date) => {
+  let currentDate = new Date().toLocaleDateString();
+  if (Date.parse(date) - Date.parse(currentDate) < 0)
+    throw "Date cannot be in the past";
+};
+
+const checkIfTimePeriodValid = (startTime, endTime) => {
+  if (startTime > endTime) throw "Start time cannot be greater than end time";
 };
 
 module.exports = {
@@ -73,5 +87,8 @@ module.exports = {
   checkIfValidEmail,
   checkIfValidAge,
   checkIfValidRole,
+  checkIfItemInRange,
+  checkIfCurrentDate,
+  checkIfTimePeriodValid,
   checkIfValidRating,
 };

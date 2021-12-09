@@ -10,10 +10,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/public/css/main.css" />
     <link rel="stylesheet" href="/public/css/landing/main.css" />
+    <link rel="stylesheet" href="/public/css/landing/act.css" />
+    <link rel="stylesheet" href="/public/css/landing/create.css" />
     <link rel="stylesheet" href="/public/css/venue/venue.css" />
     <link rel="stylesheet" href="/public/css/venue/venuepage.css" />
     <link rel="stylesheet" href="/public/css/venue/create.css" />
     <link rel="stylesheet" href="/public/css/venue/createS.css" />
+    <link rel="stylesheet" href="/public/css/user/login.css" />
+    <link rel="stylesheet" href="/public/css/user/profile.css" />
+    <link rel="stylesheet" href="/public/css/user/register.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <link rel="stylesheet" href="/public/css/admin/index.css" />
     <link rel="stylesheet" href="/public/css/admin/request.css" />
     <link rel="stylesheet" href="/public/css/admin/report.css" />
@@ -30,12 +39,27 @@
           <div class="">StevenSports</div>
         </a>
         <ul>
-          <li>
-            <a href="/login">Login</a>
-          </li>
-          <li>
-            <a href="/register">Register</a>
-          </li>
+          {{#if isLoggedIn}}
+            <li>
+              <a href="/venues">search</a>
+            </li>
+            <li>
+              <a href="/feed">Feed</a>
+            </li>
+            <li>
+              <a href="/user/profile">Profile</a>
+            </li>
+            <li>
+              <a href="/user/logout">Logout</a>
+            </li>
+          {{else}}
+            <li>
+              <a href="/user/login">Login</a>
+            </li>
+            <li>
+              <a href="/user/register">Register</a>
+            </li>
+          {{/if}}
         </ul>
       </div>
     </nav>
@@ -43,7 +67,25 @@
     {{! Add JS scripts below }}
     {{! <script src="/public/JS/venue.js"></script> }}
     <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/js/login.js"></script>
+    <script
       src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
     ></script>
+    <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+      integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/js/login.js"></script>
+    <script src="/public/js/register.js"></script>
   </body>
 </html>

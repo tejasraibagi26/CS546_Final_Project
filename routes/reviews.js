@@ -220,7 +220,6 @@ router.put("/rating/:id/:userId/:venueId", async (req, res) => {
     );
     res.status(200).json(updatedReview);
   } catch (e) {
-    console.log(e);
     res.status(500).json({ error: e });
   }
 });
@@ -311,8 +310,6 @@ router.get("/addreview/:userId/:venueId", async (req, res) => {
 });
 
 router.post("/:userId/:venueId", async (req, res) => {
-
-
   const userId = req.params.userId;
   const venueId = req.params.venueId;
 
@@ -320,7 +317,6 @@ router.post("/:userId/:venueId", async (req, res) => {
   let rating = req.body.rating;
   rating = parseInt(rating);
   
- 
 
   let inputString = [userId, venueId, reviewText];
   let check = [userId, venueId, reviewText, rating];
@@ -356,12 +352,6 @@ router.post("/:userId/:venueId", async (req, res) => {
     res.status(400).json({ error: "Id should be valid object ID" });
     return;
   }
-  /*try {
-    errorHandler.checkIfValidRating(rating);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }*/
   try {
     await userData.getUserById(userId);
   } catch (e) {
@@ -382,7 +372,7 @@ router.post("/:userId/:venueId", async (req, res) => {
       reviewText,
       rating
     );
-      res.render("reviews/createReview", {
+     res.render("reviews/createReview", {
         title: "Success",
         error2: "Reviewed Successfully",
         userId : req.params.userId,
@@ -572,7 +562,6 @@ router.get("/removeup/:reviewId/:userId", async (req, res) => {
     const updatedReview = await resData.removeUpvote(reviewId, userId);
     res.redirect('back');
   } catch (e) {
-    console.log(e);
     res.status(500).json({ error: e });
   }
 });
@@ -631,7 +620,6 @@ router.get("/removedown/:reviewId/:userId", async (req, res) => {
     const updatedReview = await resData.removeDownvote(reviewId, userId);
     res.redirect('back');
   } catch (e) {
-    console.log(e);
     res.status(500).json({ error: e });
   }
 });
@@ -693,7 +681,6 @@ router.get("/newest/:venueId", async (req, res) => {
       venueid : venueid,
     });
   } catch (e) {
-    console.log(e);
     res.status(500).json({ error: e });
   }
 }),
@@ -755,7 +742,6 @@ router.get("/newest/:venueId", async (req, res) => {
         venueid : venueid,
       });
     } catch (e) {
-      console.log(e);
       res.status(500).json({ error: e });
     }
   }),
@@ -816,8 +802,7 @@ router.get("/newest/:venueId", async (req, res) => {
         venueName : venuename,
         venueid : venueid,
       });
-    } catch (e) {
-      console.log(e);
+    } catch 
       res.status(500).json({ error: e });
     }
   }),
@@ -879,7 +864,6 @@ router.get("/newest/:venueId", async (req, res) => {
         venueid : venueid,
       });
     } catch (e) {
-      console.log(e);
       res.status(500).json({ error: e });
     }
   }),
@@ -941,7 +925,6 @@ router.get("/newest/:venueId", async (req, res) => {
         venueid : venueid,
       });
     } catch (e) {
-      console.log(e);
       res.status(500).json({ error: e });
     }
   }),
@@ -1003,7 +986,6 @@ router.get("/newest/:venueId", async (req, res) => {
         venueid : venueid,
       });
     } catch (e) {
-      console.log(e);
       res.status(500).json({ error: e });
     }
   }),
@@ -1055,7 +1037,6 @@ router.get("/newest/:venueId", async (req, res) => {
       );
       res.status(200).json(filterReview);
     } catch (e) {
-      console.log(e);
       res.status(500).json({ error: e });
     }
   });

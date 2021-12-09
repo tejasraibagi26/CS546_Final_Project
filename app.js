@@ -11,27 +11,61 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", public);
 
+//Set up express session
+app.use(
+  session({
+    name: "LoginCookie",
+    secret: "Cookie used for login",
+    saveUninitialized: true,
+    resave: true,
+    cookie: { maxAge: 600000 },
+  })
+);
+
 //Set up handlebars
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-app.use(
-  session({
-    name: "AuthCookie",
-    secret: "some secret string!",
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+app.use("/create", async (req, res, next) => {
+  if (!req.session.user) {
+    //Redirect to login page as user is not authorized to create venue
+    return res.redirect("/user/login");
+  } else {
+    next();
+  }
+});
 
-// app.use("/create", async (req, res, next) => {
-//   if (!req.session.user) {
-//     //Redirect to login page as user is not authorized to create venue
-//     return res.redirect("/");
-//   } else {
-//     next();
-//   }
-// });
+app.use("/feed", (req, res, next) => {
+  if (!req.session.user) {
+    //Redirect to login page as user is not authorized to view feed
+    return res.redirect("/user/login");
+  } else {
+    next();
+  }
+});
+
+app.use("/feed/posts/create", (req, res, next) => {
+  let user = req.session.user;
+  if (!user) {
+    //Redirect to login, for now its "/"
+    return res.redirect("/user/login");
+  }
+  next();
+});
+
+app.use("/feed/invite/accept", (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("/user/login");
+  }
+  next();
+});
+
+app.use("/bookings", (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("/user/login");
+  }
+  next();
+});
 
 //Configure app to the routes
 configRouter(app);

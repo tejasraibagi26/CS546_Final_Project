@@ -1,7 +1,13 @@
 <section id="create-venue">
   <div class="container">
     <h1 class="title">Create New Venue</h1>
-    <form action="/venues/create" method="POST" enctype="multipart/form-data">
+    <form
+      action="/venues/create"
+      onsubmit="return validateForm()"
+      method="POST"
+      enctype="multipart/form-data"
+      id="create-form"
+    >
       <div class="field">
         <div class="input-fields">
           <label for="venueName" class="label">
@@ -86,6 +92,9 @@
               required
             />
           </label>
+        </div>
+        <div id="error" hidden>
+          <ul id="err-list"></ul>
         </div>
         <input
           id="create-button"

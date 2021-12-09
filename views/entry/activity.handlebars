@@ -1,0 +1,62 @@
+<section id="activity">
+  {{#if error}}
+    <div class="floating-err float-in" id="err">
+      <p>Error: {{message}}</p>
+    </div>
+  {{else if success}}
+    <div
+      class="floating-err float-in"
+      style="background-color: green !important;"
+      id="err"
+    >
+      <p>Success: {{message}}</p>
+    </div>
+  {{/if}}
+  <div class="container">
+    <div class="row">
+      <h1 class="act-title">Activity Feed</h1>
+      <a href="/feed/posts/create" id="open-add-modal" class="btn">
+        <i class="fa fa-plus"></i>
+        New Post</a>
+    </div>
+    <div class="posts">
+      {{#each posts}}
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <img src="/public/images/user.png" alt="avatar" class="avatar" />
+              <div class="user">
+                <h2 class="name">{{userName}}</h2>
+                <p class="date">Posted on: {{creationDateTime}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="stat">
+              <p class="stat-chip">Players Required: {{playersReq}}</p>
+              <p class="stat-chip">Players Filled : {{playersFilled}}</p>
+              <p class="stat-chip">Where: {{venue.venueName}}</p>
+              <p class="stat-chip">Address: {{venue.venueAddress}}</p>
+              <p class="stat-chip">Date: {{venue.booking.date}}</p>
+              <p class="stat-chip">Time:
+                {{venue.booking.startTime}}
+                -
+                {{venue.booking.endTime}}</p>
+            </div>
+
+            <h2 class="title-body">{{activityTitle}}</h2>
+            <p class="desc">{{activityBody}}
+            </p>
+          </div>
+          <div class="card-footer" id="card-footer">
+            <a class="btn" href="/feed/invite/accept?id={{_id}}">
+              <i class="fa fa-thumbs-up"></i>
+              Join Invite
+            </a>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</section>
+<script src="/public/js/err.js"></script>
