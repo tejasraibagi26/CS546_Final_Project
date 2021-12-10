@@ -74,6 +74,17 @@ app.use("/report", (req, res, next) => {
   next();
 });
 
+app.use("/admin/dashboard", (req, res, next) => {
+  if (req.session.user) {
+    if (req.session.user.role !== "admin") {
+      return res.redirect("/");
+    }
+  } else if (!req.session.user) {
+    return res.redirect("/admin/login");
+  }
+  next();
+});
+
 //Configure app to the routes
 configRouter(app);
 
