@@ -56,7 +56,7 @@ router.get("/", async (req, res) => {
   res.status(200).render("entry/activity", {
     title: "Feed",
     posts: activities,
-    isLoggedIn: req.session.user ? true : false,
+    isLoggedIn: req.session.user,
     error: error,
     eCode: eCode,
     message: message,

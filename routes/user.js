@@ -7,18 +7,9 @@ const bcrypt = require("bcrypt");
 const saltRounds = 16;
 const xss = require("xss");
 
-// router.get("/", async (req, res) => {
-//   try {
-//     const users = await user.getAllUsers();
-//     res.status(200).json(users);
-//   } catch (e) {
-//     res.status(500).json({ err: e });
-//   }
-// });
-
 router.get("/login", async (req, res) => {
   if (req.session.user) {
-    return res.redirect("/user/profile");
+    return res.redirect("/user/profile/" + req.session.user.id);
   }
   res.render("user/login", {
     title: "Login",
@@ -31,29 +22,72 @@ router.get("/register", async (req, res) => {
   });
 });
 
-router.get("/profile", async (req, res) => {
+router.get("/profile/:id", async (req, res) => {
   if (!req.session.user) {
     return res.redirect("/user/login");
   }
-  let currentUser = null;
+
+  let id = req.params.id;
   try {
-    currentUser = await user.getUserById(req.session.user.id);
+    errorHandler.checkIfElementsExists([id]);
+    errorHandler.checkIfElementsAreStrings([id]);
+    errorHandler.checkIfElementNotEmptyString([id]);
+    errorHandler.checkIfValidObjectId(id);
   } catch (e) {
-    res.json({ err: e });
+    res.status(404).redirect("/404");
     return;
   }
+
+  let userById = null;
+  try {
+    userById = await user.getUserById(id);
+  } catch (e) {
+    res.status(404).redirect("/404");
+    return;
+  }
+
+  let myProfile = id == req.session.user.id;
+  let showAddFriend = true;
+  if (myProfile) {
+    showAddFriend = false;
+  }
+
   let friends = [];
   try {
-    friends = await user.getFriends(req.session.user.id);
+    friends = await user.getFriends(id);
   } catch (e) {
     res.json({ err: e });
     return;
   }
+  let myFriends = [];
+  try {
+    myFriends = await user.getFriends(req.session.user.id);
+  } catch (e) {
+    res.json({ err: e });
+    return;
+  }
+  for (let i of myFriends) {
+    if (i._id == id) {
+      showAddFriend = false;
+    }
+  }
+  let userGames = null;
+  try {
+    userGames = await user.getActiveGames(id);
+  } catch (e) {
+    res.json({ err: e });
+    return;
+  }
+
   res.render("user/profile", {
     title: "Profile",
-    currentUser: currentUser,
+    currentUser: userById,
+    activeGames: userGames.activeGames,
+    pastGames: userGames.pastGames,
     friends: friends,
-    isLoggedIn: true,
+    isLoggedIn: req.session.user,
+    myProfile: myProfile,
+    showAddFriend: showAddFriend,
   });
 });
 
@@ -125,7 +159,7 @@ router.post("/create", async (req, res) => {
       firstName: currentUser.firstName,
       lastName: currentUser.lastName,
     };
-    res.redirect("/user/profile");
+    res.redirect("/feed");
     return;
   } catch (e) {
     res.render("user/register", {
@@ -207,6 +241,26 @@ router.post("/login", async (req, res) => {
       error: "Email or password is incorrect",
     });
     return;
+  }
+});
+
+router.post("/addFriend/:id", async (req, res) => {
+  let id = req.params.id;
+  try {
+    errorHandler.checkIfElementsExists([id]);
+    errorHandler.checkIfElementsAreStrings([id]);
+    errorHandler.checkIfElementNotEmptyString([id]);
+    errorHandler.checkIfValidObjectId(id);
+  } catch (e) {
+    res.status(400).json({ err: e });
+    return;
+  }
+
+  try {
+    await user.addFriend(req.session.user.id, id);
+    res.redirect("/user/profile/" + id);
+  } catch (e) {
+    res.status(500).json({ err: e });
   }
 });
 
