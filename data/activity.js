@@ -64,6 +64,12 @@ const getActivity = async () => {
   return activityList;
 };
 
+const getAllActivity = async () => {
+  const activity = await activityCollection();
+  const activityList = await activity.find({}).toArray();
+  return activityList;
+};
+
 const getActivityById = async (id) => {
   let array = [id];
   errorHandler.checkIfElementsExists(array);
@@ -125,4 +131,9 @@ const createActivity = async (
   return activityList;
 };
 
-module.exports = { getActivity, getActivityById, createActivity };
+module.exports = {
+  getActivity,
+  getAllActivity,
+  getActivityById,
+  createActivity,
+};
