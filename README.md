@@ -8,6 +8,9 @@ Created using HTML | CSS | JS | Express | NodeJs | MongoDB
 
 - Run ```npm install ``` to download all dependencies
 - Run ```node ./task/seed.js``` to seed database.
+- About seeding :
+  1. Seeding will create set of 20 users, venues and reviews.
+  
 
 ## Working of the website
 
