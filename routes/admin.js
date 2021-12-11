@@ -18,7 +18,6 @@ router.post("/login", async (req, res) => {
   const username = xss(req.body.email);
   const inputPassword = xss(req.body.password);
   let array = [username, inputPassword];
-  console.log(array);
   try {
     errorHandler.checkIfElementsExists(array);
     errorHandler.checkIfElementsAreStrings(array);
@@ -229,7 +228,6 @@ router.get("/report/:id", async (req, res) => {
     return;
   }
   const getReport = await adminReq.getReportById(id);
-  console.log(getReport);
   res.render("admin/report", {
     title: "Report",
     report: getReport.reported,

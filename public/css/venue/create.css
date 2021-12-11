@@ -31,6 +31,7 @@
 
 #create-venue .container .field .input-fields {
   margin-bottom: 10px;
+  background-color: transparent;
 }
 
 #create-venue .container .input {
@@ -61,7 +62,7 @@
 .hint {
   font-size: 18px;
   font-weight: 400;
-  color: rgba(0, 0, 0, 0.478);
+  color: #767676;
   margin-top: 10px;
 }
 

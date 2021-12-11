@@ -4,6 +4,7 @@ const errorHandler = require("../Errors/errorHandler");
 const { ObjectId } = require("mongodb");
 const activity = require("./activity");
 const booking = require("./booking");
+const bcrypt = require("bcrypt");
 
 async function getAllUsers() {
   const users = await userCollection();
@@ -46,6 +47,8 @@ async function createUser(
   errorHandler.checkIfValidRole(role);
   errorHandler.checkIfValidAge(age);
 
+  password = await bcrypt.hash(password, 16);
+
   const users = await userCollection();
   let newUser = {
     firstName: firstName,
@@ -70,7 +73,7 @@ async function createUser(
 
   if (insertData.insertedCount == 0) throw "Could not insert user";
 
-  return { msg: "Inserted user", added: true };
+  return { msg: "Inserted user", added: true, id: insertData.insertedId };
 }
 
 async function searchUsers(firstName, lastName) {

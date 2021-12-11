@@ -125,7 +125,7 @@ a .venue-address {
 
 #venue-page .container .right .row .fa:hover {
   text-decoration: none;
-  color: tomato;
+  color: #da3d00;
   transform: scale(1.1);
 }
 
@@ -172,7 +172,7 @@ a .venue-address {
 }
 
 .silent {
-  color: gray;
+  color: #767676;
   font-size: 18px;
   padding: 0;
   margin-top: 10px;
@@ -283,7 +283,7 @@ a .venue-address {
 
 .user-review .username .date-time {
   font-size: 14px;
-  color: gray;
+  color: #707070;
   font-weight: normal;
   text-align: center;
 }

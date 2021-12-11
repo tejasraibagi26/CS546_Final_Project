@@ -9,8 +9,6 @@ const booking = data.booking;
 const venue = data.venues;
 const user = data.user;
 const xss = require("xss");
-const { venues } = require("../data");
-const { CommandStartedEvent } = require("mongodb");
 
 router.get("/", async (req, res) => {
   let error = req.query.error || false;

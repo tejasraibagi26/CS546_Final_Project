@@ -7,6 +7,7 @@ const report = require("./reports");
 const admin = require("./admin");
 const activity = require("./activity");
 const booking = require("./booking");
+const post = require("./post");
 
 module.exports = {
   venues: venueData,
@@ -18,4 +19,5 @@ module.exports = {
   activity: activity,
   booking: booking,
   report: report,
+  post: post,
 };

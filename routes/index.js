@@ -9,6 +9,7 @@ const notFound = require("./404");
 const feed = require("./feed");
 const booking = require("./bookings");
 const report = require("./reports");
+const post = require("./post");
 
 const constructorMethod = (app) => {
   app.use("/", landing);
@@ -21,6 +22,7 @@ const constructorMethod = (app) => {
   app.use("/admin", admin);
   app.use("/404", notFound);
   app.use("/feed", feed);
+  app.use("/post", post);
   app.use("/bookings", booking);
   app.use("*", (req, res) => {
     res.status(404).redirect("/404");

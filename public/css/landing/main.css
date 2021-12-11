@@ -24,6 +24,7 @@
   align-items: center;
   justify-content: center;
   margin: 0 !important;
+  background-color: transparent;
 }
 
 #home .search-container .header {
@@ -52,6 +53,10 @@
   background-color: whitesmoke;
   border-radius: 6px;
   border: 2px black solid;
+}
+
+.search-lable {
+  width: 100%;
 }
 
 #home .search-container .search-bar input {
