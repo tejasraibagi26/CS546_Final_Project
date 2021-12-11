@@ -15,6 +15,11 @@
   margin: 0;
 }
 
+#requestVenue {
+  font-weight: 800;
+  font-size: 20pt;
+}
+
 #infoDiv {
   top: 0;
   display: flex;

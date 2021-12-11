@@ -5,6 +5,7 @@ const { ObjectId } = require("mongodb");
 const activity = require("./activity");
 const booking = require("./booking");
 const bcrypt = require("bcrypt");
+const saltRounds = 16;
 
 async function getAllUsers() {
   const users = await userCollection();
@@ -46,15 +47,14 @@ async function createUser(
   errorHandler.checkIfValidEmail(email);
   errorHandler.checkIfValidRole(role);
   errorHandler.checkIfValidAge(age);
-
-  password = await bcrypt.hash(password, 16);
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
 
   const users = await userCollection();
   let newUser = {
     firstName: firstName,
     lastName: lastName,
     email: email,
-    password: password,
+    password: hashedPassword,
     age: age,
     gender: gender,
     postId: [],
