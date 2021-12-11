@@ -78,7 +78,7 @@ router.get("/posts/create", async (req, res) => {
 
   res.render("entry/create", {
     title: "Create Post",
-    isLoggedIn: req.session.user ? true : false,
+    isLoggedIn: req.session.user,
     venueData: venues,
   });
 });
