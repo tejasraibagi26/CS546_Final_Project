@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="/public/css/reviews/createReview.css" />
+<div id="createReview-page">
+  <div class="createReview-container">
+    <h1 id="createReviewTitle">Update Review</h1>
+    {{#if error1}}
+    <h3 id="createReviewError1"> {{error1}}</h3>
+    {{/if}}
+    {{#if error2}}
+    <h3 id="createReviewError2"> {{error2}}</h3>
+    {{/if}}
+    <h3 id="createReviewError" hidden> {{error}}</h3>
+    <form action="/reviews/text/{{id}}/{{userId}}/{{venueId}}" name="create" method="post" id="createReviewForm">
+      <label class="createReviewLabel">Edit the Review
+        <textarea name="reviewText" id="reviewText"  class="createReviewInput"
+          >{{text}}</textarea>
+      </label>
+
+      <label><input type="submit" id="registerSubmit" value="Update Review" /></label>
+    </form>
+    <a href="/reviews/venuereviews/{{venueId}}" id="venuelink">Cancel</a>
+  </div>
+</div>
+<script src="/public/js/createReview.js"></script>
