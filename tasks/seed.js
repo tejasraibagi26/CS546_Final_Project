@@ -189,7 +189,7 @@ const names = [
   "Tisler",
 ];
 
-let maxCount = 20;
+let maxCount = 3;
 let addressStart = 100;
 let addressEnd = 1400;
 let minPrice = 10;
@@ -402,22 +402,27 @@ const main = async () => {
 
     console.log(`Uploaded ${fakeName}`);
   }
-
   // This will create random reviews
   for (let i = 0; i < maxCount; i++) {
     let random = Math.round(Math.random() * userId.length);
     let random2 = Math.round(Math.random() * venueId.length);
     let user = userId[random];
     let venue = venueId[random2];
+    if (user === undefined) user = userId[0];
+    if (venue === undefined) venue = venueId[0];
     let reviewIdx = Math.round(Math.random() * reviewsArr.length);
     if (reviewsArr[reviewIdx] === undefined) reviewIdx = 0;
     let review = reviewsArr[reviewIdx];
-    await reviews.addReview(user, venue, review.text, review.rating);
-    console.log(`Uploaded review for ${userId}`);
+    let addRev = await reviews.addReview(
+      user,
+      venue,
+      review.text,
+      review.rating,
+      ""
+    );
+    console.log(`Uploaded review for ${venue} by ${user}`);
   }
 
-  console.log(venueId);
-  console.log(userId);
   console.log("Closing DB Connection");
   await _connection.closeConnection();
 };

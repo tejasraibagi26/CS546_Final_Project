@@ -38,50 +38,57 @@
         <h3>This user has not added any friends yet!</h3>
       {{/if}}
     {{/if}}
-    <h2 class="heading">Upcoming Games</h2>
-    {{#if activeGames}}
-      <button id="showActiveGamesParts" class="showParts">Show Participants</button>
-      {{#each activeGames}}
-        <div class="gameReqsJoined">
-          <h3 id="activityTitle">{{this.activityTitle}}</h3>
-          <h4 id="activityDesc">{{this.activityBody}}</h4>
-          <ul class="activeParts" hidden>
-            {{#each this.parts}}
-              <li id="participant"><a
-                  href="/user/profile/{{this._id}}"
-                >{{this.firstName}}
-                  {{this.lastName}}</a></li>
-            {{/each}}
-          </ul>
-        </div>
-      {{/each}}
+    {{#if userAccount}}
+      <h2 class="heading">Upcoming Games</h2>
+      {{#if activeGames}}
+        <button id="showActiveGamesParts" class="showParts">Show Participants</button>
+        {{#each activeGames}}
+          <div class="gameReqsJoined">
+            <h3 id="activityTitle">{{this.activityTitle}}</h3>
+            <h4 id="activityDesc">{{this.activityBody}}</h4>
+            <ul class="activeParts" hidden>
+              {{#each this.parts}}
+                <li id="participant"><a
+                    href="/user/profile/{{this._id}}"
+                  >{{this.firstName}}
+                    {{this.lastName}}</a></li>
+              {{/each}}
+            </ul>
+          </div>
+        {{/each}}
+      {{else}}
+        {{#if myProfile}}
+          <h3>You do not have any upcoming games</h3>
+        {{else}}
+          <h3>This user does not have any upcoming games</h3>
+        {{/if}}
+      {{/if}}
+      <h2 class="heading">Past Games</h2>
+      {{#if pastGames}}
+        <button id="showPastGamesParts" class="showParts">Show Participants</button>
+        {{#each pastGames}}
+          <div class="gameReqsJoined">
+            <h3 id="activityTitle">{{this.activityTitle}}</h3>
+            <h4 id="activityDesc">{{this.activityBody}}</h4>
+            <ul class="pastParts" hidden>
+              {{#each this.parts}}<li id="participant"><a
+                    href="/user/profile/{{this._id}}"
+                  >{{this.firstName}} {{this.lastName}}</a></li>{{/each}}
+            </ul>
+          </div>
+        {{/each}}
+      {{else}}
+        {{#if myProfile}}
+          <h3>You do not have any past games</h3>
+        {{else}}
+          <h3>This user does not have any past games</h3>
+        {{/if}}
+      {{/if}}
     {{else}}
       {{#if myProfile}}
-        <h3>You do not have any upcoming games</h3>
-      {{else}}
-        <h3>This user does not have any upcoming games</h3>
+        <a href="/user/request" id="requestVenue">Request a Venue</a>
       {{/if}}
     {{/if}}
-    <h2 class="heading">Past Games</h2>
-    {{#if pastGames}}
-      <button id="showPastGamesParts" class="showParts">Show Participants</button>
-      {{#each pastGames}}
-        <div class="gameReqsJoined">
-          <h3 id="activityTitle">{{this.activityTitle}}</h3>
-          <h4 id="activityDesc">{{this.activityBody}}</h4>
-          <ul class="pastParts" hidden>
-            {{#each this.parts}}<li id="participant"><a
-                  href="/user/profile/{{this._id}}"
-                >{{this.firstName}} {{this.lastName}}</a></li>{{/each}}
-          </ul>
-        </div>
-      {{/each}}
-    {{else}}
-      {{#if myProfile}}
-        <h3>You do not have any past games</h3>
-      {{else}}
-        <h3>This user does not have any past games</h3>
-      {{/if}}
-    {{/if}}
+
   </div>
 </div>
