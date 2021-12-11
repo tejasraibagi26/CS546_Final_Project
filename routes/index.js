@@ -8,6 +8,7 @@ const admin = require("./admin");
 const notFound = require("./404");
 const feed = require("./feed");
 const booking = require("./bookings");
+const report = require("./reports");
 
 const constructorMethod = (app) => {
   app.use("/", landing);
@@ -16,6 +17,7 @@ const constructorMethod = (app) => {
   app.use("/post", gameReq);
   app.use("/user", user);
   app.use("/reviews", reviews);
+  app.use("/report", report);
   app.use("/admin", admin);
   app.use("/404", notFound);
   app.use("/feed", feed);

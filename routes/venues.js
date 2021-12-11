@@ -3,6 +3,8 @@ const router = express.Router();
 const data = require("../data");
 const errorHandler = require("../Errors/errorHandler");
 const venue = data.venues;
+const review = data.reviews;
+const user = data.user;
 const multer = require("multer");
 const xss = require("xss");
 
@@ -23,7 +25,7 @@ router.get("/", async (req, res) => {
   const max = parseInt(req.query.max) || 1000000;
   const rating = parseInt(req.query.rating) || 0;
   let array = [searchTerm];
-  
+
   if (!searchTerm) {
     try {
       const getVenues = await venue.searchVenue(searchTerm, min, max, rating);
@@ -31,7 +33,7 @@ router.get("/", async (req, res) => {
         title: "Search Results",
         venues: getVenues,
         count: getVenues.length,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
       return;
     } catch (error) {
@@ -71,7 +73,7 @@ router.get("/", async (req, res) => {
         venues: fetchVenue,
         count: fetchVenue.length,
         searchTerm: searchTerm,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
       return;
     } catch (error) {
@@ -80,7 +82,7 @@ router.get("/", async (req, res) => {
         err: true,
         error: error,
         searchTerm,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
       return;
     }
@@ -93,7 +95,7 @@ router.get("/", async (req, res) => {
       venues: fetchVenue,
       count: fetchVenue.length,
       searchTerm: searchTerm,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
     return;
   } catch (error) {
@@ -102,7 +104,7 @@ router.get("/", async (req, res) => {
       err: true,
       error: error,
       searchTerm,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
   }
 });
@@ -140,9 +142,23 @@ router.get("/:id", async (req, res) => {
 
   try {
     const getVenue = await venue.getVenueById(id);
+    let getReviews = await review.getAllReviewsByvenueId(id);
+
+    let maxReviews = 5;
+    if (getReviews.length > maxReviews) {
+      getReviews = getReviews.slice(0, maxReviews);
+    }
+    for (let i = 0; i < getReviews.length; i++) {
+      const username = await user.getUserById(getReviews[i].reviewerId);
+      let reviewUser = `${username.firstName} ${username.lastName}`;
+      getReviews[i].username = reviewUser;
+      getReviews[i].userId = getReviews[i].reviewerId;
+    }
+
     res.status(200).render("venue/venuePage", {
       title: getVenue.venueName,
       venue: getVenue,
+      reviews: getReviews,
       reviewCount: getVenue.reviews.length,
       isLoggedIn: req.session.user ? true : false,
       userId: req.session.user ? req.session.user.id : "",
@@ -226,7 +242,7 @@ router.post("/create", upload.single("venueImage"), async (req, res) => {
     res.render("venue/createSucc", {
       title: "Venue Created",
       id: createVenue,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
   } catch (error) {
     res.status(500).json({ err: error });

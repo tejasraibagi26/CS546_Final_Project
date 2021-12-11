@@ -424,7 +424,7 @@ router.get("/addreview/:userId/:venueId", async (req, res) => {
     title: "add Review",
     userId: req.params.userId,
     venueId: req.params.venueId,
-
+    isLoggedIn: req.session.user ? true : false,
   });
 });
 
@@ -439,8 +439,6 @@ router.post("/:userId/:venueId", async (req, res) => {
   const reviewText = req.body.reviewText;
   let rating = req.body.rating;
   rating = parseInt(rating);
-
-
 
   let inputString = [userId, venueId, reviewText];
   let check = [userId, venueId, reviewText, rating];
@@ -507,14 +505,15 @@ router.post("/:userId/:venueId", async (req, res) => {
       error2: "Reviewed Successfully",
       userId: req.params.userId,
       venueId: req.params.venueId,
+      isLoggedIn: req.session.user ? true : false,
     });
-  }
-  catch (e) {
+  } catch (e) {
     res.render("reviews/createReview", {
       title: "Error",
       error1: e,
       userId: req.params.userId,
       venueId: req.params.venueId,
+      isLoggedIn: req.session.user ? true : false,
     });
   }
 });
@@ -573,9 +572,9 @@ router.get("/upvote/:reviewId/:userId", async (req, res) => {
   }
   try {
     const updatedReview = await resData.upVote(reviewId, userId);
-    res.redirect('back');
+    res.redirect("back");
   } catch (e) {
-    res.redirect('/reviews/removeup/' + reviewId + '/' + userId);
+    res.redirect("/reviews/removeup/" + reviewId + "/" + userId);
   }
 });
 //---------------------------------------------------------------------------------------------------------
@@ -631,9 +630,9 @@ router.get("/downvote/:reviewId/:userId", async (req, res) => {
   }
   try {
     const updatedReview = await resData.downVote(reviewId, userId);
-    res.redirect('back');
+    res.redirect("back");
   } catch (e) {
-    res.redirect('/reviews/removedown/' + reviewId + '/' + userId);
+    res.redirect("/reviews/removedown/" + reviewId + "/" + userId);
   }
 });
 //---------------------------------------------------------------------------------------------------------
@@ -690,7 +689,7 @@ router.get("/removeup/:reviewId/:userId", async (req, res) => {
   }
   try {
     const updatedReview = await resData.removeUpvote(reviewId, userId);
-    res.redirect('back');
+    res.redirect("back");
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e });
@@ -749,7 +748,7 @@ router.get("/removedown/:reviewId/:userId", async (req, res) => {
   }
   try {
     const updatedReview = await resData.removeDownvote(reviewId, userId);
-    res.redirect('back');
+    res.redirect("back");
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e });
@@ -814,10 +813,14 @@ router.get("/newest/:venueId", async (req, res) => {
     const getNewest = await resData.sortNewest(id);
     for (let i = 0; i < getNewest.length; i++) {
       getNewest[i].venueId = getNewest[i].reviewerId;
-      getNewest[i].reviewerId = await userData.getUserById(getNewest[i].reviewerId);
-      getNewest[i].reviewerId = getNewest[i].reviewerId.firstName.concat(" ", getNewest[i].reviewerId.lastName);
+      getNewest[i].reviewerId = await userData.getUserById(
+        getNewest[i].reviewerId
+      );
+      getNewest[i].reviewerId = getNewest[i].reviewerId.firstName.concat(
+        " ",
+        getNewest[i].reviewerId.lastName
+      );
       getNewest[i]._id = getNewest[i]._id.toString();
-
     }
     let venueDetails = await venueData.getVenueById(id);
     let venuename = venueDetails.venueName;
@@ -828,6 +831,7 @@ router.get("/newest/:venueId", async (req, res) => {
       venueReview1: mainReview,
       venueName: venuename,
       venueid: venueid,
+      isLoggedIn: req.session.user ? true : false,
     });
   } catch (e) {
     console.log(e);
@@ -892,10 +896,14 @@ router.get("/newest/:venueId", async (req, res) => {
       const getOldest = await resData.sortOldest(id);
       for (let i = 0; i < getOldest.length; i++) {
         getOldest[i].venueId = getOldest[i].reviewerId;
-        getOldest[i].reviewerId = await userData.getUserById(getOldest[i].reviewerId);
-        getOldest[i].reviewerId = getOldest[i].reviewerId.firstName.concat(" ", getOldest[i].reviewerId.lastName);
+        getOldest[i].reviewerId = await userData.getUserById(
+          getOldest[i].reviewerId
+        );
+        getOldest[i].reviewerId = getOldest[i].reviewerId.firstName.concat(
+          " ",
+          getOldest[i].reviewerId.lastName
+        );
         getOldest[i]._id = getOldest[i]._id.toString();
-
       }
       let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
@@ -906,6 +914,7 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
+        isLoggedIn: req.session.user ? true : false,
       });
     } catch (e) {
       console.log(e);
@@ -970,10 +979,14 @@ router.get("/newest/:venueId", async (req, res) => {
       const getHigest = await resData.sortHighestRating(id);
       for (let i = 0; i < getHigest.length; i++) {
         getHigest[i].venueId = getHigest[i].reviewerId;
-        getHigest[i].reviewerId = await userData.getUserById(getHigest[i].reviewerId);
-        getHigest[i].reviewerId = getHigest[i].reviewerId.firstName.concat(" ", getHigest[i].reviewerId.lastName);
+        getHigest[i].reviewerId = await userData.getUserById(
+          getHigest[i].reviewerId
+        );
+        getHigest[i].reviewerId = getHigest[i].reviewerId.firstName.concat(
+          " ",
+          getHigest[i].reviewerId.lastName
+        );
         getHigest[i]._id = getHigest[i]._id.toString();
-
       }
       let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
@@ -984,9 +997,9 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
+        isLoggedIn: req.session.user ? true : false,
       });
     } catch (e) {
-      console.log(e);
       res.status(500).json({ error: e });
     }
   }),
@@ -1048,10 +1061,14 @@ router.get("/newest/:venueId", async (req, res) => {
       const getLowest = await resData.sortLowestRating(id);
       for (let i = 0; i < getLowest.length; i++) {
         getLowest[i].venueId = getLowest[i].reviewerId;
-        getLowest[i].reviewerId = await userData.getUserById(getLowest[i].reviewerId);
-        getLowest[i].reviewerId = getLowest[i].reviewerId.firstName.concat(" ", getLowest[i].reviewerId.lastName);
+        getLowest[i].reviewerId = await userData.getUserById(
+          getLowest[i].reviewerId
+        );
+        getLowest[i].reviewerId = getLowest[i].reviewerId.firstName.concat(
+          " ",
+          getLowest[i].reviewerId.lastName
+        );
         getLowest[i]._id = getLowest[i]._id.toString();
-
       }
       let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
@@ -1062,6 +1079,7 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
+        isLoggedIn: req.session.user ? true : false,
       });
     } catch (e) {
       console.log(e);
@@ -1126,10 +1144,14 @@ router.get("/newest/:venueId", async (req, res) => {
       const mostUpvoted = await resData.mostUpvoted(id);
       for (let i = 0; i < mostUpvoted.length; i++) {
         mostUpvoted[i].venueId = mostUpvoted[i].reviewerId;
-        mostUpvoted[i].reviewerId = await userData.getUserById(mostUpvoted[i].reviewerId);
-        mostUpvoted[i].reviewerId = mostUpvoted[i].reviewerId.firstName.concat(" ", mostUpvoted[i].reviewerId.lastName);
+        mostUpvoted[i].reviewerId = await userData.getUserById(
+          mostUpvoted[i].reviewerId
+        );
+        mostUpvoted[i].reviewerId = mostUpvoted[i].reviewerId.firstName.concat(
+          " ",
+          mostUpvoted[i].reviewerId.lastName
+        );
         mostUpvoted[i]._id = mostUpvoted[i]._id.toString();
-
       }
       let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
@@ -1140,6 +1162,7 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
+        isLoggedIn: req.session.user ? true : false,
       });
     } catch (e) {
       console.log(e);
@@ -1204,10 +1227,16 @@ router.get("/newest/:venueId", async (req, res) => {
       const mostDownvoted = await resData.mostDownvoted(id);
       for (let i = 0; i < mostDownvoted.length; i++) {
         mostDownvoted[i].venueId = mostDownvoted[i].reviewerId;
-        mostDownvoted[i].reviewerId = await userData.getUserById(mostDownvoted[i].reviewerId);
-        mostDownvoted[i].reviewerId = mostDownvoted[i].reviewerId.firstName.concat(" ", mostDownvoted[i].reviewerId.lastName);
+        mostDownvoted[i].reviewerId = await userData.getUserById(
+          mostDownvoted[i].reviewerId
+        );
+        mostDownvoted[i].reviewerId = mostDownvoted[
+          i
+        ].reviewerId.firstName.concat(
+          " ",
+          mostDownvoted[i].reviewerId.lastName
+        );
         mostDownvoted[i]._id = mostDownvoted[i]._id.toString();
-
       }
       let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
@@ -1218,6 +1247,7 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
+        isLoggedIn: req.session.user ? true : false,
       });
     } catch (e) {
       console.log(e);
@@ -1598,6 +1628,7 @@ router.get("/venuereviews/:venueId", async (req, res) => {
       venueReview1: mainReview,
       venueName: venuename,
       venueid: venueid,
+      isLoggedIn: req.session.user ? true : false,
     });
 
   } catch (e) {
@@ -1608,6 +1639,7 @@ router.get("/venuereviews/:venueId", async (req, res) => {
       error: e,
       venueid: venueId,
       venueName: venuename,
+      isLoggedIn: req.session.user ? true : false,
     });
   }
 });
