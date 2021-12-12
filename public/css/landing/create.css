@@ -18,6 +18,7 @@
   font-size: 3em;
   font-weight: 900;
   letter-spacing: -1;
+  color: white;
 }
 
 #create-post .container form {
@@ -33,7 +34,8 @@
   height: 50px;
   border: none;
   border-radius: 6px;
-  background-color: whitesmoke;
+  background-color: #222;
+  color: white;
   padding: 10px;
   margin-top: 5px;
   font-family: "Source Sans Pro", sans-serif;
@@ -42,6 +44,8 @@
   justify-content: center;
   align-items: center;
   margin: 10px 0;
+  font-weight: 500 !important;
+  letter-spacing: 0;
 }
 
 #create-post .container textarea {

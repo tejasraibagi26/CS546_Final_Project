@@ -4,6 +4,7 @@ function validate() {
   error.hidden = true;
   var title = document.forms["create-post"]["activityTitle"].value;
   var body = document.forms["create-post"]["activityBody"].value;
+  var venue = document.forms["create-post"]["venueReq"].value;
   var playersReq = parseInt(document.forms["create-post"]["playerReq"].value);
 
   let errors = [];
@@ -12,6 +13,9 @@ function validate() {
   }
   if (body == null || body == "") {
     errors.push("Body is required");
+  }
+  if (venue == null || venue == "") {
+    errors.push("Venue is required");
   }
   if (playersReq == null) {
     errors.push("Players Required is required");

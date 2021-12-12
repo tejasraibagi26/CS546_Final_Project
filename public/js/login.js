@@ -58,7 +58,7 @@
     $.post(route, data, function (data) {
       console.log(data);
       if (data.auth == true) {
-        if (data.user.role == "admin") {
+        if (data.user.role == "Admin") {
           window.location.href = "/admin/dashboard";
         } else window.location.href = "/feed";
       } else {

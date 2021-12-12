@@ -93,7 +93,6 @@
               <option value="{{this}}">{{this}}</option>
             {{/each}}
           </select>
-          {{! <p class="silent">Note: Each slot is for 1 hour only!</p> }}
         </h3>
         <h3 class="sports"><span><i class="fas fa-calendar-alt"></i></span>
           Date:
@@ -115,7 +114,7 @@
               <option value="{{timeSlot}}">{{timeSlot}}</option>
             {{/each}}
           </select>
-          <p class="silent">Note: Each slot is for 1 hour only!</p>
+
         </h3>
         <lable>
           <input name="bookingVenueId" value="{{venue._id}}" hidden />
@@ -139,7 +138,10 @@
     </div>
   </div>
   <div class="comment">
-    <h1 class="comment-header">Reviews</h1>
+    <div class="row">
+      <h1 class="comment-header">Reviews</h1>
+      <a href="/reviews/venuereviews/{{venue._id}}">See all reviews</a>
+    </div>
     {{! <div class="comment-textbox">
       <form
         method="post"

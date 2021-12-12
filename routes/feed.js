@@ -33,7 +33,12 @@ router.get("/", async (req, res) => {
     users.push(userName);
   }
   for (let i = 0; i < activities.length; i++) {
-    let venueData = await venue.getVenueById(activities[i].venueReq);
+    let venueData;
+    try {
+      venueData = await venue.getVenueById(activities[i].venueReq);
+    } catch (error) {
+      res.json(error);
+    }
     venues.push(venueData);
   }
   for (let i = 0; i < activities.length; i++) {
@@ -76,7 +81,7 @@ router.get("/posts/create", async (req, res) => {
 
   res.render("entry/create", {
     title: "Create Post",
-    isLoggedIn: req.session.user ? true : false,
+    isLoggedIn: req.session.user,
     venueData: venues,
   });
 });

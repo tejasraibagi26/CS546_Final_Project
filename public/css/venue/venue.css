@@ -14,7 +14,8 @@
   height: 100vh;
   position: fixed;
   overflow: hidden;
-  background-color: white;
+  background-color: #121212;
+  color: white;
 }
 
 .fadeIn {
@@ -32,7 +33,8 @@
 }
 
 .container .left .filters form .cost {
-  background-color: whitesmoke;
+  background-color: #222;
+  color: #fff;
   height: 30px;
   width: 49%;
   border: none;
@@ -129,6 +131,7 @@
   padding: 10px 20px;
   font-size: xx-large;
   font-weight: 900;
+  color: white;
 }
 
 .container {
@@ -159,7 +162,7 @@
   max-width: 500px;
   margin-left: 20px;
   margin-bottom: 20px;
-  background-color: whitesmoke;
+  background-color: #222;
   flex: content;
   border-radius: 6px;
   display: flex;
@@ -172,6 +175,7 @@
   flex-direction: column;
   justify-content: space-between;
   flex: 1 1 auto;
+  color: white;
 }
 
 .container .venue .details {
@@ -265,11 +269,12 @@
   flex-direction: row;
   align-items: center;
   justify-content: start;
-  background-color: whitesmoke;
+  background-color: #222;
   border-radius: 6px;
 }
 
 .search-bar input {
+  color: white;
   width: 90%;
   height: 35px;
   border: none;
@@ -289,6 +294,7 @@
   border: none;
   cursor: pointer;
   background-color: transparent;
+  color: white;
 }
 
 .bg {
@@ -305,6 +311,7 @@
   text-transform: lowercase;
   letter-spacing: -1;
   line-height: 1.2;
+  color: white;
 }
 
 .hidden {

@@ -305,7 +305,7 @@ router.get("/addreview/:userId/:venueId", async (req, res) => {
     title: "add Review",
     userId: req.params.userId,
     venueId: req.params.venueId,
-    isLoggedIn: req.session.user ? true : false,
+    isLoggedIn: req.session.user,
   });
 });
 
@@ -371,20 +371,22 @@ router.post("/:userId/:venueId", async (req, res) => {
       reviewText,
       rating
     );
-    res.render("reviews/createReview", {
-      title: "Success",
-      error2: "Reviewed Successfully",
-      userId: req.params.userId,
-      venueId: req.params.venueId,
-      isLoggedIn: req.session.user ? true : false,
-    });
+    // res.render("reviews/createReview", {
+    //   title: "Success",
+    //   error2: "Reviewed Successfully",
+    //   userId: req.params.userId,
+    //   venueId: req.params.venueId,
+    //   isLoggedIn: req.session.user,
+    // });
+
+    res.redirect("/reviews/venuereviews/" + venueId);
   } catch (e) {
     res.render("reviews/createReview", {
       title: "Error",
       error1: e,
       userId: req.params.userId,
       venueId: req.params.venueId,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
   }
 });
@@ -678,12 +680,25 @@ router.get("/newest/:venueId", async (req, res) => {
     let venueDetails = await venueData.getVenueById(id);
     let venuename = venueDetails.venueName;
     let venueid = venueDetails._id.toString();
+    let user_id = req.session.user.id;
+
+    const user_data = await userData.getUserById(user_id.toString());
+    for (let i = 0; i < user_data.upvotedReviews.length; i++) {
+      if (user_data.upvotedReviews[i].id == venueid) {
+        getNewest[i].upvoted = true;
+      }
+    }
+    for (let i = 0; i < user_data.downvotedReviews.length; i++) {
+      if (user_data.upvotedReviews[i].id == venueid) {
+        getNewest[i].downvoted = true;
+      }
+    }
     res.render("reviews/filter", {
       title: "Filtered",
       venueReview: getNewest,
       venueName: venuename,
       venueid: venueid,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
   } catch (e) {
     res.status(500).json({ error: e });
@@ -744,12 +759,25 @@ router.get("/newest/:venueId", async (req, res) => {
       let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
       let venueid = venueDetails._id.toString();
+      let user_id = req.session.user.id;
+
+      const user_data = await userData.getUserById(user_id.toString());
+      for (let i = 0; i < user_data.upvotedReviews.length; i++) {
+        if (user_data.upvotedReviews[i].id == venueid) {
+          getOldest[i].upvoted = true;
+        }
+      }
+      for (let i = 0; i < user_data.downvotedReviews.length; i++) {
+        if (user_data.upvotedReviews[i].id == venueid) {
+          getOldest[i].downvoted = true;
+        }
+      }
       res.render("reviews/filter", {
         title: "Filtered",
         venueReview: getOldest,
         venueName: venuename,
         venueid: venueid,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -810,12 +838,25 @@ router.get("/newest/:venueId", async (req, res) => {
       let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
       let venueid = venueDetails._id.toString();
+      let user_id = req.session.user.id;
+
+      const user_data = await userData.getUserById(user_id.toString());
+      for (let i = 0; i < user_data.upvotedReviews.length; i++) {
+        if (user_data.upvotedReviews[i].id == venueid) {
+          getHigest[i].upvoted = true;
+        }
+      }
+      for (let i = 0; i < user_data.downvotedReviews.length; i++) {
+        if (user_data.upvotedReviews[i].id == venueid) {
+          getHigest[i].downvoted = true;
+        }
+      }
       res.render("reviews/filter", {
         title: "Filtered",
         venueReview: getHigest,
         venueName: venuename,
         venueid: venueid,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -876,12 +917,25 @@ router.get("/newest/:venueId", async (req, res) => {
       let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
       let venueid = venueDetails._id.toString();
+      let user_id = req.session.user.id;
+
+      const user_data = await userData.getUserById(user_id.toString());
+      for (let i = 0; i < user_data.upvotedReviews.length; i++) {
+        if (user_data.upvotedReviews[i].id == venueid) {
+          getLowest[i].upvoted = true;
+        }
+      }
+      for (let i = 0; i < user_data.downvotedReviews.length; i++) {
+        if (user_data.upvotedReviews[i].id == venueid) {
+          getLowest[i].downvoted = true;
+        }
+      }
       res.render("reviews/filter", {
         title: "Filtered",
         venueReview: getLowest,
         venueName: venuename,
         venueid: venueid,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -942,12 +996,25 @@ router.get("/newest/:venueId", async (req, res) => {
       let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
       let venueid = venueDetails._id.toString();
+      let user_id = req.session.user.id;
+
+      const user_data = await userData.getUserById(user_id.toString());
+      for (let i = 0; i < user_data.upvotedReviews.length; i++) {
+        if (user_data.upvotedReviews[i].id == venueid) {
+          mostUpvoted[i].upvoted = true;
+        }
+      }
+      for (let i = 0; i < user_data.downvotedReviews.length; i++) {
+        if (user_data.upvotedReviews[i].id == venueid) {
+          mostUpvoted[i].downvoted = true;
+        }
+      }
       res.render("reviews/filter", {
         title: "Filtered",
         venueReview: mostUpvoted,
         venueName: venuename,
         venueid: venueid,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -1010,12 +1077,24 @@ router.get("/newest/:venueId", async (req, res) => {
       let venueDetails = await venueData.getVenueById(id);
       let venuename = venueDetails.venueName;
       let venueid = venueDetails._id.toString();
+      let user_id = req.session.user.id;
+      const user_data = await userData.getUserById(user_id.toString());
+      for (let i = 0; i < user_data.upvotedReviews.length; i++) {
+        if (user_data.upvotedReviews[i].id == venueid) {
+          mostDownvoted[i].upvoted = true;
+        }
+      }
+      for (let i = 0; i < user_data.downvotedReviews.length; i++) {
+        if (user_data.upvotedReviews[i].id == venueid) {
+          mostDownvoted[i].downvoted = true;
+        }
+      }
       res.render("reviews/filter", {
         title: "Filtered",
         venueReview: mostDownvoted,
         venueName: venuename,
         venueid: venueid,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -1344,18 +1423,30 @@ router.get("/venuereviews/:venueId", async (req, res) => {
     let venueDetails = await venueData.getVenueById(venueId);
     let venuename = venueDetails.venueName;
     let venueid = venueDetails._id.toString();
+    let user_id = req.session.user.id;
 
+    const user_data = await userData.getUserById(user_id.toString());
+    for (let i = 0; i < user_data.upvotedReviews.length; i++) {
+      if (user_data.upvotedReviews[i].id == venueid) {
+        venueReviews[i].upvoted = true;
+      }
+    }
+    for (let i = 0; i < user_data.downvotedReviews.length; i++) {
+      if (user_data.upvotedReviews[i].id == venueid) {
+        venueReviews[i].downvoted = true;
+      }
+    }
     res.render("reviews/VenueReview", {
       title: "All Reviews",
       venueReview: venueReviews,
       venueName: venuename,
       venueid: venueid,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
   } catch (e) {
     res.render("reviews/VenueReview", {
       error: e,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
   }
 });

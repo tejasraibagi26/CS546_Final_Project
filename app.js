@@ -76,7 +76,7 @@ app.use("/report", (req, res, next) => {
 
 app.use("/admin/dashboard", (req, res, next) => {
   if (req.session.user) {
-    if (req.session.user.role !== "admin") {
+    if (req.session.user.role !== "Admin") {
       return res.redirect("/");
     }
   } else if (!req.session.user) {

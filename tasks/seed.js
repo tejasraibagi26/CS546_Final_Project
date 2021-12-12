@@ -1,8 +1,12 @@
-const _connection = require("../config/mongoConnection");
+const dbConnection = require("../config/mongoConnection");
 const data = require("../data");
 const venue = data.venues;
 const user = data.user;
 const reviews = data.reviews;
+const booking = data.booking;
+const activity = data.activity;
+const report = data.report;
+
 const names = [
   "Adam",
   "Alex",
@@ -189,19 +193,14 @@ const names = [
   "Tisler",
 ];
 
-let maxCount = 3;
+let maxCount = 5;
+let postCount = 5;
 let addressStart = 100;
 let addressEnd = 1400;
 let minPrice = 10;
 let maxPrice = 100;
 let venueApprove = true;
 let time = [
-  "00:00",
-  "01:00",
-  "02:00",
-  "03:00",
-  "04:00",
-  "05:00",
   "06:00",
   "07:00",
   "08:00",
@@ -215,12 +214,6 @@ let time = [
   "16:00",
   "17:00",
   "18:00",
-  "19:00",
-  "20:00",
-  "21:00",
-  "22:00",
-  "23:00",
-  "24:00",
 ];
 
 let sports = [
@@ -264,10 +257,42 @@ let genders = [
   "Bisexual",
   "Prefer not to respond",
 ];
+
+let activityTitles = [
+  "Need players to play.",
+  "Need frontline player, who can co-operate with others.",
+  "Need someone who is a team player!",
+  "Need someone who can play with others.",
+  "One of our players is injured! Need someone to play for us.",
+  "We are looking for players who can join us!",
+  "Looking for a beginner to play with us. We all are newbies",
+  "Need a professional player to play with us in a major league.",
+  "Need a coach who can help us in our training.",
+  "We need a moderate level player to be as a backup player.",
+];
+
+let activityDescriptions = [
+  "We are looking for a player who can play with others.",
+  "We are a group of people who are looking for a player who can play with others.",
+];
+
+let reportComment = [
+  "Rude comment",
+  "Inappropriate content",
+  "Asking for money",
+  "Spam",
+  "Disrespectful",
+  "Disagree with the rules",
+];
+
+let reportTypes = ["Abusive", "Hate", "Rude", "Sexual", "Other"];
+
 let userId = [];
 let venueId = [];
+let bookingId = [];
+let activityId = [];
 
-let password = "CS546_Project";
+let password = "Project@123";
 
 let reviewsArr = [
   {
@@ -333,6 +358,10 @@ let reviewsArr = [
 ];
 
 const main = async () => {
+  console.log("Starting...");
+  const db = await dbConnection();
+  await db.dropDatabase();
+
   //This will create the users with the same password
   for (let i = 0; i < maxCount; i++) {
     let random = Math.round(Math.random() * names.length);
@@ -355,8 +384,21 @@ const main = async () => {
       role
     );
     userId.push(uploadUser.id.toString());
-    console.log(`Uploaded ${firstName} ${lastName}`);
+    console.log(`Created User: ${firstName} ${lastName}`);
   }
+
+  //Insert admin
+  const uploadUser = await user.createUser(
+    "Patrick",
+    "Hill",
+    "admin@gmail.com",
+    "Admin@123",
+    46,
+    "Male",
+    "Admin"
+  );
+
+  console.log(`Added Admin`);
 
   // This will create random venues
   for (let i = 0; i < maxCount; i++) {
@@ -365,24 +407,23 @@ const main = async () => {
     random = Math.round(Math.random() * addressEnd);
     let add = `${random + addressStart} Main St, Hoboken, NJ`;
     let slots = parseInt(Math.round(Math.random() * 10));
-    let maxTimeObjects = Math.round(Math.random() * time.length);
+    //let maxTimeObjects = Math.round(Math.random() * time.length);
     let timeObjects = [];
-    for (let j = 0; j < maxTimeObjects; j++) {
+    for (let k = 0; k < time.length; k++) {
       let tempObject = {};
-      let randomTime = Math.round(Math.random() * time.length - 1);
-      if (time[randomTime] != undefined) {
-        tempObject.timeSlot = time[randomTime];
-        tempObject.slotsAvailable = slots === 0 ? slots + 2 : slots;
-        timeObjects.push(tempObject);
-      }
+      tempObject.timeSlot = time[k];
+      tempObject.slotsAvailable = slots === 0 ? slots + 2 : slots;
+      timeObjects.push(tempObject);
     }
+
     let sportArray = [];
     let maxSports = Math.round(Math.random() * sports.length);
     for (let j = 0; j < maxSports; j++) {
       let random = Math.round(Math.random() * sports.length - 1);
       if (sports[random] !== undefined) sportArray.push(sports[random]);
     }
-    let getPrice = Math.round(Math.random() * maxPrice);
+
+    let getPrice = Math.round((Math.random() * maxPrice) / 10) * 10;
     let price = getPrice < 10 ? parseInt(minPrice) : parseInt(getPrice);
     let randomImageIdx = Math.round(Math.random() * preUplaodedImgNames.length);
     let image = preUplaodedImgNames[randomImageIdx];
@@ -398,33 +439,128 @@ const main = async () => {
       venueApprove
     );
 
-    venueId.push(venueData.toString());
+    venueId.push({ id: venueData.toString(), cost: price });
 
     console.log(`Uploaded ${fakeName}`);
   }
+
   // This will create random reviews
+  for (let k = 0; k < venueId.length; k++) {
+    for (let j = 0; j < userId.length; j++) {
+      let venue = venueId[k];
+      let reviewIdx = Math.round(Math.random() * reviewsArr.length);
+      if (reviewsArr[reviewIdx] === undefined) reviewIdx = 0;
+      let review = reviewsArr[reviewIdx];
+      let addRev = await reviews.addReview(
+        userId[j],
+        venue.id,
+        review.text,
+        review.rating,
+        ""
+      );
+
+      console.log(`Added review for ${venue.id}`);
+    }
+  }
+
+  // This will add bookings
   for (let i = 0; i < maxCount; i++) {
-    let random = Math.round(Math.random() * userId.length);
-    let random2 = Math.round(Math.random() * venueId.length);
-    let user = userId[random];
+    let random = Math.floor(Math.random() * userId.length);
+    let random2 = Math.floor(Math.random() * venueId.length);
+    let user_id = userId[random];
     let venue = venueId[random2];
-    if (user === undefined) user = userId[0];
-    if (venue === undefined) venue = venueId[0];
-    let reviewIdx = Math.round(Math.random() * reviewsArr.length);
-    if (reviewsArr[reviewIdx] === undefined) reviewIdx = 0;
-    let review = reviewsArr[reviewIdx];
-    let addRev = await reviews.addReview(
-      user,
-      venue,
-      review.text,
-      review.rating,
-      ""
+    let sT = ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00"];
+    let eT = ["13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
+    let startTime = sT[Math.floor(Math.random() * sT.length)];
+    let endTime = eT[Math.floor(Math.random() * eT.length)];
+    let date = "2021-12-31";
+    let price = venue.cost;
+    let shortET = parseInt(endTime.split(":")[0]);
+    let shortST = parseInt(startTime.split(":")[0]);
+    let cost = price * (shortET - shortST);
+    const addBooking = await booking.create(
+      venue.id,
+      user_id,
+      startTime,
+      endTime,
+      date,
+      cost.toString()
     );
-    console.log(`Uploaded review for ${venue} by ${user}`);
+
+    console.log(`Created Booking with id ${addBooking.bookingId}`);
+
+    bookingId.push(addBooking.bookingId);
+  }
+
+  //Create activity feed
+  for (let i = 0; i < postCount; i++) {
+    let randomIdx = Math.floor(Math.random() * activityTitles.length);
+    let activityTitle = activityTitles[randomIdx];
+    let randomIdx2 = Math.floor(Math.random() * activityDescriptions.length);
+    let activityDescription = activityDescriptions[randomIdx2];
+    let playerReq = Math.floor(Math.random() * 10);
+    if (playerReq === 0) playerReq = 1;
+    let createdBy = userId[Math.floor(Math.random() * userId.length)];
+    let venueReq = venueId[Math.floor(Math.random() * venueId.length)].id;
+    let booking = bookingId[Math.floor(Math.random() * bookingId.length)];
+
+    const addActivity = await activity.createActivity(
+      activityTitle,
+      activityDescription,
+      playerReq,
+      createdBy,
+      venueReq,
+      booking.toString()
+    );
+
+    console.log(`Created Activity with id ${addActivity._id}`);
+    activityId.push(addActivity._id.toString());
+  }
+
+  // Create reports
+  for (let i = 0; i < 5; i++) {
+    let typeVote = Math.floor(Math.random() * 2);
+    let user_id = userId[Math.floor(Math.random() * userId.length)];
+    if (user_id === undefined) user_id = userId[0];
+    let reportContent =
+      reportComment[Math.floor(Math.random() * reportComment.length)];
+    let reportType =
+      reportTypes[Math.floor(Math.random() * reportTypes.length)];
+    if (typeVote === 0) {
+      // Upload report as post
+      let id = activityId[Math.floor(Math.random() * activityId.length - 1)];
+      if (id == undefined) id = activityId[0].toString();
+
+      let type = "post";
+      const addReport = await report.reportVenue(
+        id.toString(),
+        user_id.toString(),
+        reportContent,
+        reportType,
+        type
+      );
+      console.log(`Created Report for ${type} with id ${addReport.id}`);
+    } else {
+      // Upload report as venue
+      let id =
+        venueId[Math.floor(Math.random() * venueId.length)].id.toString();
+      if (id == undefined) id = venueId[0].id.toString();
+      let type = "venues";
+
+      const addReport = await report.reportVenue(
+        id.toString(),
+        user_id.toString(),
+        reportContent,
+        reportType,
+        type
+      );
+      console.log(`Created Report for ${type} with id ${addReport.id}`);
+    }
   }
 
   console.log("Closing DB Connection");
-  await _connection.closeConnection();
+  await db.serverConfig.close();
+  console.log("Done");
 };
 
-main();
+main().catch((err) => console.log(err));

@@ -33,11 +33,15 @@
       <div class="form-group">
         <label for="venueReq">Select Venue for Request</label>
         <select id="sport" name="venueReq" class="form-control">
-          {{#each venueData}}
-            <option
-              value="{{this._id}}|{{this.bookingId}}"
-            >{{this.venueName}}</option>
-          {{/each}}
+          {{#if venueData}}
+            {{#each venueData}}
+              <option
+                value="{{this._id}}|{{this.bookingId}}"
+              >{{this.venueName}}</option>
+            {{/each}}
+          {{else}}
+            <option value="">No Bookings found.</option>
+          {{/if}}
         </select>
       </div>
       <div class="form-group">
