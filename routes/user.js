@@ -277,4 +277,27 @@ router.post("/addFriend/:id", async (req, res) => {
   }
 });
 
+router.post("/editBio/:id", async (req, res) => {
+  let id = req.params.id;
+  let biography = xss(req.body.biography);
+  let array = [id, biography];
+  try {
+    errorHandler.checkIfElementsExists(array);
+    errorHandler.checkIfElementsAreStrings(array);
+    errorHandler.checkIfElementNotEmptyString(array);
+    errorHandler.checkIfValidObjectId(id);
+  } catch (e) {
+    res.status(400).json({ err: e });
+    return;
+  }
+
+  try {
+    await user.editBio(id, biography);
+
+    res.redirect("/user/profile/" + id);
+  } catch (e) {
+    res.status(500).json({ err: e });
+  }
+});
+
 module.exports = router;
