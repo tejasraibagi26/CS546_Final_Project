@@ -13,7 +13,7 @@ const errorHandler = require("../Errors/errorHandler");
 async function addComment(userId, reviewId,venueId, commentText) {
   /* Error Handling */
 
-  let array = [userId, reviewId, commentText];
+  let array = [userId, reviewId,venueId, commentText];
   errorHandler.checkIfElementsExists(array);
   errorHandler.checkIfElementsAreStrings(array);
   errorHandler.checkIfElementNotEmptyString(array);
@@ -27,6 +27,12 @@ async function addComment(userId, reviewId,venueId, commentText) {
     ObjectId(reviewId);
   } catch (error) {
     throw "review Id should be valid ObjectId";
+  }
+
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw "venue Id should be valid ObjectId";
   }
 
   //const reviewCollection = await reviews();
@@ -186,7 +192,7 @@ async function removeComment(id, userId, reviewId) {
 async function updateCommentText(id, userId, reviewId, venueId,commentText) {
   /* Error Handling */
 
-  let array = [id, userId, reviewId, commentText];
+  let array = [id, userId,venueId, reviewId, commentText];
   errorHandler.checkIfElementsExists(array);
   errorHandler.checkIfElementsAreStrings(array);
   errorHandler.checkIfElementNotEmptyString(array);
@@ -206,6 +212,12 @@ async function updateCommentText(id, userId, reviewId, venueId,commentText) {
     ObjectId(id);
   } catch (error) {
     throw "comment ID Id should be valid ObjectId";
+  }
+
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw "venue Id should be valid ObjectId";
   }
 
   const commentCollection = await comments();
@@ -819,7 +831,7 @@ async function removeDownvote(commentId, userId) {
 //---------------------------------------------------------------------------------------------------------
 
 async function mostUpvoted(reviewId, venueId) {
-  let array1 = [reviewId];
+  let array1 = [reviewId,venueId];
 
   errorHandler.checkIfElementsExists(array1);
   errorHandler.checkIfElementsAreStrings(array1);
@@ -828,6 +840,12 @@ async function mostUpvoted(reviewId, venueId) {
     ObjectId(reviewId);
   } catch (error) {
     throw "review ID should be valid ObjectId";
+  }
+
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw "venue Id should be valid ObjectId";
   }
 
   const commentCollection = await comments();
@@ -849,7 +867,7 @@ async function mostUpvoted(reviewId, venueId) {
 //---------------------------------------------------------------------------------------------------------
 
 async function mostDownvoted(reviewId, venueId) {
-  let array1 = [reviewId];
+  let array1 = [reviewId,venueId];
 
   errorHandler.checkIfElementsExists(array1);
   errorHandler.checkIfElementsAreStrings(array1);
@@ -858,6 +876,11 @@ async function mostDownvoted(reviewId, venueId) {
     ObjectId(reviewId);
   } catch (error) {
     throw "review ID should be valid ObjectId";
+  }
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw "venue Id should be valid ObjectId";
   }
 
   const commentCollection = await comments();
@@ -879,7 +902,7 @@ async function mostDownvoted(reviewId, venueId) {
 
 async function sortNewest(reviewId, venueId) {
   /* Error Handling */
-  let array1 = [reviewId];
+  let array1 = [reviewId,venueId];
 
   errorHandler.checkIfElementsExists(array1);
   errorHandler.checkIfElementsAreStrings(array1);
@@ -888,6 +911,11 @@ async function sortNewest(reviewId, venueId) {
     ObjectId(reviewId);
   } catch (error) {
     throw "review ID should be valid ObjectId";
+  }
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw "venue Id should be valid ObjectId";
   }
 
   const reviewThatGotPosted = await review.getReviewById(reviewId);
@@ -911,7 +939,7 @@ async function sortNewest(reviewId, venueId) {
 
 async function sortOldest(reviewId, venueId) {
   /* Error Handling */
-  let array1 = [reviewId];
+  let array1 = [reviewId,venueId];
 
   errorHandler.checkIfElementsExists(array1);
   errorHandler.checkIfElementsAreStrings(array1);
@@ -920,6 +948,11 @@ async function sortOldest(reviewId, venueId) {
     ObjectId(reviewId);
   } catch (error) {
     throw "review ID should be valid ObjectId";
+  }
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw "venue Id should be valid ObjectId";
   }
 
   const venueThatGotPosted = await review.getReviewById(reviewId);
@@ -947,7 +980,7 @@ async function sortOldest(reviewId, venueId) {
 async function getAllCommentsByReviewId(reviewId,venueId) {
   /* Error Handling */
   
-  let array1 = [reviewId];
+  let array1 = [reviewId,venueId];
 
   errorHandler.checkIfElementsExists(array1);
   errorHandler.checkIfElementsAreStrings(array1);
@@ -957,7 +990,11 @@ async function getAllCommentsByReviewId(reviewId,venueId) {
   } catch (error) {
     throw "Review ID should be valid ObjectId";
   }
-
+  try {
+    ObjectId(venueId);
+  } catch (error) {
+    throw "venue Id should be valid ObjectId";
+  }
   /* Checking if venue exists */
 
   const ReviewThatGotPosted = await review.getReviewById(reviewId);
