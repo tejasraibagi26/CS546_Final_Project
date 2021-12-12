@@ -19,94 +19,101 @@
         <i class="fa fa-plus"></i>
         New Post</a>
     </div>
-    <div class="posts">
-      {{#each posts}}
-        <div class="card">
-          <div class="card-header">
-            <div class="row">
-              <img src="/public/images/user.png" alt="avatar" class="avatar" />
-              <div class="user">
-                <h2 class="name"><a
-                    href="/user/profile/{{createdBy}}"
-                  >{{userName}}</a></h2>
-                <p class="date">Posted on: {{creationDateTime}}</p>
+    {{#if posts}}
+      <div class="posts">
+        {{#each posts}}
+          <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <img
+                  src="/public/images/user.png"
+                  alt="avatar"
+                  class="avatar"
+                />
+                <div class="user">
+                  <h2 class="name"><a
+                      href="/user/profile/{{createdBy}}"
+                    >{{userName}}</a></h2>
+                  <p class="date">Posted on: {{creationDateTime}}</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="card-body">
-            <div class="stat">
-              <p class="stat-chip">Players Required: {{playersReq}}</p>
-              <p class="stat-chip">Players Filled : {{playersFilled}}</p>
-              <p class="stat-chip">Where: {{venue.venueName}}</p>
-              <p class="stat-chip">Address: {{venue.venueAddress}}</p>
-              <p class="stat-chip">Date: {{venue.booking.date}}</p>
-              <p class="stat-chip">Time:
-                {{venue.booking.startTime}}
-                -
-                {{venue.booking.endTime}}</p>
+            <div class="card-body">
+              <div class="stat">
+                <p class="stat-chip">Players Required: {{playersReq}}</p>
+                <p class="stat-chip">Players Filled : {{playersFilled}}</p>
+                <p class="stat-chip">Where: {{venue.venueName}}</p>
+                <p class="stat-chip">Address: {{venue.venueAddress}}</p>
+                <p class="stat-chip">Date: {{booking.date}}</p>
+                <p class="stat-chip">Time:
+                  {{booking.startTime}}
+                  -
+                  {{booking.endTime}}</p>
+              </div>
+
+              <h2 class="title-body">{{activityTitle}}</h2>
+              <p class="desc">{{activityBody}}
+              </p>
             </div>
-
-            <h2 class="title-body">{{activityTitle}}</h2>
-            <p class="desc">{{activityBody}}
-            </p>
-          </div>
-          <div class="card-footer" id="card-footer">
-            <a class="btn" href="/feed/invite/accept?id={{_id}}">
-              <i class="fa fa-thumbs-up"></i>
-              Join Invite
-            </a>
-            <a class="btn report">
-              <span>
-                <i class="fa fa-flag reportButton">
-                  <span class="font">Report</span></i>
-                <div class="report-container reportDiv" id="reportDiv" hidden>
-                  <form
-                    id="reportForm"
-                    method="post"
-                    action="/report/{{venue._id}}/post"
-                    onsubmit="return validate()"
-                  >
-                    <div class="input-fields">
-                      <label for="reportComment" class="label">
-                        Problem
-                        <textarea
-                          class="input"
-                          type="text"
-                          name="reportComment"
-                          placeholder="Describe the problem"
-                          required
-                        ></textarea>
-                      </label>
-                      <label
-                        for="reportContentType"
-                        class="label"
-                        style="margin-top: 10px;"
-                      >
-                        Report Type
-                        <select
-                          class="input reportType"
-                          style="background-color: white;"
-                          name="reportContentType"
-                          id="reportType"
-                          required
+            <div class="card-footer" id="card-footer">
+              <a class="btn" href="/feed/invite/accept?id={{_id}}">
+                <i class="fa fa-thumbs-up"></i>
+                Join Invite
+              </a>
+              <a class="btn report">
+                <span>
+                  <i class="fa fa-flag reportButton">
+                    <span class="font">Report</span></i>
+                  <div class="report-container reportDiv" id="reportDiv" hidden>
+                    <form
+                      id="reportForm"
+                      method="post"
+                      action="/report/{{_id}}/post"
+                      onsubmit="return validate()"
+                    >
+                      <div class="input-fields">
+                        <label for="reportComment" class="label">
+                          Problem
+                          <textarea
+                            class="input"
+                            type="text"
+                            name="reportComment"
+                            placeholder="Describe the problem"
+                            required
+                          ></textarea>
+                        </label>
+                        <label
+                          for="reportContentType"
+                          class="label"
+                          style="margin-top: 10px;"
                         >
-                        </select>
-                      </label>
-                      <button
-                        type="submit"
-                        class="book-btn"
-                        style="margin-top: 10px; width:100%"
-                      >Report</button>
-                    </div>
-                  </form>
-                </div>
-              </span>
+                          Report Type
+                          <select
+                            class="input reportType"
+                            name="reportContentType"
+                            id="reportType"
+                            required
+                          >
+                          </select>
+                        </label>
+                        <button
+                          type="submit"
+                          class="book-btn"
+                          style="margin-top: 10px; width:100%"
+                        >Report</button>
+                      </div>
+                    </form>
+                  </div>
+                </span>
 
-            </a>
+              </a>
+            </div>
           </div>
-        </div>
-      {{/each}}
-    </div>
+        {{/each}}
+      </div>
+    {{else}}
+      <h1 class="no-posts">No posts yet!</h1>
+    {{/if}}
   </div>
 
 </section>

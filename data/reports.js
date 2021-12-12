@@ -31,7 +31,7 @@ const reportVenue = async (
   const addReport = await report.insertOne(reportBody);
   if (addReport.insertedCount === 0) throw "Could not add report";
 
-  return { success: true };
+  return { success: true, id: addReport.insertedId };
 };
 
 module.exports = {

@@ -23,7 +23,7 @@ select {
   height: 50px;
   border: none;
   border-radius: 6px;
-  background-color: whitesmoke;
+  background-color: #222;
   padding: 10px;
   margin-top: 5px;
   font-family: "Source Sans Pro", sans-serif;
@@ -31,17 +31,21 @@ select {
   display: flex;
   justify-content: center;
   align-items: center;
+  color: white;
 }
 
 #registerTitle {
   text-align: center;
   font-size: 3em;
   margin: 0;
+  color: white;
+  margin: 0 !important;
 }
 
 .registerLabel {
   display: block;
   margin-bottom: 10px;
+  color: white;
 }
 
 #registerSubmit {
@@ -65,7 +69,7 @@ select {
 
 #loginLink {
   font-size: medium;
-  color: darkblue;
+  color: lightblue;
   text-decoration: underline;
   margin-bottom: 20px;
 }

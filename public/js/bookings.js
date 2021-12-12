@@ -47,7 +47,10 @@ function validate() {
   let date = document.forms["book-form"]["date"].value;
 
   let currentDate = new Date().toLocaleDateString();
-
+  let splitYear = date.split("-")[0];
+  if (splitYear.length !== 4) {
+    errors.push("Invalid Date");
+  }
   if (date == null || date == "") {
     errors.push("Please select a date");
   }

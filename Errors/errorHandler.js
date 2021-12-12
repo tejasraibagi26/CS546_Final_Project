@@ -79,7 +79,7 @@ const checkIfTimePeriodValid = (startTime, endTime) => {
 };
 
 const checkReportType = (reportType) => {
-  let reportTypes = ["post", "comment", "venue"];
+  let reportTypes = ["post", "comment", "venues"];
   if (!reportTypes.includes(reportType.toLowerCase()))
     throw "Invalid report type";
 };

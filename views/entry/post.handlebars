@@ -1,0 +1,33 @@
+<section id="post">
+  <div class="container">
+    {{#if err}}
+      <lottie-player
+        src="https://assets9.lottiefiles.com/packages/lf20_hhoade8h.json"
+        background="transparent"
+        speed="1"
+        style="width: 300px; height: 300px;"
+        loop
+        autoplay
+      ></lottie-player>
+      <h1 class="header">{{err.err}}</h1>
+      <p class="postby">Looks like the post no longer exist.</p>
+      <a href="/admin/dashboard" class="back">
+        <i class="fa fa-long-arrow-alt-left"></i>
+        Back to Admin</a>
+    {{else}}
+      <h1 class="header">Reported Post Details</h1>
+      <div class="col">
+        <p class="postby">Post Content:
+          <span class="bold">{{post.activityBody}}</span></p>
+        <p class="postby">Players Filled:
+          <span class="bold">{{post.playersFilled}}</span></p>
+        <p class="postby">Players Requested:
+          <span class="bold">{{post.playersReq}}</span></p>
+        <p class="postby">Venue Booked:
+          <span class="bold">{{venue.venueName}}</span></p>
+        <p class="postby">Venue Address:
+          <span class="bold">{{venue.venueAddress}}</span></p>
+      </div>
+    {{/if}}
+  </div>
+</section>

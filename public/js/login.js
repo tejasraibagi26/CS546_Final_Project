@@ -53,9 +53,14 @@
     loading.show();
     button.hide();
 
-    $.post("/user/login", data, function (data) {
+    //console.log(window.location.href.split("3000")[1]);
+    let route = window.location.href.split("3000")[1];
+    $.post(route, data, function (data) {
+      console.log(data);
       if (data.auth == true) {
-        window.location.href = "/feed";
+        if (data.user.role == "Admin") {
+          window.location.href = "/admin/dashboard";
+        } else window.location.href = "/feed";
       } else {
         password.val("");
         error.text(data.error);

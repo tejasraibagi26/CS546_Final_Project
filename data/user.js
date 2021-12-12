@@ -47,7 +47,6 @@ async function createUser(
   errorHandler.checkIfValidEmail(email);
   errorHandler.checkIfValidRole(role);
   errorHandler.checkIfValidAge(age);
-
   const hashedPassword = await bcrypt.hash(password, saltRounds);
 
   const users = await userCollection();
@@ -74,7 +73,7 @@ async function createUser(
 
   if (insertData.insertedCount == 0) throw "Could not insert user";
 
-  return { msg: "Inserted user", added: true };
+  return { msg: "Inserted user", added: true, id: insertData.insertedId };
 }
 
 async function searchUsers(firstName, lastName) {

@@ -16,7 +16,7 @@
             <form
               id="reportForm"
               method="post"
-              action="/report/{{venue._id}}/venue"
+              action="/report/{{venue._id}}/venues"
               onsubmit="return validateReport()"
             >
               <div class="input-fields">
@@ -93,11 +93,12 @@
               <option value="{{this}}">{{this}}</option>
             {{/each}}
           </select>
-          {{! <p class="silent">Note: Each slot is for 1 hour only!</p> }}
         </h3>
         <h3 class="sports"><span><i class="fas fa-calendar-alt"></i></span>
           Date:
-          <input type="date" name="date" class="date" />
+          <label>
+            <input type="date" name="date" class="date" />
+          </label>
         </h3>
         <h3 class="timings">
           <span><i class="fas fa-clock"></i></span>
@@ -113,7 +114,7 @@
               <option value="{{timeSlot}}">{{timeSlot}}</option>
             {{/each}}
           </select>
-          <p class="silent">Note: Each slot is for 1 hour only!</p>
+
         </h3>
         <lable>
           <input name="bookingVenueId" value="{{venue._id}}" hidden />
@@ -137,7 +138,10 @@
     </div>
   </div>
   <div class="comment">
-    <h1 class="comment-header">Reviews</h1>
+    <div class="row">
+      <h1 class="comment-header">Reviews</h1>
+      <a href="/reviews/venuereviews/{{venue._id}}">See all reviews</a>
+    </div>
     {{! <div class="comment-textbox">
       <form
         method="post"
@@ -161,7 +165,9 @@
     {{#if reviews}}
       {{#each reviews}}
         <div class="user-review">
-          <h2 class="username"><a href="/user/{{userId}}">{{username}}</a>
+          <h2 class="username"><a
+              href="/user/profile/{{userId}}"
+            >{{username}}</a>
             <span class="date-time">Posted On: {{createdAt1}}</span>
           </h2>
           <p class="reviewText">{{reviewText}}</p>

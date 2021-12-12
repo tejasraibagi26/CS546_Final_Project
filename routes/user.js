@@ -12,6 +12,7 @@ router.get("/login", async (req, res) => {
   }
   res.render("user/login", {
     title: "Login",
+    action: "/user/login",
   });
 });
 
@@ -246,6 +247,7 @@ router.post("/login", async (req, res) => {
     };
     res.json({
       auth: true,
+      user: req.session.user,
     });
     return;
   } else {

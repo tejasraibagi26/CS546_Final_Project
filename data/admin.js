@@ -2,6 +2,7 @@ const mongoCollections = require("../config/mongoCollections");
 const reports = mongoCollections.reports;
 const venueCollection = mongoCollections.venue;
 const commentCollection = mongoCollections.comments;
+const activityCollection = mongoCollections.activity;
 const errorHandler = require("../Errors/errorHandler");
 const { ObjectId } = require("mongodb");
 
@@ -136,14 +137,22 @@ const approveReport = async (id) => {
   errorHandler.checkIfValidObjectId(id);
 
   id = id.trim();
-  id = ObjectId(id);
+  // id = ObjectId(id);
   const rCol = await reports();
   const approve = await rCol.updateOne(
-    { _id: id },
+    { _id: ObjectId(id) },
     { $set: { reportApproved: 1 } }
   );
 
-  if (approve.modifiedCount === 0) throw "Cannot update";
+  const reportData = await getReportById(id);
+  const aCol = await activityCollection();
+  const updatePost = await aCol.updateOne(
+    { _id: ObjectId(reportData.reported.venueId) },
+    { $set: { postVisible: false } }
+  );
+
+  if (approve.modifiedCount === 0 || updatePost.modifiedCount === 0)
+    throw "Cannot update";
   return { updated: true };
 };
 
