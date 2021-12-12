@@ -1,14 +1,17 @@
-const loginForm = document.getElementById("loginForm");
+(function ($) {
+  let loginForm = $("#loginForm"),
+    email = $("#loginEmail"),
+    password = $("#loginPassword"),
+    error = $("#loginError"),
+    loading = $("#spinnerDiv"),
+    button = $("#loginSubmitLabel");
 
-if (loginForm) {
-  const email = document.getElementById("loginEmail");
-  const password = document.getElementById("loginPassword");
-  const error = document.getElementById("loginError");
-
-  loginForm.addEventListener("submit", (event) => {
-    let emailValue = email.value;
-    let passwordValue = password.value;
-    error.hidden = true;
+  loginForm.submit(function (event) {
+    let emailValue = email.val();
+    let passwordValue = password.val();
+    error.val("");
+    error.hide();
+    event.preventDefault();
 
     try {
       if (!emailValue) throw "Must provide email";
@@ -24,11 +27,11 @@ if (loginForm) {
       if (domain.substring(dotsign + 1, domain.length).length == 0)
         throw "Must provide valid email";
     } catch (e) {
-      email.value = "";
-      error.innerHTML = e;
-      error.hidden = false;
+      email.val("");
+      password.val("");
+      error.text(e);
+      error.show();
       email.focus();
-      event.preventDefault();
       return;
     }
 
@@ -36,12 +39,31 @@ if (loginForm) {
       if (!passwordValue) throw "Must provide password";
       if (passwordValue.trim().length == 0) throw "Must provide password";
     } catch (e) {
-      password.value = "";
-      error.innerHTML = e;
-      error.hidden = false;
+      password.val("");
+      error.text(e);
+      error.show();
       password.focus();
-      event.preventDefault();
       return;
     }
+    let data = {
+      email: emailValue,
+      password: passwordValue,
+    };
+
+    loading.show();
+    button.hide();
+
+    $.post("/user/login", data, function (data) {
+      if (data.auth == true) {
+        window.location.href = "/feed";
+      } else {
+        password.val("");
+        error.text(data.error);
+        error.show();
+        password.focus();
+        loading.hide();
+        button.show();
+      }
+    });
   });
-}
+})(window.jQuery);

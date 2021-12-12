@@ -35,16 +35,40 @@ app.use("/create", async (req, res, next) => {
   }
 });
 
-app.use("/venues/create", (req, res, next) => {
-  console.log(req.method);
-  req.method = "POST";
-  next();
+app.use("/feed", (req, res, next) => {
+  if (!req.session.user) {
+    //Redirect to login page as user is not authorized to view feed
+    return res.redirect("/user/login");
+  } else {
+    next();
+  }
 });
 
 app.use("/feed/posts/create", (req, res, next) => {
   let user = req.session.user;
   if (!user) {
     //Redirect to login, for now its "/"
+    return res.redirect("/user/login");
+  }
+  next();
+});
+
+app.use("/feed/invite/accept", (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("/user/login");
+  }
+  next();
+});
+
+app.use("/bookings", (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("/user/login");
+  }
+  next();
+});
+
+app.use("/report", (req, res, next) => {
+  if (!req.session.user) {
     return res.redirect("/user/login");
   }
   next();

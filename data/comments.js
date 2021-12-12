@@ -218,6 +218,7 @@ async function updateCommentText(id, userId, reviewId, venueId,commentText) {
     ObjectId(venueId);
   } catch (error) {
     throw "venue Id should be valid ObjectId";
+
   }
 
   const commentCollection = await comments();
@@ -1017,7 +1018,6 @@ async function getAllCommentsByReviewId(reviewId,venueId) {
   }
   return commentArray;
 }
-
 module.exports = {
   addComment,
   removeComment,

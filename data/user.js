@@ -243,6 +243,36 @@ async function addFriend(userId, newFriendId) {
   }
 }
 
+async function editBio(id, newBiography) {
+  let array = [id, newBiography];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
+  errorHandler.checkIfValidObjectId(id);
+
+  const users = await userCollection();
+
+  try {
+    const currentUser = await getUserById(id);
+  } catch (e) {
+    return { err: "User does not exist" };
+  }
+
+  try {
+    const updateInfo = await users.updateOne(
+      { _id: ObjectId(id) },
+      {
+        $set: {
+          biography: newBiography,
+        },
+      }
+    );
+    return { msg: "Bio updated" };
+  } catch (e) {
+    throw e;
+  }
+}
+
 module.exports = {
   getAllUsers,
   getUserById,
@@ -252,4 +282,5 @@ module.exports = {
   getFriends,
   getActiveGames,
   addFriend,
+  editBio,
 };

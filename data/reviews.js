@@ -1,5 +1,6 @@
 const mongoCollections = require("../config/mongoCollections");
 const reviews = mongoCollections.reviews;
+const comments = mongoCollections.comments;
 const user = mongoCollections.user;
 const venue = mongoCollections.venue;
 const { ObjectId } = require("mongodb");
@@ -7,6 +8,7 @@ const user1 = require("./user");
 const venue1 = require("./venue");
 const bodyParser = require("body-parser");
 const errorHandler = require("../Errors/errorHandler");
+//const comments = require('./comments');
 
 //---------------------------------------------------------------------------------------------------------
 
@@ -210,6 +212,9 @@ async function removeReview(id, userId, venueId) {
     return;
   }
 
+  let temp1,temp2,temp3;
+  let deletecomments = review.commentId;
+  
   /* Checking if review deletion was successfull ot not */
 
   const deletionInfo = await reviewCollection.deleteOne({ _id: ObjectId(id) });
@@ -217,6 +222,27 @@ async function removeReview(id, userId, venueId) {
     throw `Could not delete review with id of ${id}`;
   }
 
+   for (let i=0;i<deletecomments.length;i++){
+     temp3 = await user();
+   temp1 = await comments();
+   temp2 = await temp1.findOne({ _id: ObjectId(deletecomments[i]._id) });
+   let temp4 = temp2.reviewerId;
+   let deletionInfo1 = await temp1.deleteOne({ _id: ObjectId(temp2._id.toString()) });
+   const updateInfo24 = await temp3.updateOne(
+    { _id: ObjectId(temp4) },
+    {
+      $pull: {
+        commentId: {
+          _id: temp2._id.toString(),
+        },
+      },
+    }
+  );
+   }
+
+   
+  //   temp2 = await comments.removeComment(temp1._id.toString());
+  //   }
   /* Updating the reviews under venue whenever a review is deleted */
 
   const updateInfo = await venueCollection.updateOne(
@@ -1506,8 +1532,8 @@ async function getAllReviewsByUserId(userId) {
   let reviewArray = [];
   let userReviewCollection = await user1.getUserById(userId);
   let length = userReviewCollection.reviewId.length;
-  if (length === 0) {
-    throw "No reviews";
+  if(length === 0){
+    return false;
   }
   for (let i = 0; i < length; i++) {
     let reviewFinal = userReviewCollection.reviewId[i]._id;

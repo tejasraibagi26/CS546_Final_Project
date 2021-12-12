@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="/public/css/reviews/createReview.css" />
+<div id="createReview-page">
+  <div class="createReview-container">
+    <h1 id="createReviewTitle">Add Review</h1>
+    {{#if error1}}
+    <h3 id="createReviewError1"> {{error1}}</h3>
+    {{/if}}
+    {{#if error2}}
+    <h3 id="createReviewError2"> {{error2}}</h3>
+    {{/if}}
+    <h3 id="createReviewError" hidden> {{error}}</h3>
+    <form action="/reviews/{{userId}}/{{venueId}}" name="create" method="post" id="createReviewForm">
+      <label class="createReviewLabel">Add a Written Review
+        <textarea name="reviewText" id="reviewText"  class="createReviewInput"
+          placeholder="What did you like or dislike about the venue?"></textarea>
+      </label>
+      <label class="createReviewLabel">Provide Rating:
+        <input name="rating" type="range" min="0" max="5" value="0" class="createRatingInput" id="reviewRating">
+      </label>
+      <p>Rating: <span id="demo"></span></p>
+
+      <label><input type="submit" id="registerSubmit" value="Add Review" /></label>
+    </form>
+    <script>
+      let createRatingInput = document.getElementById("reviewRating");
+      var output = document.getElementById("demo");
+      output.innerHTML = createRatingInput.value;
+
+      createRatingInput.oninput = function () {
+        output.innerHTML = this.value;
+      }
+    </script>
+    <a href="/venues/{{venueId}}" id="venuelink">Cancel</a>
+  </div>
+</div>
+<script src="/public/js/createReview.js"></script>

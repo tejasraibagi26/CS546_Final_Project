@@ -1,18 +1,123 @@
 <div id="profile-page">
-  <h1>{{currentUser.firstName}} {{currentUser.lastName}}</h1>
-  <h2>Age: {{currentUser.age}}</h2>
-  <h2>Gender: {{currentUser.gender}}</h2>
-  <div class="friends">
-    <h2>Friends</h2>
+  <h1 id="profileName">{{currentUser.firstName}} {{currentUser.lastName}}</h1>
+  {{#if showAddFriend}}
+    <form
+      id="addFriendForm"
+      action="/user/addFriend/{{currentUser._id}}"
+      method="post"
+    >
+      <label><input type="submit" id="addFriend" value="Add Friend" /></label>
+    </form>
+  {{else}}
+    {{#if myProfile}}{{else}}
+      <h2 id="alreadyFriends">You and
+        {{currentUser.firstName}}
+        {{currentUser.lastName}}
+        are friends!</h2>
+    {{/if}}
+  {{/if}}
+  <div id="infoDiv">
+    <p class="info">Age: {{currentUser.age}}</p>
+    <p class="info">Gender: {{currentUser.gender}}</p>
+  </div>
+  <div id="biography">
+    <h2 class="heading" id="bioTitle">Biography</h2>
+    {{#if myProfile}}
+      <a id="editBioLink">Edit Bio</a>
+      <p id="errorBio" hidden></p>
+      <form
+        id="editBio"
+        action="/user/editBio/{{isLoggedIn.id}}"
+        method="post"
+        hidden
+      >
+        <textarea
+          placeholder="Enter your new biography here"
+          id="enterBiography"
+          name="biography"
+        ></textarea>
+        <label><input type="submit" id="addFriend" value="Enter bio" /></label>
+      </form>
+    {{/if}}
+    {{#if currentUser.biography}}
+      <p class="info" id="bio">{{currentUser.biography}}</p>
+    {{else}}
+      {{#if myProfile}}
+        <p class="info">You have no biography!</p>
+      {{else}}
+        <p class="info">This user has no biography!</p>
+      {{/if}}
+    {{/if}}
+  </div>
+  <div class="sections">
+    <h2 class="heading">Friends</h2>
     {{#if friends}}
       {{#each friends}}
-        <div class="friend">
-          <h3>{{this.firstName}} {{this.lastName}}</h3>
+        <div class="friends">
+          <h3 id="friend"><a
+              href="/user/profile/{{this._id}}"
+            >{{this.firstName}}
+              {{this.lastName}}</a></h3>
         </div>
       {{/each}}
     {{else}}
-      <h3>You have not added any friends yet!</h3>
+      {{#if myProfile}}
+        <h3>You have not added any friends yet!</h3>
+      {{else}}
+        <h3>This user has not added any friends yet!</h3>
+      {{/if}}
     {{/if}}
+    {{#if userAccount}}
+      <h2 class="heading">Upcoming Games</h2>
+      {{#if activeGames}}
+        <button id="showActiveGamesParts" class="showParts">Show Participants</button>
+        {{#each activeGames}}
+          <div class="gameReqsJoined">
+            <h3 id="activityTitle">{{this.activityTitle}}</h3>
+            <h4 id="activityDesc">{{this.activityBody}}</h4>
+            <ul class="activeParts" hidden>
+              {{#each this.parts}}
+                <li id="participant"><a
+                    href="/user/profile/{{this._id}}"
+                  >{{this.firstName}}
+                    {{this.lastName}}</a></li>
+              {{/each}}
+            </ul>
+          </div>
+        {{/each}}
+      {{else}}
+        {{#if myProfile}}
+          <h3>You do not have any upcoming games</h3>
+        {{else}}
+          <h3>This user does not have any upcoming games</h3>
+        {{/if}}
+      {{/if}}
+      <h2 class="heading">Past Games</h2>
+      {{#if pastGames}}
+        <button id="showPastGamesParts" class="showParts">Show Participants</button>
+        {{#each pastGames}}
+          <div class="gameReqsJoined">
+            <h3 id="activityTitle">{{this.activityTitle}}</h3>
+            <h4 id="activityDesc">{{this.activityBody}}</h4>
+            <ul class="pastParts" hidden>
+              {{#each this.parts}}<li id="participant"><a
+                    href="/user/profile/{{this._id}}"
+                  >{{this.firstName}} {{this.lastName}}</a></li>{{/each}}
+            </ul>
+          </div>
+        {{/each}}
+      {{else}}
+        {{#if myProfile}}
+          <h3>You do not have any past games</h3>
+        {{else}}
+          <h3>This user does not have any past games</h3>
+        {{/if}}
+      {{/if}}
+    {{else}}
+      {{#if myProfile}}
+        <a href="/user/request" id="requestVenue">Request a Venue</a>
+      {{/if}}
+    {{/if}}
+
   </div>
-  <a href="/user/logout" id="logoutLink">Logout</a>
 </div>

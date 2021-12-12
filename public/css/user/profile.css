@@ -20,6 +20,36 @@
   font-size: 20pt;
 }
 
+#bioTitle {
+  padding-bottom: 5px;
+}
+
+#bio {
+  padding-top: 5px;
+}
+
+#enterBiography {
+  height: 50px;
+  width: 250px;
+  margin: 0;
+  padding-bottom: 20px;
+}
+
+#editBio {
+  display: flex;
+  flex-direction: column;
+}
+
+#editBioLink {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#biography {
+  margin: 0;
+  padding-top: 10px;
+}
+
 #infoDiv {
   top: 0;
   display: flex;
@@ -39,7 +69,6 @@
   font-size: 2em;
   font-weight: 900;
   letter-spacing: -1;
-  text-decoration: underline;
   margin: 0;
   padding-top: 20px;
 }

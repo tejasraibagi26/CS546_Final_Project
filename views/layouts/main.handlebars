@@ -3,6 +3,11 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>{{title}}</title>
+    <link
+      rel="shortcut icon"
+      type="image/jpg"
+      href="../../public/images/favicon.ico"
+    />
     <meta
       name="description"
       content="Select from a wide selections of sports to play, and make new friends!"
@@ -36,15 +41,25 @@
     <nav>
       <div class="nav-wrapper">
         <a href="/" class="brand-logo">
+          <img
+            src="../../public/images/favicon.ico"
+            alt="logo"
+            class="logo"
+            width="60"
+            height="60"
+          />
           <div class="">StevenSports</div>
         </a>
         <ul>
-          <li>
-            <a href="/feed">Feed</a>
-          </li>
           {{#if isLoggedIn}}
             <li>
-              <a href="/user/profile">Profile</a>
+              <a href="/venues">search</a>
+            </li>
+            <li>
+              <a href="/feed">Feed</a>
+            </li>
+            <li>
+              <a href="/user/profile/{{isLoggedIn.id}}">Profile</a>
             </li>
             <li>
               <a href="/user/logout">Logout</a>
@@ -63,9 +78,27 @@
     {{{body}}}
     {{! Add JS scripts below }}
     {{! <script src="/public/JS/venue.js"></script> }}
+    <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/js/profile.js"></script>
     <script src="/public/js/login.js"></script>
     <script
       src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
     ></script>
+    <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+      integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/js/login.js"></script>
+    <script src="/public/js/register.js"></script>
   </body>
 </html>

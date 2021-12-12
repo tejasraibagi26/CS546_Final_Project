@@ -1,0 +1,131 @@
+<link rel="stylesheet" href="/public/css/reviews/venueReview.css" />
+<section id="activity">
+  <div class="container">
+    <div class="row">
+      {{#if venueReview}}
+      <h1 class="act-title">Reviews for {{venueName}}</h1>
+      <a href="/venues/{{venueid}}" id="open-add-modal1" class="btn">
+        Back to Venue</a>
+      {{else}}
+      <h3 class="act-title">No Reviews to display for {{venueName}} </h3>
+      <a href="/venues/{{venueid}}" id="open-add-modal2" class="btn">
+        Back to Venue</a>
+      {{/if}}
+    </div><br>
+    {{#if venueReview}}
+    <div id="beta">
+      <a href="/reviews/oldest/{{venueid}}" id="open-add-modal3" class="btn">
+        Oldest </a>
+      <a href="/reviews/newest/{{venueid}}" id="open-add-modal4" class="btn">
+        Newest </a>
+      <a href="/reviews/mostupvote/{{venueid}}" id="open-add-modal5" class="btn">
+        Most Upvoted</a>
+      <a href="/reviews/mostdownvote/{{venueid}}" id="open-add-modal6" class="btn">
+        Most Downvoted</a>
+      <a href="/reviews/highest/{{venueid}}" id="open-add-modal7" class="btn">
+        Positive</a>
+      <a href="/reviews/lowest/{{venueid}}" id="open-add-modal8" class="btn">
+        Critical</a>
+      <a href="/reviews/filter/{{venueid}}/1" id="open-add-modal9" class="btn">
+        <i class="fas fa-star"></i> <i class="fa fa-plus"></i>
+      </a>
+      <a href="/reviews/filter/{{venueid}}/2" id="open-add-modal10" class="btn">
+        <i class="fas fa-star"></i><i class="fas fa-star"></i> <i class="fa fa-plus"></i>
+      </a>
+      <a href="/reviews/filter/{{venueid}}/3" id="open-add-modal11" class="btn">
+        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> <i class="fa fa-plus"></i>
+      </a>
+      <a href="/reviews/filter/{{venueid}}/4" id="open-add-modal12" class="btn">
+        <i class="fas fa-star"></i> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+          class="fa fa-plus"></i>
+      </a>
+      <a href="/reviews/filter/{{venueid}}/5" id="open-add-modal13" class="btn">
+        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+          class="fas fa-star"></i><i class="fa fa-plus"></i>
+      </a>
+    </div><br>
+    {{/if}}
+    <div class="posts">
+      {{#if venueReview1}}
+      <h2 class="act-title">Your Review </h2>
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <img src="/public/images/user.png" alt="avatar" class="avatar" />
+            <div class="user">
+              <h2 class="name">{{venueReview1.reviewerId}}</h2>
+              <p class="date">Posted on (Eastern Standard Time) : {{venueReview1.createdAt1}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="stat">
+            <p class="stat-chip">Rating : {{venueReview1.rating}}</p>
+            <p class="stat-chip">Votes : {{venueReview1.votes}}</p>
+          </div>
+          <p class="desc">{{venueReview1.reviewText}}
+          </p>
+        </div>
+        <div class="card-footer">
+          <a href="/reviews/upvote/{{venueReview1._id}}/{{venueReview1.venueId}}" class="btn1">
+            <i class="fa fa-thumbs-up"></i>
+          </a>
+          <a href="/reviews/downvote/{{venueReview1._id}}/{{venueReview1.venueId}}" class="btn1">
+            <i class="fa fa-thumbs-down"></i>
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <a href="/reviews/delete/{{venueReview1._id}}/{{venueReview1.venueId}}/{{venueid}}" id="open-add-modal14"
+          class="btn">
+          Delete Review</a>
+        <a href="/reviews/getinfo/{{venueReview1._id}}/{{venueReview1.venueId}}/{{venueid}}" class="btn">
+          Update Review</a>
+        <a href="/reviews/getrating/{{venueReview1._id}}/{{venueReview1.venueId}}/{{venueid}}" id="open-add-modal15"
+          class="btn">
+          Update Rating</a>
+      </div>
+      <br>
+      <br>
+      <br>
+      {{/if}}
+
+      {{#if venueReview}}
+      <h2 class="act-title">All Reviews </h2>
+      {{/if}}
+      {{#each venueReview}}
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <img src="/public/images/user.png" alt="avatar" class="avatar" />
+            <div class="user">
+              <h2 class="name">{{this.reviewerId}}</h2>
+              <p class="date">Posted on (Eastern Standard Time) : {{this.createdAt1}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="stat">
+            <p class="stat-chip">Rating : {{this.rating}}</p>
+            <p class="stat-chip">Votes : {{this.votes}}</p>
+          </div>
+          <p class="desc">{{this.reviewText}}
+          </p>
+        </div>
+        <div class="card-footer">
+          <a href="/reviews/upvote/{{this._id}}/{{this.venueId}}" class="btn1">
+            <i class="fa fa-thumbs-up"></i>
+          </a>
+          <a href="/reviews/downvote/{{this._id}}/{{this.venueId}}" class="btn1">
+            <i class="fa fa-thumbs-down"></i>
+          </a>
+           <a href="/comments/addcomment/{{this.venueId}}/{{this._id}}/{{venue}}" class="add-rev hint">Add a
+          Comment</a>
+           <a href="/comments/reviewcomments/{{this._id}}/{{venue}}" class="add-rev hint">View All Comments
+       </a>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</section>

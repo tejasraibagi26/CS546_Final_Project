@@ -49,6 +49,8 @@
         <input
           id="age"
           type="number"
+          min="1"
+          max="128"
           name="age"
           class="registerInput"
           placeholder="Enter Age"
@@ -70,8 +72,11 @@
           value="Register"
         /></label>
     </form>
+    <div id="spinnerDiv" hidden>
+      <div class="spin"></div>
+    </div>
     <a href="/user/login" id="loginLink">Already have an account? Click to Login
       In!</a>
   </div>
 </div>
-<script src="/public/js/register.js"></script>
+<script src="/public/js/gender.js"></script>
