@@ -4,7 +4,6 @@ const data = require("../data");
 const errorHandler = require("../Errors/errorHandler");
 const user = data.user;
 const bcrypt = require("bcrypt");
-const saltRounds = 16;
 const xss = require("xss");
 
 router.get("/login", async (req, res) => {
@@ -79,6 +78,10 @@ router.get("/profile/:id", async (req, res) => {
     return;
   }
 
+  let userAccount = true;
+  if (req.session.user.role == "Owner") {
+    userAccount = false;
+  }
   res.render("user/profile", {
     title: "Profile",
     currentUser: userById,
@@ -88,12 +91,24 @@ router.get("/profile/:id", async (req, res) => {
     isLoggedIn: req.session.user,
     myProfile: myProfile,
     showAddFriend: showAddFriend,
+    userAccount: userAccount,
   });
 });
 
 router.get("/logout", async (req, res) => {
   req.session.destroy();
   res.redirect("/user/login");
+});
+
+router.get("/request", async (req, res) => {
+  try {
+    res.status(200).render("venue/create", {
+      title: "Request Venue",
+      isLoggedIn: req.session.user,
+    });
+  } catch (e) {
+    res.status(404).redirect("/404");
+  }
 });
 
 router.get("/:id", async (req, res) => {
@@ -140,14 +155,12 @@ router.post("/create", async (req, res) => {
     return;
   }
 
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
-
   try {
     const createUser = await user.createUser(
       firstName,
       lastName,
       email,
-      hashedPassword,
+      password,
       Number(age),
       gender,
       role
@@ -258,6 +271,29 @@ router.post("/addFriend/:id", async (req, res) => {
 
   try {
     await user.addFriend(req.session.user.id, id);
+    res.redirect("/user/profile/" + id);
+  } catch (e) {
+    res.status(500).json({ err: e });
+  }
+});
+
+router.post("/editBio/:id", async (req, res) => {
+  let id = req.params.id;
+  let biography = xss(req.body.biography);
+  let array = [id, biography];
+  try {
+    errorHandler.checkIfElementsExists(array);
+    errorHandler.checkIfElementsAreStrings(array);
+    errorHandler.checkIfElementNotEmptyString(array);
+    errorHandler.checkIfValidObjectId(id);
+  } catch (e) {
+    res.status(400).json({ err: e });
+    return;
+  }
+
+  try {
+    await user.editBio(id, biography);
+
     res.redirect("/user/profile/" + id);
   } catch (e) {
     res.status(500).json({ err: e });

@@ -4,6 +4,8 @@ const errorHandler = require("../Errors/errorHandler");
 const { ObjectId } = require("mongodb");
 const activity = require("./activity");
 const booking = require("./booking");
+const bcrypt = require("bcrypt");
+const saltRounds = 16;
 
 async function getAllUsers() {
   const users = await userCollection();
@@ -46,12 +48,14 @@ async function createUser(
   errorHandler.checkIfValidRole(role);
   errorHandler.checkIfValidAge(age);
 
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+
   const users = await userCollection();
   let newUser = {
     firstName: firstName,
     lastName: lastName,
     email: email,
-    password: password,
+    password: hashedPassword,
     age: age,
     gender: gender,
     postId: [],
@@ -239,6 +243,36 @@ async function addFriend(userId, newFriendId) {
   }
 }
 
+async function editBio(id, newBiography) {
+  let array = [id, newBiography];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
+  errorHandler.checkIfValidObjectId(id);
+
+  const users = await userCollection();
+
+  try {
+    const currentUser = await getUserById(id);
+  } catch (e) {
+    return { err: "User does not exist" };
+  }
+
+  try {
+    const updateInfo = await users.updateOne(
+      { _id: ObjectId(id) },
+      {
+        $set: {
+          biography: newBiography,
+        },
+      }
+    );
+    return { msg: "Bio updated" };
+  } catch (e) {
+    throw e;
+  }
+}
+
 module.exports = {
   getAllUsers,
   getUserById,
@@ -248,4 +282,5 @@ module.exports = {
   getFriends,
   getActiveGames,
   addFriend,
+  editBio,
 };

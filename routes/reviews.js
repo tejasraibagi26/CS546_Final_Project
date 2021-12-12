@@ -424,7 +424,7 @@ router.get("/addreview/:userId/:venueId", async (req, res) => {
     title: "add Review",
     userId: req.params.userId,
     venueId: req.params.venueId,
-    isLoggedIn: req.session.user ? true : false,
+    isLoggedIn: req.session.user,
   });
 });
 
@@ -505,7 +505,7 @@ router.post("/:userId/:venueId", async (req, res) => {
       error2: "Reviewed Successfully",
       userId: req.params.userId,
       venueId: req.params.venueId,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
   } catch (e) {
     res.render("reviews/createReview", {
@@ -513,7 +513,7 @@ router.post("/:userId/:venueId", async (req, res) => {
       error1: e,
       userId: req.params.userId,
       venueId: req.params.venueId,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
   }
 });
@@ -831,7 +831,7 @@ router.get("/newest/:venueId", async (req, res) => {
       venueReview1: mainReview,
       venueName: venuename,
       venueid: venueid,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
   } catch (e) {
     console.log(e);
@@ -914,7 +914,7 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
     } catch (e) {
       console.log(e);
@@ -997,7 +997,7 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -1079,7 +1079,7 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
     } catch (e) {
       console.log(e);
@@ -1162,7 +1162,7 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
     } catch (e) {
       console.log(e);
@@ -1247,7 +1247,7 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
-        isLoggedIn: req.session.user ? true : false,
+        isLoggedIn: req.session.user,
       });
     } catch (e) {
       console.log(e);
@@ -1628,7 +1628,7 @@ router.get("/venuereviews/:venueId", async (req, res) => {
       venueReview1: mainReview,
       venueName: venuename,
       venueid: venueid,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
 
   } catch (e) {
@@ -1639,7 +1639,7 @@ router.get("/venuereviews/:venueId", async (req, res) => {
       error: e,
       venueid: venueId,
       venueName: venuename,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
     });
   }
 });
