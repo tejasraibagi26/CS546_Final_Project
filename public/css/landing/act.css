@@ -4,6 +4,32 @@
   width: 100%;
 }
 
+.floating-err {
+  position: fixed;
+  top: 25%;
+  right: 20px;
+  background-color: tomato;
+  color: white;
+  border-radius: 6px;
+  padding: 0 5px;
+  width: 25%;
+  z-index: 1;
+  text-align: center;
+  cursor: pointer;
+}
+
+.floating-err p {
+  margin: 0;
+  padding: 10px;
+}
+
+.float-in {
+  animation: float-in 0.5s ease-in-out;
+}
+.float-out {
+  animation: float-out 0.5s ease-in-out;
+}
+
 #activity .container {
   width: calc(100% - 40px);
   padding-left: 20px;
@@ -25,7 +51,7 @@
 }
 
 #activity .container .row .btn {
-  background-color: #0d82df;
+  background-color: #0079d1;
   border: none;
   padding: 10px;
   margin-right: 20px;
@@ -63,6 +89,7 @@
   min-width: 50%;
   display: flex;
   justify-content: start;
+  align-items: flex-start;
 }
 
 #activity .container .posts .card .card-header .row .user {
@@ -80,6 +107,7 @@
   color: gray;
   padding: 0;
   margin: 0;
+  height: auto !important;
 }
 
 #activity .container .posts .card .card-header .row img {
@@ -103,10 +131,11 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 #activity .container .posts .card .card-body .stat .stat-chip {
-  background-color: #0d82df;
+  background-color: #0079d1;
   color: white;
   padding: 5px;
   font-size: 14px;
@@ -136,4 +165,34 @@
 
 #activity .container .posts .card .card-footer .btn {
   font-size: 18px;
+}
+
+@keyframes float-in {
+  0% {
+    opacity: 0;
+    overflow: hidden;
+  }
+  100% {
+    opacity: 1;
+    overflow: hidden;
+  }
+}
+
+@keyframes float-out {
+  0% {
+    opacity: 1;
+    overflow: hidden;
+  }
+  100% {
+    opacity: 0;
+    overflow: hidden;
+  }
+}
+
+.report {
+  cursor: pointer;
+}
+
+.font {
+  font-family: "Source Sans Pro", sans-serif;
 }
