@@ -1,0 +1,83 @@
+
+
+#createComment-page {
+    position: relative;
+    top: 60px;
+    width: 100%;
+  }
+  
+  .createComment-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #createCommentForm {
+    width: 30%;
+  }
+  
+  .createCommentInput,
+  select {
+    width: 500px;
+    height: 200px;
+    border: none;
+    border-radius: 6px;
+    background-color: whitesmoke;
+    padding: 10px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+  }
+ 
+  #createCommentTitle {
+    text-align: center;
+    font-size: 3em;
+    margin: 0;
+  }
+  
+  .createCommentLabel {
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 30px;
+  }
+  
+  #createCommentSubmit {
+    cursor: pointer;
+    background-color: #0d82df !important;
+    color: white;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: -1;
+    text-align: center;
+    height: 50px !important;
+    margin-top: 20px;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+  }
+  
+  
+  #createCommentError {
+    color: red;
+  }
+
+  #createCommentError1 {
+    color: red;
+  }
+  #createCommentError2 {
+    color :green;
+  }
+  
+  #reviewlink {
+    font-size: medium;
+    color: darkblue;
+    text-decoration: underline;
+    margin-bottom: 20px;
+  }
+  
