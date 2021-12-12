@@ -47,7 +47,6 @@ async function createUser(
   errorHandler.checkIfValidEmail(email);
   errorHandler.checkIfValidRole(role);
   errorHandler.checkIfValidAge(age);
-
   const hashedPassword = await bcrypt.hash(password, saltRounds);
 
   const users = await userCollection();
