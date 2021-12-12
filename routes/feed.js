@@ -46,11 +46,9 @@ router.get("/", async (req, res) => {
     let bookingData = await booking.getBookingById(activities[i].bookingId);
     bookings.push(bookingData);
   }
-  console.log(activities);
   for (let i = 0; i < activities.length; i++) {
     activities[i].userName = users[i];
     activities[i].venue = venues[i];
-    console.log(activities[i].venueReq, bookings[i].bookedVenueId);
     if (activities[i].venueReq == bookings[i].bookedVenueId) {
       activities[i].booking = bookings[i];
     }
@@ -61,8 +59,6 @@ router.get("/", async (req, res) => {
     //   activities[i].booking = bookings[i];
     // }
   }
-
-  //console.log(activities);
 
   res.status(200).render("entry/activity", {
     title: "Feed",
