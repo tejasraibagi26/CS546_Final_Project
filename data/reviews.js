@@ -1,13 +1,12 @@
-const mongoCollections = require('../config/mongoCollections');
+const mongoCollections = require("../config/mongoCollections");
 const reviews = mongoCollections.reviews;
 const user = mongoCollections.user;
 const venue = mongoCollections.venue;
-const { ObjectId } = require('mongodb');
-const user1 = require('./user');
-const venue1 = require('./venue');
-const bodyParser = require('body-parser');
+const { ObjectId } = require("mongodb");
+const user1 = require("./user");
+const venue1 = require("./venue");
+const bodyParser = require("body-parser");
 const errorHandler = require("../Errors/errorHandler");
-
 
 //---------------------------------------------------------------------------------------------------------
 
@@ -16,42 +15,44 @@ async function addReview(userId, venueId, reviewText, rating, reviewPicture) {
   const userCollection = await user();
   const venueCollection = await venue();
 
-
   /* Error Handling */
 
   let array = [userId, venueId, reviewText, rating];
-  let stringInput = [userId, venueId, reviewText]
+  let stringInput = [userId, venueId, reviewText];
   errorHandler.checkIfElementsExists(array);
   errorHandler.checkIfElementsAreStrings(stringInput);
   errorHandler.checkIfElementNotEmptyString(stringInput);
-  errorHandler.checkIfValidRating(rating);
+  //errorHandler.checkIfValidRating(rating);
   if (!reviewPicture || reviewPicture == "") {
     reviewPicture = "";
   }
   try {
     ObjectId(userId);
   } catch (error) {
-    throw 'User Id should be valid ObjectId';
+    throw "User Id should be valid ObjectId";
   }
 
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'Venue Id should be valid ObjectId';
+    throw "Venue Id should be valid ObjectId";
   }
 
   /* Checking if user exists */
 
   const userThatPosted = await user1.getUserById(userId);
-  if (!userThatPosted) throw 'User not found';
+  if (!userThatPosted) throw "User not found";
 
   /* Checking if venue exists */
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   /* Checking if user already reviewd to this particular venue */
-  const retrivedReview = await reviewCollection.findOne({ reviewerId: userId, venueId: venueId });
+  const retrivedReview = await reviewCollection.findOne({
+    reviewerId: userId,
+    venueId: venueId,
+  });
   if (retrivedReview) {
     throw "Already reviewed";
   }
@@ -63,23 +64,21 @@ async function addReview(userId, venueId, reviewText, rating, reviewPicture) {
     venueId: venueId,
     reviewText: reviewText,
     rating: rating,
+    createdAt1: new Date().toLocaleString(),
     createdAt: new Date(),
     commentId: [],
     votes: 0,
-    reviewPicture: reviewPicture
-
+    reviewPicture: reviewPicture,
   };
-
 
   /* Checking if review added successfully */
 
   const insertInfo = await reviewCollection.insertOne(newReview);
-  if (insertInfo.insertedCount === 0) throw 'Could not add review';
+  if (insertInfo.insertedCount === 0) throw "Could not add review";
 
   const newId = insertInfo.insertedId;
   const review = await this.getReviewById(newId.toString());
   review._id = review._id.toString();
-
 
   /* Updating the reviews in venue collection by adding the review Id to the venue */
 
@@ -88,16 +87,16 @@ async function addReview(userId, venueId, reviewText, rating, reviewPicture) {
     {
       $addToSet: {
         reviews: {
-          _id: review._id
-        }
-      }
+          _id: review._id,
+        },
+      },
     }
   );
 
   /* Checking if review Id is added to the venue successfully */
 
   if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
-    throw 'adding review to venue failed';
+    throw "adding review to venue failed";
 
   /* Updating the reviewId in user collection by adding the review Id to the user */
 
@@ -106,16 +105,15 @@ async function addReview(userId, venueId, reviewText, rating, reviewPicture) {
     {
       $addToSet: {
         reviewId: {
-          _id: review._id
-        }
-      }
+          _id: review._id,
+        },
+      },
     }
   );
   /* Checking if review Id is added to the user successfully */
 
   if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
-    throw 'adding review to user failed';
-
+    throw "adding review to user failed";
 
   /* Updating the overall rating of the venue whenever a new review with a rating is added */
 
@@ -133,12 +131,13 @@ async function addReview(userId, venueId, reviewText, rating, reviewPicture) {
     { _id: ObjectId(venueId) },
     {
       $set: {
-        venueRating: overallRating2
-      }
-    });
+        venueRating: overallRating2,
+      },
+    }
+  );
 
   if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
-    throw 'updating venue rating failed';
+    throw "updating venue rating failed";
 
   return { msg: "Review Added" };
 }
@@ -159,55 +158,55 @@ async function removeReview(id, userId, venueId) {
   try {
     ObjectId(userId);
   } catch (error) {
-    throw 'User Id should be valid ObjectId';
+    throw "User Id should be valid ObjectId";
   }
 
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'Venue Id should be valid ObjectId';
+    throw "Venue Id should be valid ObjectId";
   }
 
   try {
     ObjectId(id);
   } catch (error) {
-    throw 'Review ID Id should be valid ObjectId';
+    throw "Review ID Id should be valid ObjectId";
   }
 
   /* Checking if review exists */
 
   const reviewPosted = await getReviewById(id);
   if (!reviewPosted) {
-    throw 'review not found';
+    throw "review not found";
   }
 
   /* Checking if the review belongs to that particular venue or not */
 
   if (reviewPosted.venueId != venueId) {
-    throw 'review authentication failed for venue';
+    throw "review authentication failed for venue";
   }
 
   /* Checking if the review belongs to that particular user or not */
 
   if (reviewPosted.reviewerId != userId) {
-    throw 'review authentication failed for user';
+    throw "review authentication failed for user";
   }
 
   /* Checking if user exists */
 
   const userThatPosted = await user1.getUserById(userId);
-  if (!userThatPosted) throw 'User not found';
+  if (!userThatPosted) throw "User not found";
 
   /* Checking if venue exists */
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   let review = null;
   try {
-    review = await this.getReviewById((id));
+    review = await this.getReviewById(id);
   } catch (e) {
-    console.log(e);
+    //Do something with error
     return;
   }
 
@@ -225,13 +224,13 @@ async function removeReview(id, userId, venueId) {
     {
       $pull: {
         reviews: {
-          _id: id
-        }
-      }
+          _id: id,
+        },
+      },
     }
   );
   if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
-    throw 'deleting review from venue failed';
+    throw "deleting review from venue failed";
 
   /* Updating the reviewId under user whenever a review is deleted */
 
@@ -240,13 +239,13 @@ async function removeReview(id, userId, venueId) {
     {
       $pull: {
         reviewId: {
-          _id: id
-        }
-      }
+          _id: id,
+        },
+      },
     }
   );
   if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
-    throw 'deleting review from user failed';
+    throw "deleting review from user failed";
 
   /* Updating the overallrating of the venue whenever a review is deleted */
 
@@ -266,19 +265,16 @@ async function removeReview(id, userId, venueId) {
     { _id: ObjectId(venueId) },
     {
       $set: {
-        venueRating: overallRating2
-      }
-    });
+        venueRating: overallRating2,
+      },
+    }
+  );
 
   if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
-    throw 'updating venue rating failed';
-
-
-
-
+    throw "updating venue rating failed";
 
   if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
-    throw 'deleting review from user failed';
+    throw "deleting review from user failed";
 
   return { msg: "Review removed" };
 }
@@ -296,48 +292,48 @@ async function updateReviewText(id, userId, venueId, reviewText) {
   try {
     ObjectId(userId);
   } catch (error) {
-    throw 'User Id should be valid ObjectId';
+    throw "User Id should be valid ObjectId";
   }
 
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'Venue Id should be valid ObjectId';
+    throw "Venue Id should be valid ObjectId";
   }
 
   try {
     ObjectId(id);
   } catch (error) {
-    throw 'Review ID Id should be valid ObjectId';
+    throw "Review ID Id should be valid ObjectId";
   }
 
   /* Checking if review exists */
 
   const reviewPosted = await getReviewById(id);
   if (!reviewPosted) {
-    throw 'review not found';
+    throw "review not found";
   }
 
   /* Checking if review belongs to that particular venue */
 
   if (reviewPosted.venueId != venueId) {
-    throw 'review authentication failed for venue';
+    throw "review authentication failed for venue";
   }
 
   /* Checking if review belongs to that particular user */
 
   if (reviewPosted.reviewerId != userId) {
-    throw 'review authentication failed for user';
+    throw "review authentication failed for user";
   }
   /* Checking if user exists*/
 
   const userThatPosted = await user1.getUserById(userId);
-  if (!userThatPosted) throw 'User not found';
+  if (!userThatPosted) throw "User not found";
 
   /* Checking if venue exists*/
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   const updatedReview = {
     reviewText: reviewText,
@@ -350,7 +346,7 @@ async function updateReviewText(id, userId, venueId, reviewText) {
     { $set: updatedReview }
   );
   if (updatedInfo.modifiedCount === 0) {
-    throw 'could not update review text successfully';
+    throw "could not update review text successfully";
   }
   //const review = await this.getReviewById(id);
   return { msg: "Updated Review text successfully" };
@@ -366,7 +362,7 @@ async function updateReviewRating(id, userId, venueId, rating) {
   /* Error Handling*/
 
   let array = [id, userId, venueId, rating];
-  let stringInput = [id, userId, venueId]
+  let stringInput = [id, userId, venueId];
   errorHandler.checkIfElementsExists(array);
   errorHandler.checkIfElementsAreStrings(stringInput);
   errorHandler.checkIfElementNotEmptyString(stringInput);
@@ -374,54 +370,54 @@ async function updateReviewRating(id, userId, venueId, rating) {
   try {
     ObjectId(userId);
   } catch (error) {
-    throw 'User Id should be valid ObjectId';
+    throw "User Id should be valid ObjectId";
   }
 
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'Venue Id should be valid ObjectId';
+    throw "Venue Id should be valid ObjectId";
   }
 
   try {
     ObjectId(id);
   } catch (error) {
-    throw 'Review ID Id should be valid ObjectId';
+    throw "Review ID Id should be valid ObjectId";
   }
 
   /* Checking if review exists */
 
   const reviewPosted = await getReviewById(id);
   if (!reviewPosted) {
-    throw 'review not found';
+    throw "review not found";
   }
 
   /* Checking if review belongs to that particular venue */
 
   if (reviewPosted.venueId != venueId) {
-    throw 'review authentication failed for venue';
+    throw "review authentication failed for venue";
   }
 
   /* Checking if review belongs to that particular user */
 
   if (reviewPosted.reviewerId != userId) {
-    throw 'review authentication failed for user';
+    throw "review authentication failed for user";
   }
 
   /* Checking if user exists*/
 
   const userThatPosted = await user1.getUserById(userId);
-  if (!userThatPosted) throw 'User not found';
+  if (!userThatPosted) throw "User not found";
 
   /* Checking if venue exists*/
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   /* Updating the rating of a venue */
 
   const updatedReview = {
-    rating: rating
+    rating: rating,
   };
 
   const updatedInfo = await reviewCollection.updateOne(
@@ -429,7 +425,7 @@ async function updateReviewRating(id, userId, venueId, rating) {
     { $set: updatedReview }
   );
   if (updatedInfo.modifiedCount === 0) {
-    throw 'could not update review rating successfully';
+    throw "could not update review rating successfully";
   }
 
   /* Updating the overall rating of a venue whenever a individual review rating is updated */
@@ -448,12 +444,13 @@ async function updateReviewRating(id, userId, venueId, rating) {
     { _id: ObjectId(venueId) },
     {
       $set: {
-        venueRating: overallRating2
-      }
-    });
+        venueRating: overallRating2,
+      },
+    }
+  );
 
   if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
-    throw 'updating venue rating failed';
+    throw "updating venue rating failed";
 
   //const review = await this.getReviewById(id);
   return { msg: "Updated review rating successfully" };
@@ -461,9 +458,8 @@ async function updateReviewRating(id, userId, venueId, rating) {
 //---------------------------------------------------------------------------------------------------------
 
 async function getReviewById(id) {
-
   /* Error Handling */
-
+//console.log(id);
   let array1 = [id];
 
   errorHandler.checkIfElementsExists(array1);
@@ -472,21 +468,21 @@ async function getReviewById(id) {
   try {
     ObjectId(id);
   } catch (error) {
-    throw 'Review id should be valid ObjectId';
+    throw "Review id should be valid ObjectId";
   }
 
   /* Retriving the review by its Id */
 
   const reviewCollection = await reviews();
   const review = await reviewCollection.findOne({ _id: ObjectId(id) });
-
-  if (!review) throw 'Review not found';
+ 
+  
+  if (!review) throw "Review not found";
   return review;
 }
 //---------------------------------------------------------------------------------------------------------
 
 async function getAllReviews() {
-
   /* Error Handling */
 
   if (Object.keys(arguments).length !== 0) {
@@ -500,7 +496,8 @@ async function getAllReviews() {
 }
 //---------------------------------------------------------------------------------------------------------
 
-async function addCommentToReview(reviewId, commentID) { // function will be called in comments.js
+async function addCommentToReview(reviewId, commentID) {
+  // function will be called in comments.js
   const reviewCollection = await reviews();
 
   /* Error Handling */
@@ -513,29 +510,30 @@ async function addCommentToReview(reviewId, commentID) { // function will be cal
   try {
     ObjectId(reviewId);
   } catch (error) {
-    throw 'Review ID should be valid ObjectId';
+    throw "Review ID should be valid ObjectId";
   }
 
   try {
     ObjectId(commentID);
   } catch (error) {
-    throw 'Comment ID should be valid ObjectId';
+    throw "Comment ID should be valid ObjectId";
   }
 
   /* Adding comments id to the comments in review */
 
   const updateInfo = await reviewCollection.updateOne(
     { _id: ObjectId(reviewId) },
-    { $addToSet: { commentId: { _id: ObjectId(commentID) } } }
+    { $addToSet: { commentId: { _id: (commentID) } } }
   );
   if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
-    throw 'Comment Addition failed';
+    throw "Comment Addition failed";
 
   return { msg: "Comment Added" };
 }
 
 //---------------------------------------------------------------------------------------------------------
-async function removeCommentFromReview(reviewId, commentID) { // function will be called in comments.js
+async function removeCommentFromReview(reviewId, commentID) {
+  // function will be called in comments.js
 
   /* Error Handling */
 
@@ -547,13 +545,13 @@ async function removeCommentFromReview(reviewId, commentID) { // function will b
   try {
     ObjectId(reviewId);
   } catch (error) {
-    throw 'Review ID should be valid ObjectId';
+    throw "Review ID should be valid ObjectId";
   }
 
   try {
     ObjectId(commentID);
   } catch (error) {
-    throw 'Comment ID should be valid ObjectId';
+    throw "Comment ID should be valid ObjectId";
   }
 
   /* Deleting comments id from the comments in review */
@@ -561,10 +559,10 @@ async function removeCommentFromReview(reviewId, commentID) { // function will b
   const reviewCollection = await reviews();
   const updateInfo = await reviewCollection.updateOne(
     { _id: ObjectId(reviewId) },
-    { $pull: { commentId: { _id: ObjectId(commentID) } } }
+    { $pull: { commentId: { _id: commentID } } }
   );
   if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
-    throw 'Comment deletion failed';
+    throw "Comment deletion failed";
 
   return { msg: "Comment deleted" };
 }
@@ -583,43 +581,48 @@ async function upVote(reviewId, userId) {
   try {
     ObjectId(userId);
   } catch (error) {
-    throw 'User Id should be valid ObjectId';
+    throw "User Id should be valid ObjectId";
   }
 
   try {
     ObjectId(reviewId);
   } catch (error) {
-    throw 'Review Id should be valid ObjectId';
+    throw "Review Id should be valid ObjectId";
   }
 
   /* Retriving and Checking if review exists */
 
-  const retrivedReview = await reviewCollection.findOne({ _id: ObjectId(reviewId) });
+  const retrivedReview = await reviewCollection.findOne({
+    _id: ObjectId(reviewId),
+  });
   if (!retrivedReview) {
-    throw 'Review not found';
+    throw "Review not found";
   }
 
   /* Checking if user  exists */
 
   let flag1, flag2, flag3, flag4;
   const retrivedUser1 = await userCollection.findOne({ _id: ObjectId(userId) });
-  if (!retrivedUser1) throw 'User not found';
+  if (!retrivedUser1) throw "User not found";
 
   /* Creating a dummy review in upvotedReviews in user which is not tied upto any user or venue or and its ID set to 0 for initial iteration */
 
-  if (retrivedUser1.upvotedReviews.length === 0 && retrivedUser1.downvotedReviews.length === 0) {
+  if (
+    retrivedUser1.upvotedReviews.length === 0 &&
+    retrivedUser1.downvotedReviews.length === 0
+  ) {
     const updateInfo10 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
         $addToSet: {
           upvotedReviews: {
-            id: "0"
-          }
-        }
+            id: "0",
+          },
+        },
       }
     );
     if (!updateInfo10.matchedCount && !updateInfo10.modifiedCount)
-      throw 'updating dummy _id value for upvoted Reviews failed';
+      throw "updating dummy _id value for upvoted Reviews failed";
 
     /* Creating a dummy review in downvotedReviews in user which is not tied upto any user or venue or and its ID set to 0 for initial iteration */
 
@@ -628,26 +631,25 @@ async function upVote(reviewId, userId) {
       {
         $addToSet: {
           downvotedReviews: {
-            id: "0"
-          }
-        }
+            id: "0",
+          },
+        },
       }
     );
     if (!updateInfo9.matchedCount && !updateInfo9.modifiedCount)
-      throw 'updating dummy _id value for downvoted Reviews failed';
+      throw "updating dummy _id value for downvoted Reviews failed";
   }
 
   /* Retriving and checking if the user exists  */
 
   const retrivedUser = await userCollection.findOne({ _id: ObjectId(userId) });
   if (!retrivedUser) {
-    throw 'User  not found';
+    throw "User  not found";
   }
 
   /* checking if the user already upvoted that particular review  */
 
   for (let i = 0; i < retrivedUser.upvotedReviews.length; i++) {
-
     if (retrivedUser.upvotedReviews[i].id === reviewId) {
       flag3 = true;
       break;
@@ -681,30 +683,27 @@ async function upVote(reviewId, userId) {
       {
         $pull: {
           downvotedReviews: {
-
-            id: reviewId
-          }
-        }
+            id: reviewId,
+          },
+        },
       }
     );
     if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
-      throw 'removing review id from downvotedReviews failed';
+      throw "removing review id from downvotedReviews failed";
 
     const updateInfo2 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
         $addToSet: {
           upvotedReviews: {
-
-            id: reviewId
-          }
-        }
+            id: reviewId,
+          },
+        },
       }
     );
 
     if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
-      throw 'removing review id from upvotedReviews failed';
-
+      throw "removing review id from upvotedReviews failed";
 
     /* Updating overall vote count */
 
@@ -713,12 +712,12 @@ async function upVote(reviewId, userId) {
       { _id: ObjectId(reviewId) },
       {
         $set: {
-          votes: votes3 + 2
-        }
+          votes: votes3 + 2,
+        },
       }
     );
     if (!updateInfo3.matchedCount && !updateInfo3.modifiedCount)
-      throw 'Updating vote count failed';
+      throw "Updating vote count failed";
   }
 
   /* If user never downvoted or upvoted that review and now choose to upvote then upvote is being enforced */
@@ -729,15 +728,14 @@ async function upVote(reviewId, userId) {
       {
         $addToSet: {
           upvotedReviews: {
-
-            id: reviewId
-          }
-        }
+            id: reviewId,
+          },
+        },
       }
     );
 
     if (!updateInfo5.matchedCount && !updateInfo5.modifiedCount)
-      throw 'Adding review id to upvotedReviews failed';
+      throw "Adding review id to upvotedReviews failed";
 
     /* Updating the overall vote count */
 
@@ -746,15 +744,14 @@ async function upVote(reviewId, userId) {
       { _id: ObjectId(reviewId) },
       {
         $set: {
-          votes: votes2 + 1
-        }
+          votes: votes2 + 1,
+        },
       }
     );
     if (!updateInfo4.matchedCount && !updateInfo4.modifiedCount)
-      throw 'Updating Vote count failed';
+      throw "Updating Vote count failed";
   }
-  return { msg: "Upvote Successful!" }
-
+  return { msg: "Upvote Successful!" };
 }
 //---------------------------------------------------------------------------------------------------------
 
@@ -771,58 +768,63 @@ async function downVote(reviewId, userId) {
   try {
     ObjectId(userId);
   } catch (error) {
-    throw 'User Id should be valid ObjectId';
+    throw "User Id should be valid ObjectId";
   }
 
   try {
     ObjectId(reviewId);
   } catch (error) {
-    throw 'Review Id should be valid ObjectId';
+    throw "Review Id should be valid ObjectId";
   }
 
   /* Checking if review exists */
 
-  const retrivedReview = await reviewCollection.findOne({ _id: ObjectId(reviewId) });
+  const retrivedReview = await reviewCollection.findOne({
+    _id: ObjectId(reviewId),
+  });
   if (!retrivedReview) {
-    throw 'Review not found';
+    throw "Review not found";
   }
   let flag1, flag2, flag3, flag4;
 
   /*Checking if user exists*/
 
   const retrivedUser1 = await userCollection.findOne({ _id: ObjectId(userId) });
-  if (!retrivedUser1) throw 'User not found';
+  if (!retrivedUser1) throw "User not found";
 
   /* Creating a dummy review in upvotedReviews in user which is not tied upto any user or venue or and its ID set to 0 for initial iteration */
 
-  if (retrivedUser1.upvotedReviews.length === 0 && retrivedUser1.downvotedReviews.length === 0) {
+  if (
+    retrivedUser1.upvotedReviews.length === 0 &&
+    retrivedUser1.downvotedReviews.length === 0
+  ) {
     const updateInfo9 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
         $addToSet: {
           upvotedReviews: {
-            id: "0"
-          }
-        }
+            id: "0",
+          },
+        },
       }
     );
 
     /* Creating a dummy review in downvotedReviews in user which is not tied upto any user or venue or and its ID set to 0 for initial iteration */
 
     if (!updateInfo9.matchedCount && !updateInfo9.modifiedCount)
-      throw 'updating dummy _id value for upvoted Reviews failed';
+      throw "updating dummy _id value for upvoted Reviews failed";
     const updateInfo10 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
         $addToSet: {
           downvotedReviews: {
-            id: "0"
-          }
-        }
+            id: "0",
+          },
+        },
       }
     );
     if (!updateInfo10.matchedCount && !updateInfo10.modifiedCount)
-      throw 'updating dummy _id value for downvoted Reviews failed';
+      throw "updating dummy _id value for downvoted Reviews failed";
   }
 
   /* checking if the user already downvoted that particular review  */
@@ -849,7 +851,6 @@ async function downVote(reviewId, userId) {
     flag4 = true;
   }
 
-
   if (flag3 === true) {
     throw "already downvoted";
   }
@@ -862,38 +863,38 @@ async function downVote(reviewId, userId) {
       {
         $pull: {
           upvotedReviews: {
-            id: reviewId
-          }
-        }
+            id: reviewId,
+          },
+        },
       }
     );
     if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
-      throw 'Removing review id from upvotedReviews failed';
+      throw "Removing review id from upvotedReviews failed";
 
     const updateInfo2 = await userCollection.updateOne(
       { _id: ObjectId(userId) },
       {
         $addToSet: {
           downvotedReviews: {
-            id: reviewId
-          }
-        }
+            id: reviewId,
+          },
+        },
       }
     );
     if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
-      throw 'Adding review id to downvotedReviews failed';
+      throw "Adding review id to downvotedReviews failed";
 
     let votes = retrivedReview.votes;
     const updateInfo3 = await reviewCollection.updateOne(
       { _id: ObjectId(reviewId) },
       {
         $set: {
-          votes: votes - 2
-        }
+          votes: votes - 2,
+        },
       }
     );
     if (!updateInfo3.matchedCount && !updateInfo3.modifiedCount)
-      throw 'Updating vote count failed';
+      throw "Updating vote count failed";
   }
 
   /* If user never downvoted or upvoted that review and now choose to downvote then downvote is being enforced */
@@ -904,13 +905,13 @@ async function downVote(reviewId, userId) {
       {
         $addToSet: {
           downvotedReviews: {
-            id: reviewId
-          }
-        }
+            id: reviewId,
+          },
+        },
       }
     );
     if (!updateInfo5.matchedCount && !updateInfo5.modifiedCount)
-      throw 'Adding review id to downvotedReviews failed';
+      throw "Adding review id to downvotedReviews failed";
 
     /* Updating overall vote count */
 
@@ -919,15 +920,14 @@ async function downVote(reviewId, userId) {
       { _id: ObjectId(reviewId) },
       {
         $set: {
-          votes: votes1 - 1
-        }
+          votes: votes1 - 1,
+        },
       }
     );
     if (!updateInfo4.matchedCount && !updateInfo4.modifiedCount)
-      throw 'Updating vote count failed';
+      throw "Updating vote count failed";
   }
-  return { msg: "Downvote Successful!" }
-
+  return { msg: "Downvote Successful!" };
 }
 //---------------------------------------------------------------------------------------------------------
 
@@ -945,20 +945,22 @@ async function removeUpvote(reviewId, userId) {
   try {
     ObjectId(userId);
   } catch (error) {
-    throw 'User Id should be valid ObjectId';
+    throw "User Id should be valid ObjectId";
   }
 
   try {
     ObjectId(reviewId);
   } catch (error) {
-    throw 'Review Id should be valid ObjectId';
+    throw "Review Id should be valid ObjectId";
   }
 
   /* Checking if review exists */
 
-  const retrivedReview = await reviewCollection.findOne({ _id: ObjectId(reviewId) });
+  const retrivedReview = await reviewCollection.findOne({
+    _id: ObjectId(reviewId),
+  });
   if (!retrivedReview) {
-    throw 'Review not found';
+    throw "Review not found";
   }
 
   /* Checking if user ever upvoted the review in the first place  */
@@ -966,7 +968,6 @@ async function removeUpvote(reviewId, userId) {
   let flag3 = "false";
   const retrivedUser = await userCollection.findOne({ _id: ObjectId(userId) });
   for (let i = 0; i < retrivedUser.upvotedReviews.length; i++) {
-
     if (retrivedUser.upvotedReviews[i].id === reviewId) {
       flag3 = true;
       break;
@@ -984,13 +985,13 @@ async function removeUpvote(reviewId, userId) {
       {
         $pull: {
           upvotedReviews: {
-            id: reviewId
-          }
-        }
+            id: reviewId,
+          },
+        },
       }
     );
     if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
-      throw 'Removing review id from upvotedReviews failed';
+      throw "Removing review id from upvotedReviews failed";
 
     /* Overall vote count is being updated */
 
@@ -999,14 +1000,14 @@ async function removeUpvote(reviewId, userId) {
       { _id: ObjectId(reviewId) },
       {
         $set: {
-          votes: votes2 - 1
-        }
+          votes: votes2 - 1,
+        },
       }
     );
     if (!updateInfo4.matchedCount && !updateInfo4.modifiedCount)
-      throw 'Removing upvote failed';
+      throw "Removing upvote failed";
   }
-  return { msg: "Remove Upvote Successful!" }
+  return { msg: "Remove Upvote Successful!" };
 }
 //---------------------------------------------------------------------------------------------------------
 
@@ -1024,20 +1025,22 @@ async function removeDownvote(reviewId, userId) {
   try {
     ObjectId(userId);
   } catch (error) {
-    throw 'User Id should be valid ObjectId';
+    throw "User Id should be valid ObjectId";
   }
 
   try {
     ObjectId(reviewId);
   } catch (error) {
-    throw 'Review Id should be valid ObjectId';
+    throw "Review Id should be valid ObjectId";
   }
 
   /* Checking if review exists */
 
-  const retrivedReview = await reviewCollection.findOne({ _id: ObjectId(reviewId) });
+  const retrivedReview = await reviewCollection.findOne({
+    _id: ObjectId(reviewId),
+  });
   if (!retrivedReview) {
-    throw 'Review not found';
+    throw "Review not found";
   }
 
   /* Checking if user ever downvoted the review in the first place  */
@@ -1045,7 +1048,6 @@ async function removeDownvote(reviewId, userId) {
   let flag3 = false;
   const retrivedUser = await userCollection.findOne({ _id: ObjectId(userId) });
   for (let i = 0; i < retrivedUser.downvotedReviews.length; i++) {
-
     if (retrivedUser.downvotedReviews[i].id === reviewId) {
       flag3 = true;
       break;
@@ -1063,13 +1065,13 @@ async function removeDownvote(reviewId, userId) {
       {
         $pull: {
           downvotedReviews: {
-            id: reviewId
-          }
-        }
+            id: reviewId,
+          },
+        },
       }
     );
     if (!updateInfo1.matchedCount && !updateInfo1.modifiedCount)
-      throw 'Removing review id from downvotedReviews failed';
+      throw "Removing review id from downvotedReviews failed";
 
     /* Overall vote count is being updated */
 
@@ -1078,19 +1080,18 @@ async function removeDownvote(reviewId, userId) {
       { _id: ObjectId(reviewId) },
       {
         $set: {
-          votes: votes2 + 1
-        }
+          votes: votes2 + 1,
+        },
       }
     );
     if (!updateInfo4.matchedCount && !updateInfo4.modifiedCount)
-      throw 'Removing Downvote failed';
+      throw "Removing Downvote failed";
   }
-  return { msg: "Remove Downvote Successful!" }
+  return { msg: "Remove Downvote Successful!" };
 }
 //---------------------------------------------------------------------------------------------------------
 
 async function sortNewest(venueId) {
-
   /* Error Handling */
   let array1 = [venueId];
 
@@ -1100,19 +1101,19 @@ async function sortNewest(venueId) {
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'venue ID should be valid ObjectId';
+    throw "venue ID should be valid ObjectId";
   }
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   const reviewCollection = await reviews();
-  const content = await venue1.getVenueById(venueId)
+  const content = await venue1.getVenueById(venueId);
   if (content.reviews.length === 0) {
     throw "No reviews to filter out";
   }
   let venueReviews = [];
-  const sort = { createdAt: -1 }
+  const sort = { createdAt: -1 };
   let newArray = await reviewCollection.find().sort(sort).toArray();
   for (let key of newArray) {
     if (key.venueId === venueId) {
@@ -1133,19 +1134,19 @@ async function sortOldest(venueId) {
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'venue ID should be valid ObjectId';
+    throw "venue ID should be valid ObjectId";
   }
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   const reviewCollection = await reviews();
-  const content = await venue1.getVenueById(venueId)
+  const content = await venue1.getVenueById(venueId);
   if (content.reviews.length === 0) {
     throw "No reviews to filter out";
   }
   let venueReviews = [];
-  const sort = { createdAt: 1 }
+  const sort = { createdAt: 1 };
   let newArray = await reviewCollection.find().sort(sort).toArray();
   for (let key of newArray) {
     if (key.venueId === venueId) {
@@ -1166,19 +1167,19 @@ async function sortHighestRating(venueId) {
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'venue ID should be valid ObjectId';
+    throw "venue ID should be valid ObjectId";
   }
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   const reviewCollection = await reviews();
-  const content = await venue1.getVenueById(venueId)
+  const content = await venue1.getVenueById(venueId);
   if (content.reviews.length === 0) {
     throw "No reviews to filter out";
   }
   let venueReviews = [];
-  const sort = { rating: -1 }
+  const sort = { rating: -1 };
   let newArray = await reviewCollection.find().sort(sort).toArray();
   for (let key of newArray) {
     if (key.venueId === venueId) {
@@ -1200,19 +1201,19 @@ async function sortLowestRating(venueId) {
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'venue ID should be valid ObjectId';
+    throw "venue ID should be valid ObjectId";
   }
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   const reviewCollection = await reviews();
-  const content = await venue1.getVenueById(venueId)
+  const content = await venue1.getVenueById(venueId);
   if (content.reviews.length === 0) {
     throw "No reviews to filter out";
   }
   let venueReviews = [];
-  const sort = { rating: 1 }
+  const sort = { rating: 1 };
   let newArray = await reviewCollection.find().sort(sort).toArray();
   for (let key of newArray) {
     if (key.venueId === venueId) {
@@ -1235,20 +1236,22 @@ async function filterReviewsByRatings(venueId, rating) {
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'venue ID should be valid ObjectId';
+    throw "venue ID should be valid ObjectId";
   }
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   errorHandler.checkIfValidRating(rating);
-  const content = await venue1.getVenueById(venueId)
+  const content = await venue1.getVenueById(venueId);
   if (content.reviews.length === 0) {
     throw "No reviews to filter out";
   }
-  const sort = { rating: 1 }
-  const filter = await reviewCollection.find({ rating: { $gte: rating } }).sort(sort).toArray();
-
+  const sort = { rating: 1 };
+  const filter = await reviewCollection
+    .find({ rating: { $gte: rating } })
+    .sort(sort)
+    .toArray();
 
   let venueReviews = [];
   for (let key of filter) {
@@ -1259,14 +1262,12 @@ async function filterReviewsByRatings(venueId, rating) {
 
   if (venueReviews.length === 0) {
     throw "No reviews to filter out with the preferred rating";
-
   }
-  let percentage = ((venueReviews.length / content.reviews.length) * 100);
+  let percentage = (venueReviews.length / content.reviews.length) * 100;
   let array1 = [];
   array1.push(percentage);
   array1.push(venueReviews);
   return array1;
-
 }
 
 //---------------------------------------------------------------------------------------------------------
@@ -1281,19 +1282,19 @@ async function mostUpvoted(venueId) {
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'venue ID should be valid ObjectId';
+    throw "venue ID should be valid ObjectId";
   }
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   const reviewCollection = await reviews();
-  const content = await venue1.getVenueById(venueId)
+  const content = await venue1.getVenueById(venueId);
   if (content.reviews.length === 0) {
     throw "No reviews to filter out";
   }
   let venueReviews = [];
-  const sort = { votes: -1 }
+  const sort = { votes: -1 };
   let newArray = await reviewCollection.find().sort(sort).toArray();
   for (let key of newArray) {
     if (key.venueId === venueId) {
@@ -1314,19 +1315,19 @@ async function mostDownvoted(venueId) {
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'venue ID should be valid ObjectId';
+    throw "venue ID should be valid ObjectId";
   }
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   const reviewCollection = await reviews();
-  const content = await venue1.getVenueById(venueId)
+  const content = await venue1.getVenueById(venueId);
   if (content.reviews.length === 0) {
     throw "No reviews to filter out";
   }
   let venueReviews = [];
-  const sort = { votes: 1 }
+  const sort = { votes: 1 };
   let newArray = await reviewCollection.find().sort(sort).toArray();
   for (let key of newArray) {
     if (key.venueId === venueId) {
@@ -1337,7 +1338,6 @@ async function mostDownvoted(venueId) {
 }
 //---------------------------------------------------------------------------------------------------------
 async function updateReviewPicture(id, userId, venueId, reviewPicture) {
-
   const userCollection = await user();
   const venueCollection = await venue();
   const reviewCollection = await reviews();
@@ -1350,50 +1350,47 @@ async function updateReviewPicture(id, userId, venueId, reviewPicture) {
   try {
     ObjectId(userId);
   } catch (error) {
-    throw 'User Id should be valid ObjectId';
+    throw "User Id should be valid ObjectId";
   }
 
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'Venue Id should be valid ObjectId';
+    throw "Venue Id should be valid ObjectId";
   }
 
   try {
     ObjectId(id);
   } catch (error) {
-    throw 'Review ID Id should be valid ObjectId';
+    throw "Review ID Id should be valid ObjectId";
   }
 
   /* Checking if user exists */
   const userThatPosted = await user1.getUserById(userId);
-  if (!userThatPosted) throw 'User not found';
+  if (!userThatPosted) throw "User not found";
 
   /* Checking if venue exists*/
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   /* Checking if review exists*/
   const reviewPosted = await getReviewById(id);
   if (!reviewPosted) {
-    throw 'review not found';
+    throw "review not found";
   }
 
   /* Checking if review belongs to that particular venue */
 
   if (reviewPosted.venueId != venueId) {
-    throw 'review authentication failed for venue';
+    throw "review authentication failed for venue";
   }
 
   /* Checking if review belongs to that particular user */
 
   if (reviewPosted.reviewerId != userId) {
-    throw 'review authentication failed for user';
+    throw "review authentication failed for user";
   }
-
-
-
 
   const updatedReview = {
     reviewPicture: reviewPicture,
@@ -1406,7 +1403,7 @@ async function updateReviewPicture(id, userId, venueId, reviewPicture) {
     { $set: updatedReview }
   );
   if (updatedInfo.modifiedCount === 0) {
-    throw 'could not update review picture successfully';
+    throw "could not update review picture successfully";
   }
   //const review = await this.getReviewById(id);
   return { msg: "Updated Review picture successfully" };
@@ -1427,50 +1424,48 @@ async function deleteReviewPicture(id, userId, venueId) {
   try {
     ObjectId(userId);
   } catch (error) {
-    throw 'User Id should be valid ObjectId';
+    throw "User Id should be valid ObjectId";
   }
 
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'Venue Id should be valid ObjectId';
+    throw "Venue Id should be valid ObjectId";
   }
 
   try {
     ObjectId(id);
   } catch (error) {
-    throw 'Review ID Id should be valid ObjectId';
+    throw "Review ID Id should be valid ObjectId";
   }
   /* Checking if user exists*/
 
   const userThatPosted = await user1.getUserById(userId);
-  if (!userThatPosted) throw 'User not found';
+  if (!userThatPosted) throw "User not found";
 
   /* Checking if venue exists */
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   /* Checking if review exists */
 
   const reviewPosted = await getReviewById(id);
   if (!reviewPosted) {
-    throw 'review not found';
+    throw "review not found";
   }
 
   /* Checking if review belongs to that particular venue */
 
   if (reviewPosted.venueId != venueId) {
-    throw 'review authentication failed for venue';
+    throw "review authentication failed for venue";
   }
 
   /* Checking if review belongs to that particular user */
 
   if (reviewPosted.reviewerId != userId) {
-    throw 'review authentication failed for user';
+    throw "review authentication failed for user";
   }
-
-
 
   const updatedReview = {
     reviewPicture: "",
@@ -1483,7 +1478,7 @@ async function deleteReviewPicture(id, userId, venueId) {
     { $set: updatedReview }
   );
   if (updatedInfo.modifiedCount === 0) {
-    throw 'could not delete review picture successfully';
+    throw "could not delete review picture successfully";
   }
   //const review = await this.getReviewById(id);
   return { msg: "Deleted Review picture successfully" };
@@ -1501,17 +1496,17 @@ async function getAllReviewsByUserId(userId) {
   try {
     ObjectId(userId);
   } catch (error) {
-    throw 'user ID should be valid ObjectId';
+    throw "user ID should be valid ObjectId";
   }
   /* Checking if user exists*/
 
   const userThatPosted = await user1.getUserById(userId);
-  if (!userThatPosted) throw 'User not found';
+  if (!userThatPosted) throw "User not found";
 
   let reviewArray = [];
   let userReviewCollection = await user1.getUserById(userId);
   let length = userReviewCollection.reviewId.length;
-  if(length === 0){
+  if (length === 0) {
     throw "No reviews";
   }
   for (let i = 0; i < length; i++) {
@@ -1524,7 +1519,6 @@ async function getAllReviewsByUserId(userId) {
 
 //---------------------------------------------------------------------------------------------------------
 async function getAllReviewsByvenueId(venueId) {
-
   /* Error Handling */
   let array1 = [venueId];
 
@@ -1534,18 +1528,18 @@ async function getAllReviewsByvenueId(venueId) {
   try {
     ObjectId(venueId);
   } catch (error) {
-    throw 'venue ID should be valid ObjectId';
+    throw "venue ID should be valid ObjectId";
   }
 
   /* Checking if venue exists */
 
   const venueThatGotPosted = await venue1.getVenueById(venueId);
-  if (!venueThatGotPosted) throw 'Venue not found';
+  if (!venueThatGotPosted) throw "Venue not found";
 
   let reviewArray = [];
   let venueReviewCollection = await venue1.getVenueById(venueId);
   let length = venueReviewCollection.reviews.length;
-  if(length === 0){
+  if (length === 0) {
     throw "no reviews";
   }
   for (let i = 0; i < length; i++) {
@@ -1579,6 +1573,5 @@ module.exports = {
   updateReviewPicture,
   deleteReviewPicture,
   getAllReviewsByUserId,
-  getAllReviewsByvenueId
-
+  getAllReviewsByvenueId,
 };
