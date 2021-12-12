@@ -2,6 +2,10 @@ const mongoCollections = require("../config/mongoCollections");
 const userCollection = mongoCollections.user;
 const errorHandler = require("../Errors/errorHandler");
 const { ObjectId } = require("mongodb");
+const activity = require("./activity");
+const booking = require("./booking");
+const bcrypt = require("bcrypt");
+const saltRounds = 16;
 
 async function getAllUsers() {
   const users = await userCollection();
@@ -44,12 +48,14 @@ async function createUser(
   errorHandler.checkIfValidRole(role);
   errorHandler.checkIfValidAge(age);
 
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+
   const users = await userCollection();
   let newUser = {
     firstName: firstName,
     lastName: lastName,
     email: email,
-    password: password,
+    password: hashedPassword,
     age: age,
     gender: gender,
     postId: [],
@@ -59,6 +65,8 @@ async function createUser(
     role: role,
     upvotedReviews: [],
     downvotedReviews: [],
+    upvotedComments: [],
+    downvotedComments: [],
     biography: "",
   };
 
@@ -123,16 +131,116 @@ async function getFriends(id) {
 
   const currentUser = await getUserById(id);
   const friendsIds = currentUser.friends;
-  const allUsers = await getAllUsers();
   const friends = [];
 
-  for (let user of allUsers) {
-    if (friendsIds.includes(user._id)) {
-      friends.push(user);
-    }
+  for (let i of friendsIds) {
+    let friend = await getUserById(i);
+    friends.push(friend);
   }
 
   return friends;
+}
+
+async function getActiveGames(id) {
+  let array = [id];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
+  errorHandler.checkIfValidObjectId(id);
+
+  const allActivities = await activity.getAllActivity();
+  let activeGames = [];
+  let pastGames = [];
+  let currentBooking = null;
+  let today = new Date();
+
+  for (let i of allActivities) {
+    if (i.playerAccepted.includes(id)) {
+      currentBooking = await booking.getBookingById(i.bookingId);
+      let dashes = [
+        currentBooking.date.indexOf("-"),
+        currentBooking.date.lastIndexOf("-"),
+      ];
+      let year = currentBooking.date.substring(0, 4);
+      let month = currentBooking.date.substring(dashes[0] + 1, dashes[1]);
+      let day = currentBooking.date.substring(
+        dashes[1] + 1,
+        currentBooking.date.length
+      );
+      let hour = currentBooking.endTime.substring(0, 2);
+      let minute = currentBooking.endTime.substring(3, 5);
+      let bookingDate = new Date(year, month - 1, day, hour, minute);
+      if (bookingDate < today) {
+        let participants = [];
+        for (let j of i.playerAccepted) {
+          let part = await getUserById(j);
+          participants.push(part);
+        }
+        let game = {
+          activityTitle: i.activityTitle,
+          activityBody: i.activityBody,
+          parts: participants,
+        };
+        pastGames.push(game);
+      } else {
+        let participants = [];
+        for (let j of i.playerAccepted) {
+          let part = await getUserById(j);
+          participants.push(part);
+        }
+        let game = {
+          activityTitle: i.activityTitle,
+          activityBody: i.activityBody,
+          parts: participants,
+        };
+        activeGames.push(game);
+      }
+    }
+  }
+
+  return { activeGames: activeGames, pastGames: pastGames };
+}
+
+async function addFriend(userId, newFriendId) {
+  let array = [userId, newFriendId];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
+  errorHandler.checkIfValidObjectId(userId);
+  errorHandler.checkIfValidObjectId(newFriendId);
+
+  const users = await userCollection();
+
+  const currentUser = await getUserById(userId);
+  for (let i of currentUser.friends) {
+    if (i == newFriendId) {
+      throw "User is already a friend";
+    }
+  }
+
+  try {
+    const updateInfo = await users.updateOne(
+      { _id: ObjectId(userId) },
+      {
+        $push: {
+          friends: newFriendId,
+        },
+      }
+    );
+
+    const updateInfo2 = await users.updateOne(
+      { _id: ObjectId(newFriendId) },
+      {
+        $push: {
+          friends: userId,
+        },
+      }
+    );
+
+    return { msg: "Friend added" };
+  } catch (e) {
+    throw e;
+  }
 }
 
 module.exports = {
@@ -142,4 +250,6 @@ module.exports = {
   searchUsers,
   getUserByEmail,
   getFriends,
+  getActiveGames,
+  addFriend,
 };
