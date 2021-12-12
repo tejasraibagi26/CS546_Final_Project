@@ -67,6 +67,68 @@ a .venue-address {
   margin: 0;
 }
 
+#venue-page .container .right .row {
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0;
+}
+
+#venue-page .container .right .row .fa {
+  cursor: pointer;
+  font-size: 1.5em !important;
+  margin: 0;
+  padding: 0;
+}
+
+#venue-page .container .right .row .report {
+  margin: 0 20px;
+}
+
+#venue-page .container .right .row .report .report-container {
+  position: absolute;
+  max-width: 200px;
+  height: auto;
+  background-color: whitesmoke;
+  z-index: 1;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.input-fields {
+  border: none;
+  background-color: whitesmoke;
+  padding: 2px 10px;
+  border-radius: 6px;
+}
+
+.input-fields input,
+.input-fields textarea {
+  border: none;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  width: 95%;
+  font-size: 16px;
+}
+
+.input-fields textarea {
+  height: 100px;
+  font-family: "Source Sans Pro", sans-serif;
+}
+#venue-page .container .right .row a {
+  transition: all 100ms ease-in-out;
+}
+
+#venue-page .container .right .row .fa:hover {
+  text-decoration: none;
+  color: tomato;
+  transform: scale(1.1);
+}
+
 #venue-page .container .venue-title .address {
   font-weight: normal;
   margin-left: 10px;
@@ -94,6 +156,10 @@ a .venue-address {
   margin-top: 0px;
 }
 
+#venue-page .container form {
+  width: inherit;
+}
+
 #venue-page .container .sports select {
   border: none;
   background-color: whitesmoke;
@@ -114,17 +180,16 @@ a .venue-address {
 }
 
 .book-btn {
-  background-color: #0d82df;
+  background-color: #0079d1;
   border-radius: 6px;
   border: none;
-  width: 50%;
   height: 40px;
   color: white;
   font-weight: bold;
   letter-spacing: -1;
   font-size: 22px;
-  margin-top: 20px;
   cursor: pointer;
+  padding: 0px 10px;
 }
 
 .img {
@@ -149,6 +214,8 @@ a .venue-address {
   background-color: whitesmoke;
   padding: 2px 10px;
   border-radius: 6px;
+  font-size: 16px;
+  height: 50px;
   font-family: "Source Sans Pro", sans-serif;
 }
 
@@ -179,7 +246,7 @@ a .venue-address {
 }
 
 .comment-textbox form button {
-  background-color: #0d82df;
+  background-color: #0079d1;
   border-radius: 6px;
   border: none;
   padding: 5px 10px;
@@ -188,4 +255,40 @@ a .venue-address {
   font-size: 20px;
   margin-left: 10px;
   cursor: pointer;
+}
+
+.user-review {
+  width: 50%;
+  background-color: whitesmoke;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: 6px;
+}
+
+.user-review .username,
+.user-review .reviewText {
+  margin: 0;
+}
+
+.user-review .reviewText {
+  margin: 10px 0;
+}
+
+.user-review .username {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-review .username .date-time {
+  font-size: 14px;
+  color: gray;
+  font-weight: normal;
+  text-align: center;
+}
+
+.no-reviews {
+  font-size: 22px;
+  margin: 10px 0;
 }
