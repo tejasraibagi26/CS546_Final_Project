@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="/public/css/comments/createComment.css" />
+<div id="createComment-page">
+  <div class="createComment-container">
+    <h1 id="createCommentTitle">Update Comment</h1>
+    {{#if error1}}
+    <h3 id="createCommentError1" > {{error1}}</h3>
+    {{/if}}
+     {{#if error2}}
+    <h3 id="createCommentError2" > {{error2}}</h3>
+    {{/if}}
+    <h3 id="createCommentError" hidden> {{error}}</h3>
+    <form action="/comments/text/{{id}}/{{userId}}/{{reviewId}}/{{venueId}}" name="create" method="post" id="createCommentForm">
+      <label class="createCommentLabel">Edit the Comment content
+            <textarea name = "commentText" id="commentText" type="text" class="createCommentInput" >{{text}}</textarea>
+        </label>
+      <label><input
+          type="submit"
+          id="registerSubmit"
+          value="Update Comment"
+        /></label>
+    </form>
+   <a href="/comments/reviewcomments/{{reviewId}}/{{venueId}}" id="open-add-modal" class="btn">
+        Back to All Comments</a>
+  </div>
+</div>
+<script src="/public/js/createComment.js"></script>
