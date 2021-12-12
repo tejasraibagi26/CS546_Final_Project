@@ -7,6 +7,7 @@ const revData = data.reviews;
 const { ObjectId } = require('mongodb');
 const errorHandler = require("../Errors/errorHandler");
 const { venue } = require('../config/mongoCollections');
+const xss = require("xss");
 
 //---------------------------------------------------------------------------------------------------------
 
@@ -70,10 +71,10 @@ router.post('/text/:id/:userId/:reviewId/:venueId', async (req, res) => {
     const  venueId = req.params.venueId;
     const userId = req.params.userId;
     const reviewId = req.params.reviewId;
-    const commentText = req.body.commentText;
+    const commentText = xss(req.body.commentText);
 
-    let array = [id, userId, reviewId];
-    let inputString = [id, userId, reviewId, commentText];
+    let array = [id, userId, reviewId,venueId];
+    let inputString = [id, userId, reviewId,venueId, commentText];
     try {
         errorHandler.checkIfElementsExists(inputString);
     } catch (error) {
@@ -96,6 +97,12 @@ router.post('/text/:id/:userId/:reviewId/:venueId', async (req, res) => {
 
     try {
         ObjectId(id);
+    } catch (error) {
+        res.status(400).json({ error: 'Id should be valid object ID' });
+        return;
+    }
+    try {
+        ObjectId(venueId);
     } catch (error) {
         res.status(400).json({ error: 'Id should be valid object ID' });
         return;
@@ -136,7 +143,7 @@ router.post('/text/:id/:userId/:reviewId/:venueId', async (req, res) => {
         const updatedReview = await resData.updateCommentText(id, userId, reviewId,venueId, commentText);
 
 
-        const venueReviews = await resData.getAllCommentsByReviewId(reviewId);
+        const venueReviews = await resData.getAllCommentsByReviewId(reviewId,venueId);
         //console.log(req.session.user.id);
         for(let i=0;i<venueReviews.length;i++){
           venueReviews[i].reviewerId = await userData.getUserById(venueReviews[i].reviewerId);
@@ -297,10 +304,10 @@ router.post('/:userId/:reviewId/:venueId', async (req, res) => {
     const userId = req.params.userId;
     const venueId = req.params.venueId;
     const reviewId = req.params.reviewId;
-    const commentText = req.body.commentText;
+    const commentText = xss(req.body.commentText);
 
-    let inputString = [userId, reviewId, commentText];
-    let check = [userId, reviewId, commentText];
+    let inputString = [userId, reviewId,venueId, commentText];
+    let check = [userId, reviewId,venueId, commentText];
     try {
         errorHandler.checkIfElementsExists(check);
     } catch (error) {
@@ -323,6 +330,12 @@ router.post('/:userId/:reviewId/:venueId', async (req, res) => {
 
     try {
         ObjectId(userId);
+    } catch (error) {
+        res.status(400).json({ error: 'Id should be valid object ID' });
+        return;
+    }
+    try {
+        ObjectId(venueId);
     } catch (error) {
         res.status(400).json({ error: 'Id should be valid object ID' });
         return;
@@ -619,7 +632,7 @@ router.get('/mostupvote/:reviewId/:venueId', async (req, res) => {
         const id = req.params.reviewId;
         let reviewId = id;
         let venueId = req.params.venueId;
-        let array = [id];
+        let array = [id,venueId];
         try {
             errorHandler.checkIfElementsExists(array);
         } catch (error) {
@@ -646,7 +659,12 @@ router.get('/mostupvote/:reviewId/:venueId', async (req, res) => {
             res.status(400).json({ error: 'ReviewId should be valid object ID' });
             return;
         }
-
+        try {
+            ObjectId(venueId);
+        } catch (error) {
+            res.status(400).json({ error: 'Id should be valid object ID' });
+            return;
+        }
         try {
             await revData.getReviewById(id);
         } catch (e) {
@@ -655,7 +673,7 @@ router.get('/mostupvote/:reviewId/:venueId', async (req, res) => {
         }
 
         try {
-            const getNewest = await resData.mostUpvoted(id);
+            const getNewest = await resData.mostUpvoted(id,venueId);
             for(let i=0;i<getNewest.length;i++){
               getNewest[i].reviewId = req.session.user.id;
               getNewest[i].reviewerId = await userData.getUserById(getNewest[i].reviewerId);
@@ -709,7 +727,7 @@ router.get('/mostdownvote/:reviewId/:venueId', async (req, res) => {
     const id = req.params.reviewId;
     const reviewId = id;
     let venueId = req.params.venueId;
-    let array = [id];
+    let array = [id,venueId];
     try {
         errorHandler.checkIfElementsExists(array);
     } catch (error) {
@@ -736,7 +754,12 @@ router.get('/mostdownvote/:reviewId/:venueId', async (req, res) => {
         res.status(400).json({ error: 'ReviewId should be valid object ID' });
         return;
     }
-
+    try {
+        ObjectId(venueId);
+    } catch (error) {
+        res.status(400).json({ error: 'Id should be valid object ID' });
+        return;
+    }
     try {
         await revData.getReviewById(id);
     } catch (e) {
@@ -745,7 +768,7 @@ router.get('/mostdownvote/:reviewId/:venueId', async (req, res) => {
     }
 
     try {
-        const getNewest = await resData.mostDownvoted(id);
+        const getNewest = await resData.mostDownvoted(id,venueId);
         for(let i=0;i<getNewest.length;i++){
           getNewest[i].reviewId = req.session.user.id;
           getNewest[i].reviewerId = await userData.getUserById(getNewest[i].reviewerId);
@@ -800,7 +823,7 @@ router.get("/reviewcomments/:reviewId/:venueId", async (req, res) => {
        let reviewId = req.params.reviewId;
        let venueId = req.params.venueId;
         //let array = [id, userId, venueId];
-        let inputString = [reviewId];
+        let inputString = [reviewId,venueId];
         try {
           errorHandler.checkIfElementsExists(inputString);
         } catch (error) {
@@ -826,7 +849,12 @@ router.get("/reviewcomments/:reviewId/:venueId", async (req, res) => {
           res.status(400).json({ error: "Id should be valid object ID" });
           return;
         }
-      
+        try {
+            ObjectId(venueId);
+        } catch (error) {
+            res.status(400).json({ error: 'Id should be valid object ID' });
+            return;
+        }
         try {
           await revData.getReviewById(reviewId);
         } catch (e) {
@@ -834,7 +862,7 @@ router.get("/reviewcomments/:reviewId/:venueId", async (req, res) => {
           return;
         }
        try{
-        const venueReviews = await resData.getAllCommentsByReviewId(reviewId);
+        const venueReviews = await resData.getAllCommentsByReviewId(reviewId,venueId);
         //console.log(req.session.user.id);
         for(let i=0;i<venueReviews.length;i++){
           venueReviews[i].reviewerId = await userData.getUserById(venueReviews[i].reviewerId);
@@ -897,7 +925,7 @@ router.get("/reviewcomments/:reviewId/:venueId", async (req, res) => {
     const id = req.params.reviewId;
     const reviewId = id;
     const venueId = req.params.venueId;
-    let array = [id];
+    let array = [id,venueId];
     try {
       errorHandler.checkIfElementsExists(array);
     } catch (error) {
@@ -924,7 +952,12 @@ router.get("/reviewcomments/:reviewId/:venueId", async (req, res) => {
       res.status(400).json({ error: "reviewId should be valid object ID" });
       return;
     }
-  
+    try {
+        ObjectId(venueId);
+    } catch (error) {
+        res.status(400).json({ error: 'Id should be valid object ID' });
+        return;
+    }
     try {
       await revData.getReviewById(id);
     } catch (e) {
@@ -988,7 +1021,7 @@ router.get("/reviewcomments/:reviewId/:venueId", async (req, res) => {
     const id = req.params.reviewId;
     const reviewId = id;
     const venueId = req.params.venueId;
-    let array = [id];
+    let array = [id,venueId];
     try {
       errorHandler.checkIfElementsExists(array);
     } catch (error) {
@@ -1015,7 +1048,12 @@ router.get("/reviewcomments/:reviewId/:venueId", async (req, res) => {
       res.status(400).json({ error: "reviewId should be valid object ID" });
       return;
     }
-  
+    try {
+        ObjectId(venueId);
+    } catch (error) {
+        res.status(400).json({ error: 'Id should be valid object ID' });
+        return;
+    }
     try {
       await revData.getReviewById(id);
     } catch (e) {
