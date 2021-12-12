@@ -51,6 +51,16 @@
   letter-spacing: -1;
   color: #fff;
 }
+.link {
+  border: none;
+  padding: 10px;
+  margin-right: 20px;
+  border-radius: 5px;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+  transition: 100ms ease-in-out;
+}
 
 #activity .container .row .btn {
   background-color: #0079d1;
@@ -174,6 +184,8 @@
 #reportForm .input-fields select {
   background-color: #333;
   color: white;
+  height: 50px;
+  margin-top: 10px;
 }
 
 @keyframes float-in {

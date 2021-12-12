@@ -159,9 +159,11 @@ router.get("/:id", async (req, res) => {
       title: getVenue.venueName,
       venue: getVenue,
       reviews: getReviews,
+      visible: getVenue.venueApproved ? "Yes" : "No",
       reviewCount: getVenue.reviews.length,
       isLoggedIn: req.session.user,
       userId: req.session.user ? req.session.user.id : "",
+      role: req.session.user.role === "Owner" ? true : false,
     });
   } catch (error) {
     res.status(404).json({ err: error });
@@ -337,6 +339,27 @@ router.post("/:id/book", async (req, res) => {
     );
   } catch (error) {
     return res.status(500).json({ error: error });
+  }
+});
+
+router.get("/:id/visibility", async (req, res) => {
+  const venueId = req.params.id;
+  console.log(venueId);
+  let array = [venueId];
+  try {
+    errorHandler.checkIfElementsExists(array);
+    errorHandler.checkIfElementsAreStrings(array);
+    errorHandler.checkIfElementNotEmptyString(array);
+    errorHandler.checkIfValidObjectId(venueId);
+  } catch (error) {
+    return res.json({ error: error });
+  }
+
+  try {
+    const test = await venue.updateVenueVisibility(venueId);
+    return res.redirect("/venues/" + venueId);
+  } catch (error) {
+    return res.json({ error: error });
   }
 });
 

@@ -738,7 +738,6 @@ router.get("/newest/:venueId", async (req, res) => {
           user_data.upvotedReviews[i].id.toString() ===
           getNewest[j]._id.toString()
         ) {
-          console.log("upvoted");
           getNewest[j].upvoted = true;
         }
       }
@@ -749,7 +748,6 @@ router.get("/newest/:venueId", async (req, res) => {
           user_data.downvotedReviews[i].id.toString() ===
           getNewest[j]._id.toString()
         ) {
-          console.log("downvoted");
           getNewest[j].downvoted = true;
         }
       }
@@ -842,13 +840,23 @@ router.get("/newest/:venueId", async (req, res) => {
 
       const user_data = await userData.getUserById(user_id.toString());
       for (let i = 0; i < user_data.upvotedReviews.length; i++) {
-        if (user_data.upvotedReviews[i].id == venueid) {
-          getOldest[i].upvoted = true;
+        for (let j = 0; j < getOldest.length; j++) {
+          if (
+            user_data.upvotedReviews[i].id.toString() ===
+            getOldest[j]._id.toString()
+          ) {
+            getOldest[j].upvoted = true;
+          }
         }
       }
       for (let i = 0; i < user_data.downvotedReviews.length; i++) {
-        if (user_data.upvotedReviews[i].id == venueid) {
-          getOldest[i].downvoted = true;
+        for (let j = 0; j < getOldest.length; j++) {
+          if (
+            user_data.downvotedReviews[i].id.toString() ===
+            getOldest[j]._id.toString()
+          ) {
+            getOldest[j].downvoted = true;
+          }
         }
       }
       res.render("reviews/filter", {
@@ -939,13 +947,23 @@ router.get("/newest/:venueId", async (req, res) => {
 
       const user_data = await userData.getUserById(user_id.toString());
       for (let i = 0; i < user_data.upvotedReviews.length; i++) {
-        if (user_data.upvotedReviews[i].id == venueid) {
-          getHigest[i].upvoted = true;
+        for (let j = 0; j < getHigest.length; j++) {
+          if (
+            user_data.upvotedReviews[i].id.toString() ===
+            getHigest[j]._id.toString()
+          ) {
+            getHigest[j].upvoted = true;
+          }
         }
       }
       for (let i = 0; i < user_data.downvotedReviews.length; i++) {
-        if (user_data.upvotedReviews[i].id == venueid) {
-          getHigest[i].downvoted = true;
+        for (let j = 0; j < getHigest.length; j++) {
+          if (
+            user_data.downvotedReviews[i].id.toString() ===
+            getHigest[j]._id.toString()
+          ) {
+            getHigest[j].downvoted = true;
+          }
         }
       }
       res.render("reviews/filter", {
@@ -1036,13 +1054,23 @@ router.get("/newest/:venueId", async (req, res) => {
 
       const user_data = await userData.getUserById(user_id.toString());
       for (let i = 0; i < user_data.upvotedReviews.length; i++) {
-        if (user_data.upvotedReviews[i].id == venueid) {
-          getLowest[i].upvoted = true;
+        for (let j = 0; j < getLowest.length; j++) {
+          if (
+            user_data.upvotedReviews[i].id.toString() ===
+            getLowest[j]._id.toString()
+          ) {
+            getLowest[j].upvoted = true;
+          }
         }
       }
       for (let i = 0; i < user_data.downvotedReviews.length; i++) {
-        if (user_data.upvotedReviews[i].id == venueid) {
-          getLowest[i].downvoted = true;
+        for (let j = 0; j < getLowest.length; j++) {
+          if (
+            user_data.downvotedReviews[i].id.toString() ===
+            getLowest[j]._id.toString()
+          ) {
+            getLowest[j].downvoted = true;
+          }
         }
       }
       res.render("reviews/filter", {
@@ -1133,13 +1161,23 @@ router.get("/newest/:venueId", async (req, res) => {
 
       const user_data = await userData.getUserById(user_id.toString());
       for (let i = 0; i < user_data.upvotedReviews.length; i++) {
-        if (user_data.upvotedReviews[i].id.toString() == venueid.toString()) {
-          mostUpvoted[i].upvoted = true;
+        for (let j = 0; j < mostUpvoted.length; j++) {
+          if (
+            user_data.upvotedReviews[i].id.toString() ===
+            mostUpvoted[j]._id.toString()
+          ) {
+            mostUpvoted[j].upvoted = true;
+          }
         }
       }
       for (let i = 0; i < user_data.downvotedReviews.length; i++) {
-        if (user_data.downvotedReviews[i].id.toString() == venueid.toString()) {
-          mostUpvoted[i].downvoted = true;
+        for (let j = 0; j < mostUpvoted.length; j++) {
+          if (
+            user_data.downvotedReviews[i].id.toString() ===
+            mostUpvoted[j]._id.toString()
+          ) {
+            mostUpvoted[j].downvoted = true;
+          }
         }
       }
       res.render("reviews/filter", {
@@ -1148,7 +1186,6 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
-        isLoggedIn: req.session.user,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -1229,6 +1266,7 @@ router.get("/newest/:venueId", async (req, res) => {
       let venuename = venueDetails.venueName;
       let venueid = venueDetails._id.toString();
       let user_id = req.session.user.id;
+
       const user_data = await userData.getUserById(user_id.toString());
       for (let i = 0; i < user_data.upvotedReviews.length; i++) {
         for (let j = 0; j < mostDownvoted.length; j++) {
@@ -1236,7 +1274,6 @@ router.get("/newest/:venueId", async (req, res) => {
             user_data.upvotedReviews[i].id.toString() ===
             mostDownvoted[j]._id.toString()
           ) {
-            console.log("upvoted");
             mostDownvoted[j].upvoted = true;
           }
         }
@@ -1247,7 +1284,6 @@ router.get("/newest/:venueId", async (req, res) => {
             user_data.downvotedReviews[i].id.toString() ===
             mostDownvoted[j]._id.toString()
           ) {
-            console.log("downvoted");
             mostDownvoted[j].downvoted = true;
           }
         }
@@ -1258,7 +1294,6 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
-        isLoggedIn: req.session.user,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -1344,6 +1379,31 @@ router.get("/newest/:venueId", async (req, res) => {
       let venueDetails = await venueData.getVenueById(venueId);
       let venuename = venueDetails.venueName;
       let venueid = venueDetails._id.toString();
+
+      let user_id = req.session.user.id;
+
+      const user_data = await userData.getUserById(user_id.toString());
+      for (let i = 0; i < user_data.upvotedReviews.length; i++) {
+        for (let j = 0; j < filterReview[1].length; j++) {
+          if (
+            user_data.upvotedReviews[i].id.toString() ===
+            filterReview[1][j]._id.toString()
+          ) {
+            filterReview[1][j].upvoted = true;
+          }
+        }
+      }
+      for (let i = 0; i < user_data.downvotedReviews.length; i++) {
+        for (let j = 0; j < filterReview[1].length; j++) {
+          if (
+            user_data.downvotedReviews[i].id.toString() ===
+            filterReview[1][j]._id.toString()
+          ) {
+            filterReview[1][j].downvoted = true;
+          }
+        }
+      }
+
       res.render("reviews/filter", {
         title: "Filtered",
         venueReview: filterReview[1],
@@ -1654,7 +1714,6 @@ router.get("/venuereviews/:venueId", async (req, res) => {
           user_data.upvotedReviews[i].id.toString() ===
           venueReviews[j]._id.toString()
         ) {
-          console.log("upvoted");
           venueReviews[j].upvoted = true;
         }
       }
@@ -1665,7 +1724,6 @@ router.get("/venuereviews/:venueId", async (req, res) => {
           user_data.downvotedReviews[i].id.toString() ===
           venueReviews[j]._id.toString()
         ) {
-          console.log("downvoted");
           venueReviews[j].downvoted = true;
         }
       }

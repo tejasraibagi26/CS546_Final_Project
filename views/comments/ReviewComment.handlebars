@@ -4,116 +4,170 @@
     <div class="row">
       {{#if venueReview}}
         <h1 class="act-title">Displaying all Comments</h1>
-        <a href="/reviews/venuereviews/{{venueId}}" id="open-add-modal" class="btn">
-        Back to All Reviews</a>
+        <a
+          href="/reviews/venuereviews/{{venueId}}"
+          id="open-add-modal"
+          class="btn"
+        >
+          Back to All Reviews</a>
       {{else}}
         <h3 class="act-title">No Comments to display </h3>
-        <a href="/reviews/venuereviews/{{venueId}}" id="open-add-modal" class="btn">
-        Back to All Reviews</a>
+        <a
+          href="/reviews/venuereviews/{{venueId}}"
+          id="open-add-modal"
+          class="btn"
+        >
+          Back to All Reviews</a>
       {{/if}}
-    </div><br>
-     {{#if venueReview}}
-    <div id="beta">
-       <a href="/comments/oldest/{{reviewId}}/{{venueId}}" id="open-add-modal" class="btn">
-        <i class="fa fa-plus"></i>
-       Oldest </a>
-        <a href="/comments/newest/{{reviewId}}/{{venueId}}" id="open-add-modal" class="btn">
-        <i class="fa fa-plus"></i>
-        Newest </a>
-        <a href="/comments/mostupvote/{{reviewId}}/{{venueId}}" id="open-add-modal" class="btn">
-        <i class="fa fa-plus"></i>
-        Most Upvoted</a>
-       <a href="/comments/mostdownvote/{{reviewId}}/{{venueId}}" id="open-add-modal" class="btn">
-        <i class="fa fa-plus"></i>
-        Most Downvoted</a>
-    </div><br>
-     {{/if}}
-    <div class="posts">  
-{{#each allComments}}
-      <div class="card">
-        <div class="card-header">
-          <div class="row">
-            <img src="/public/images/user.png" alt="avatar" class="avatar" />
-            <div class="user">
-              <h2 class="name">{{this.reviewerId}}</h2>
-              <p class="date">Posted on : {{this.createdAt}}</p>
+    </div><br />
+    {{#if venueReview}}
+      <div id="beta">
+        <a
+          href="/comments/oldest/{{reviewId}}/{{venueId}}"
+          id="open-add-modal"
+          class="btn"
+        >
+          <i class="fa fa-plus"></i>
+          Oldest
+        </a>
+        <a
+          href="/comments/newest/{{reviewId}}/{{venueId}}"
+          id="open-add-modal"
+          class="btn"
+        >
+          <i class="fa fa-plus"></i>
+          Newest
+        </a>
+        <a
+          href="/comments/mostupvote/{{reviewId}}/{{venueId}}"
+          id="open-add-modal"
+          class="btn"
+        >
+          <i class="fa fa-plus"></i>
+          Most Upvoted</a>
+        <a
+          href="/comments/mostdownvote/{{reviewId}}/{{venueId}}"
+          id="open-add-modal"
+          class="btn"
+        >
+          <i class="fa fa-plus"></i>
+          Most Downvoted</a>
+      </div><br />
+    {{/if}}
+    <div class="posts">
+      {{#each allComments}}
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <img src="/public/images/user.png" alt="avatar" class="avatar" />
+              <div class="user">
+                <h2 class="name">{{this.reviewerId}}</h2>
+                <p class="date">Posted on : {{this.createdAt}}</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="card-body">
-          <div class="stat">
-            <p class="stat-chip">Votes : {{this.votes}}</p>
-          </div>
+          <div class="card-body">
+            <div class="stat">
+              <p class="stat-chip">Votes : {{this.votes}}</p>
+            </div>
             <p class="desc">{{this.commentText}}
             </p>
           </div>
           <div class="card-footer">
-            <a href="/comments/upvote/{{this._id}}/{{reviewId}}" class="btn1">
+            <a
+              href="/comments/upvote/{{this._id}}/{{reviewId}}"
+              class="btn1"
+              aria-label="Upvote"
+            >
               <i class="fa fa-thumbs-up"></i>
-              </a>
-            <a href="/comments/downvote/{{this._id}}/{{reviewId}}" class="btn1">
+            </a>
+            <a
+              href="/comments/downvote/{{this._id}}/{{reviewId}}"
+              class="btn1"
+              aria-label="Downvote"
+            >
               <i class="fa fa-thumbs-down"></i>
-              </a>
+            </a>
           </div>
         </div>
-         <div class="row">
-         <a href="/comments/delete/{{this._id}}/{{this.reviewId}}/{{this.review}}" id="open-add-modal" class="btn">
-        Delete Comment</a>
-         <a href="/comments/updatecomment/{{this._id}}/{{this.reviewId}}/{{this.review}}/{{this.venueId}}" id="open-add-modal" class="btn">
-        Update Comment</a>
+        <div class="row">
+          <a
+            href="/comments/delete/{{this._id}}/{{this.reviewId}}/{{this.review}}"
+            id="open-add-modal"
+            class="btn"
+          >
+            Delete Comment</a>
+          <a
+            href="/comments/updatecomment/{{this._id}}/{{this.reviewId}}/{{this.review}}/{{this.venueId}}"
+            id="open-add-modal"
+            class="btn"
+          >
+            Update Comment</a>
         </div>
-        {{/each}}
-{{#if venueReview}}
- <div class="card">
-     
-        <div class="card-header">
-          <div class="row">
-            <img src="/public/images/user.png" alt="avatar" class="avatar" />
-            <div class="user">
-              <h2 class="name">{{reviewusername}}</h2>
-              <p class="date">Posted on : {{venueDetails.createdAt1}}</p>
+      {{/each}}
+      {{#if venueReview}}
+        <div class="card">
+
+          <div class="card-header">
+            <div class="row">
+              <img src="/public/images/user.png" alt="avatar" class="avatar" />
+              <div class="user">
+                <h2 class="name">{{reviewusername}}</h2>
+                <p class="date">Posted on : {{venueDetails.createdAt1}}</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="card-body">
-          <div class="stat">
+          <div class="card-body">
+            <div class="stat">
               <p class="stat-chip">Rating : {{venueDetails.rating}}</p>
-            <p class="stat-chip">Votes : {{venueDetails.votes}}</p>
-          </div>
+              <p class="stat-chip">Votes : {{venueDetails.votes}}</p>
+            </div>
             <p class="desc">{{venueDetails.reviewText}}
             </p>
           </div>
-         
-      {{#each venueReview}}
-      <div class="card">
-        <div class="card-header">
-          <div class="row">
-            <img src="/public/images/user.png" alt="avatar" class="avatar" />
-            <div class="user">
-              <h2 class="name">{{this.reviewerId}}</h2>
-              <p class="date">Posted on : {{this.createdAt}}</p>
+
+          {{#each venueReview}}
+            <div class="card comment">
+              <div class="card-header">
+                <div class="row">
+                  <img
+                    src="/public/images/user.png"
+                    alt="avatar"
+                    class="avatar"
+                  />
+                  <div class="user">
+                    <h2 class="name">{{this.reviewerId}}</h2>
+                    <p class="date">Posted on : {{this.createdAt}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="stat">
+                  <p class="stat-chip">Votes : {{this.votes}}</p>
+                </div>
+                <p class="desc">{{this.commentText}}
+                </p>
+              </div>
+              <div class="card-footer">
+                <a
+                  href="/comments/upvote/{{this._id}}/{{this.reviewId}}"
+                  class="btn1"
+                  aria-label="Upvote"
+                >
+                  <i class="fa fa-thumbs-up"></i>
+                </a>
+                <a
+                  href="/comments/downvote/{{this._id}}/{{this.reviewId}}"
+                  class="btn1"
+                  aria-label="Downvote"
+                >
+                  <i class="fa fa-thumbs-down"></i>
+                </a>
+              </div>
             </div>
-          </div>
+          {{/each}}
         </div>
-        <div class="card-body">
-          <div class="stat">
-            <p class="stat-chip">Votes : {{this.votes}}</p>
-          </div>
-            <p class="desc">{{this.commentText}}
-            </p>
-          </div>
-          <div class="card-footer">
-            <a href="/comments/upvote/{{this._id}}/{{this.reviewId}}" class="btn1">
-              <i class="fa fa-thumbs-up"></i>
-              </a>
-            <a href="/comments/downvote/{{this._id}}/{{this.reviewId}}" class="btn1">
-              <i class="fa fa-thumbs-down"></i>
-              </a>
-          </div>
-        </div>
-        {{/each}}
-      </div>
-       {{/if}}
-      </div>
+      {{/if}}
     </div>
+  </div>
 </section>
