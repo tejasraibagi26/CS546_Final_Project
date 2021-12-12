@@ -59,7 +59,13 @@ router.post("/book", async (req, res) => {
       date,
       cost
     );
-    res.status(200).json(book);
+
+    res.render("venue/booking", {
+      title: "Booking",
+      isLoggedIn: req.session.user,
+    });
+
+    //res.status(200).json(book);
   } catch (error) {
     return res.status(500).json({ error: error });
   }

@@ -1,4 +1,5 @@
 const dbConnection = require("../config/mongoConnection");
+const { venues } = require("../data");
 const data = require("../data");
 const venue = data.venues;
 const user = data.user;
@@ -291,7 +292,7 @@ let userId = [];
 let venueId = [];
 let bookingId = [];
 let activityId = [];
-
+let alreadyBooked = [];
 let password = "Project@123";
 
 let reviewsArr = [
@@ -360,7 +361,7 @@ let reviewsArr = [
 const main = async () => {
   console.log("Starting...");
   const db = await dbConnection();
-  //await db.dropDatabase();
+  await db.dropDatabase();
 
   //This will create the users with the same password
   for (let i = 0; i < maxCount; i++) {
@@ -468,7 +469,8 @@ const main = async () => {
     let random = Math.floor(Math.random() * userId.length);
     let random2 = Math.floor(Math.random() * venueId.length);
     let user_id = userId[random];
-    let venue = venueId[random2];
+    // let venue = venueId[random2];
+
     let sT = ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00"];
     let eT = ["13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
     let startTime = sT[Math.floor(Math.random() * sT.length)];
@@ -478,22 +480,25 @@ const main = async () => {
     let shortET = parseInt(endTime.split(":")[0]);
     let shortST = parseInt(startTime.split(":")[0]);
     let cost = price * (shortET - shortST);
-    const addBooking = await booking.create(
-      venue.id,
-      user_id,
-      startTime,
-      endTime,
-      date,
-      cost.toString()
-    );
 
-    console.log(`Created Booking with id ${addBooking.bookingId}`);
+    for (let k = 0; k < venueId.length; k++) {
+      const addBooking = await booking.create(
+        venueId[k].id,
+        user_id,
+        startTime,
+        endTime,
+        date,
+        cost.toString()
+      );
 
-    bookingId.push(addBooking.bookingId);
+      console.log(`Created Booking with id ${addBooking.bookingId}`);
+
+      bookingId.push(addBooking.bookingId);
+    }
   }
 
   //Create activity feed
-  for (let i = 0; i < postCount; i++) {
+  for (let i = 0; i < maxCount; i++) {
     let randomIdx = Math.floor(Math.random() * activityTitles.length);
     let activityTitle = activityTitles[randomIdx];
     let randomIdx2 = Math.floor(Math.random() * activityDescriptions.length);
@@ -501,9 +506,10 @@ const main = async () => {
     let playerReq = Math.floor(Math.random() * 10);
     if (playerReq === 0) playerReq = 1;
     let createdBy = userId[Math.floor(Math.random() * userId.length)];
-    let venueReq = venueId[Math.floor(Math.random() * venueId.length)].id;
-    let booking = bookingId[Math.floor(Math.random() * bookingId.length)];
-
+    let random = Math.floor(Math.random() * venueId.length);
+    let venueReq = venueId[random].id;
+    let booking = bookingId[random];
+    console.log(venueReq, booking);
     const addActivity = await activity.createActivity(
       activityTitle,
       activityDescription,

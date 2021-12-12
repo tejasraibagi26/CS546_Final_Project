@@ -9,6 +9,7 @@ const booking = data.booking;
 const venue = data.venues;
 const user = data.user;
 const xss = require("xss");
+const { job } = require("cron");
 
 router.get("/", async (req, res) => {
   let error = req.query.error || false;
@@ -45,16 +46,23 @@ router.get("/", async (req, res) => {
     let bookingData = await booking.getBookingById(activities[i].bookingId);
     bookings.push(bookingData);
   }
+  console.log(activities);
   for (let i = 0; i < activities.length; i++) {
     activities[i].userName = users[i];
     activities[i].venue = venues[i];
-    if (
-      activities[i].venue._id.toString() ===
-      bookings[i].bookedVenueId.toString()
-    ) {
-      activities[i].venue.booking = bookings[i];
+    console.log(activities[i].venueReq, bookings[i].bookedVenueId);
+    if (activities[i].venueReq == bookings[i].bookedVenueId) {
+      activities[i].booking = bookings[i];
     }
+    // if (
+    //   activities[i].venue._id.toString() ===
+    //   bookings[i].bookedVenueId.toString()
+    // ) {
+    //   activities[i].booking = bookings[i];
+    // }
   }
+
+  //console.log(activities);
 
   res.status(200).render("entry/activity", {
     title: "Feed",

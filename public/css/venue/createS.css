@@ -21,6 +21,14 @@
   margin: 0;
 }
 
+#succ .succ-container .header {
+  text-transform: none;
+  color: white;
+}
+#succ .succ-container .profile {
+  color: lightblue;
+}
+
 #succ .succ-container .succ-msg {
   font-size: 22px;
 }

@@ -1,6 +1,6 @@
 {
   "mongoConfig": {
-    "serverUrl": "mongodb+srv://root:Group%406@group6.xf8is.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "serverUrl": "mongodb://localhost:27017/",
     "database": "CS546_DB"
   }
 }
