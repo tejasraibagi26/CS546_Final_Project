@@ -360,7 +360,7 @@ let reviewsArr = [
 const main = async () => {
   console.log("Starting...");
   const db = await dbConnection();
-  await db.dropDatabase();
+  //await db.dropDatabase();
 
   //This will create the users with the same password
   for (let i = 0; i < maxCount; i++) {

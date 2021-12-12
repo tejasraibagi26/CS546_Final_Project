@@ -1,6 +1,6 @@
 {
   "mongoConfig": {
-    "serverUrl": "mongodb://localhost:27017/",
-    "database": "Group6_Final_Project_Test_Seed"
+    "serverUrl": "mongodb+srv://root:Group%406@group6.xf8is.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "database": "CS546_DB"
   }
 }
