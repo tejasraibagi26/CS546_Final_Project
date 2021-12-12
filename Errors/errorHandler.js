@@ -70,11 +70,18 @@ const checkIfItemInRange = (item) => {
 
 const checkIfCurrentDate = (date) => {
   let currentDate = new Date().toLocaleDateString();
-  if (date != currentDate) throw "Date must be today";
+  if (Date.parse(date) - Date.parse(currentDate) < 0)
+    throw "Date cannot be in the past";
 };
 
 const checkIfTimePeriodValid = (startTime, endTime) => {
   if (startTime > endTime) throw "Start time cannot be greater than end time";
+};
+
+const checkReportType = (reportType) => {
+  let reportTypes = ["post", "comment", "venue"];
+  if (!reportTypes.includes(reportType.toLowerCase()))
+    throw "Invalid report type";
 };
 
 module.exports = {
@@ -90,4 +97,5 @@ module.exports = {
   checkIfCurrentDate,
   checkIfTimePeriodValid,
   checkIfValidRating,
+  checkReportType,
 };
