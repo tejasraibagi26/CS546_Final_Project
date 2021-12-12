@@ -516,7 +516,7 @@ async function downVote(commentId, userId) {
   }
   let flag1, flag2, flag3, flag4;
 
-  /*Checking if user exists*/
+  /Checking if user exists/
 
   const retrivedUser1 = await userCollection.findOne({ _id: ObjectId(userId) });
   if (!retrivedUser1) throw "User not found";
