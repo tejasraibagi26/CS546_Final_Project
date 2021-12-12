@@ -20,6 +20,35 @@
     <p class="info">Age: {{currentUser.age}}</p>
     <p class="info">Gender: {{currentUser.gender}}</p>
   </div>
+  <div id="biography">
+    <h2 class="heading" id="bioTitle">Biography</h2>
+    {{#if myProfile}}
+      <a id="editBioLink">Edit Bio</a>
+      <p id="errorBio" hidden></p>
+      <form
+        id="editBio"
+        action="/user/editBio/{{isLoggedIn.id}}"
+        method="post"
+        hidden
+      >
+        <textarea
+          placeholder="Enter your new biography here"
+          id="enterBiography"
+          name="biography"
+        ></textarea>
+        <label><input type="submit" id="addFriend" value="Enter bio" /></label>
+      </form>
+    {{/if}}
+    {{#if currentUser.biography}}
+      <p class="info" id="bio">{{currentUser.biography}}</p>
+    {{else}}
+      {{#if myProfile}}
+        <p class="info">You have no biography!</p>
+      {{else}}
+        <p class="info">This user has no biography!</p>
+      {{/if}}
+    {{/if}}
+  </div>
   <div class="sections">
     <h2 class="heading">Friends</h2>
     {{#if friends}}

@@ -160,7 +160,7 @@ router.get("/:id", async (req, res) => {
       venue: getVenue,
       reviews: getReviews,
       reviewCount: getVenue.reviews.length,
-      isLoggedIn: req.session.user ? true : false,
+      isLoggedIn: req.session.user,
       userId: req.session.user ? req.session.user.id : "",
     });
   } catch (error) {
