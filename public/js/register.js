@@ -10,6 +10,8 @@ if (registerForm) {
   const gender = document.getElementById("gender");
   const role = document.getElementById("role");
   const error = document.getElementById("registerError");
+  const loading = document.getElementById("spinnerDiv");
+  const regButton = document.getElementById("registerSubmit");
 
   registerForm.addEventListener("submit", (event) => {
     let firstNameValue = firstName.value;
@@ -126,5 +128,8 @@ if (registerForm) {
       event.preventDefault();
       return;
     }
+
+    loading.hidden = false;
+    regButton.hidden = true;
   });
 }
