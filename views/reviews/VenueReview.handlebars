@@ -119,10 +119,13 @@
           <a href="/reviews/downvote/{{this._id}}/{{this.venueId}}" class="btn1">
             <i class="fa fa-thumbs-down"></i>
           </a>
+           <a href="/comments/addcomment/{{this.venueId}}/{{this._id}}/{{venue}}" class="add-rev hint">Add a
+          Comment</a>
+           <a href="/comments/reviewcomments/{{this._id}}/{{venue}}" class="add-rev hint">View All Comments
+       </a>
         </div>
       </div>
       {{/each}}
     </div>
   </div>
 </section>
-
