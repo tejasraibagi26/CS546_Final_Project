@@ -308,6 +308,7 @@ let ownerId = [];
 let reviewId = [];
 let password = "Project@123";
 let ownerPassword = "Owner@123";
+let alreadyBooked = [];
 
 let reviewsArr = [
   {
