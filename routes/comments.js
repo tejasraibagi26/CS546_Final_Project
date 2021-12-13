@@ -366,13 +366,7 @@ router.post("/:userId/:reviewId/:venueId", async (req, res) => {
       venueId,
       commentText
     );
-    res.render("comments/createComment", {
-      title: "Success",
-      error2: "Commented Successfully",
-      userId: req.params.userId,
-      reviewId: req.params.reviewId,
-      venueId: venueId,
-    });
+    res.redirect("/comments/reviewcomments/" + reviewId + "/" + venueId);
   } catch (e) {
     res.render("comments/createComment", {
       title: "Error",
@@ -907,6 +901,30 @@ router.get("/reviewcomments/:reviewId/:venueId", async (req, res) => {
       AllComments[i].reviewId = req.session.user.id;
       AllComments[i].review = reviewId;
       AllComments[i].venueId = venueId;
+    }
+
+    let user_id = req.session.user.id;
+
+    const user_data = await userData.getUserById(user_id.toString());
+    for (let i = 0; i < user_data.upvotedComments.length; i++) {
+      for (let j = 0; j < venueReviews.length; j++) {
+        if (
+          user_data.upvotedComments[i].id.toString() ===
+          venueReviews[j]._id.toString()
+        ) {
+          venueReviews[j].upvoted = true;
+        }
+      }
+    }
+    for (let i = 0; i < user_data.downvotedComments.length; i++) {
+      for (let j = 0; j < venueReviews.length; j++) {
+        if (
+          user_data.downvotedComments[i].id.toString() ===
+          venueReviews[j]._id.toString()
+        ) {
+          venueReviews[j].downvoted = true;
+        }
+      }
     }
 
     res.render("comments/ReviewComment", {

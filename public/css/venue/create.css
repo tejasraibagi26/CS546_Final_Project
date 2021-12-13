@@ -2,6 +2,7 @@
   position: absolute;
   top: 100px;
   width: 100%;
+  color: white;
 }
 
 #create-venue .container {
@@ -27,6 +28,7 @@
 
 #create-venue .container label {
   font-size: 16px;
+  color: white;
 }
 
 #create-venue .container .field .input-fields {
@@ -39,7 +41,8 @@
   height: 50px;
   border: none;
   border-radius: 6px;
-  background-color: whitesmoke;
+  background-color: #222;
+  color: white;
   padding: 10px;
   margin-top: 5px;
   font-family: "Source Sans Pro", sans-serif;
