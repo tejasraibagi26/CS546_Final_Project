@@ -7,9 +7,15 @@ Created using HTML | CSS | JS | Express | NodeJs | MongoDB
 ## How to Setup
 
 - Run ```npm install ``` to download all dependencies
-- Run ```node ./task/seed.js``` to seed database.
+- Run ```npm run seed``` to seed database.
 - About seeding :
-  1. Seeding will create set of 20 users, venues and reviews.
+  1. Seeding will create set of random users, owners, venues, reports and comments.
+  2. The default password are:
+     User: Project@123
+     Owner: Owner@123
+  3. Admin login details: 
+     Email: admin@gmail.com
+     Password: Admin@123
   
 
 ## Working of the website
