@@ -23,7 +23,7 @@
     <div class="right">
       <div class="row">
         <h1 class="venue-title">{{venue.venueName}}</h1>
-        <span class="report"><i
+        <div class="report"><i
             class="fa fa-flag reportButton"
             id="reportButton"
           ></i>
@@ -35,18 +35,18 @@
               onsubmit="return validateReport()"
             >
               <div class="input-fields">
-                <label for="reportComment" class="label">
+                <label for="{{venue._id}}" class="label">
                   Problem
                   <textarea
                     class="input"
-                    type="text"
                     name="reportComment"
+                    id="{{venue._id}}"
                     placeholder="Describe the problem"
                     required
                   ></textarea>
                 </label>
                 <label
-                  for="reportContentType"
+                  for="reportType{{venue._id}}"
                   class="label"
                   style="margin-top: 10px;"
                 >
@@ -55,8 +55,8 @@
                     class="input reportType"
                     style="background-color: white;"
                     name="reportContentType"
-                    id="reportType"
-                    required
+                    id="reportType{{venue._id}}"
+                    size="1"
                   >
                   </select>
                 </label>
@@ -68,14 +68,10 @@
               </div>
             </form>
           </div>
-        </span>
+        </div>
 
       </div>
-      <a
-        class="map-hyperlink"
-        href="https://maps.google.com/?q={{venue.venueAddress}}"
-        target="_blank"
-      >
+      <a href="#" class="map-hyperlink" target="_blank">
         <h2 class="venue-address"><span><i
               class="fas fa-map-pin size-xl"
             ></i></span>

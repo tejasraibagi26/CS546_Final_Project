@@ -2,10 +2,12 @@ function validate() {
   const error = document.getElementById("error");
   const ul = document.getElementById("err-list");
   error.hidden = true;
-  var title = document.forms["create-post"]["activityTitle"].value;
-  var body = document.forms["create-post"]["activityBody"].value;
-  var venue = document.forms["create-post"]["venueReq"].value;
-  var playersReq = parseInt(document.forms["create-post"]["playerReq"].value);
+  var title = document.forms["create-post-form"]["activityTitle"].value;
+  var body = document.forms["create-post-form"]["activityBody"].value;
+  var venue = document.forms["create-post-form"]["venueReq"].value;
+  var playersReq = parseInt(
+    document.forms["create-post-form"]["playerReq"].value
+  );
 
   let errors = [];
   if (title == null || title == "") {

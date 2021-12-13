@@ -6,7 +6,7 @@
         <h1 class="act-title">Displaying all Comments</h1>
         <a
           href="/reviews/venuereviews/{{venueId}}"
-          id="open-add-modal"
+      
           class="btn"
         >
           Back to All Reviews</a>
@@ -14,7 +14,7 @@
         <h3 class="act-title">No Comments to display </h3>
         <a
           href="/reviews/venuereviews/{{venueId}}"
-          id="open-add-modal"
+          
           class="btn"
         >
           Back to All Reviews</a>
@@ -24,7 +24,7 @@
       <div id="beta">
         <a
           href="/comments/oldest/{{reviewId}}/{{venueId}}"
-          id="open-add-modal"
+          
           class="btn"
         >
           <i class="fa fa-plus"></i>
@@ -32,7 +32,7 @@
         </a>
         <a
           href="/comments/newest/{{reviewId}}/{{venueId}}"
-          id="open-add-modal"
+          
           class="btn"
         >
           <i class="fa fa-plus"></i>
@@ -40,14 +40,14 @@
         </a>
         <a
           href="/comments/mostupvote/{{reviewId}}/{{venueId}}"
-          id="open-add-modal"
+          
           class="btn"
         >
           <i class="fa fa-plus"></i>
           Most Upvoted</a>
         <a
           href="/comments/mostdownvote/{{reviewId}}/{{venueId}}"
-          id="open-add-modal"
+          
           class="btn"
         >
           <i class="fa fa-plus"></i>
@@ -79,13 +79,13 @@
         <div class="row">
           <a
             href="/comments/delete/{{this._id}}/{{this.reviewId}}/{{this.review}}"
-            id="open-add-modal"
+            
             class="btn"
           >
             Delete Comment</a>
           <a
             href="/comments/updatecomment/{{this._id}}/{{this.reviewId}}/{{this.review}}/{{this.venueId}}"
-            id="open-add-modal"
+            
             class="btn"
           >
             Update Comment</a>
@@ -182,7 +182,9 @@
               </div>
             </div>
           {{/each}}
-        </div>
+        
+        
+        </div></div>
       {{/if}}
     </div>
   </div>

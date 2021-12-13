@@ -55,58 +55,54 @@
               <p class="desc">{{activityBody}}
               </p>
             </div>
-            <div class="card-footer" id="card-footer">
+            <div class="card-footer">
               <a class="link" href="/feed/invite/accept?id={{_id}}">
                 <i class="fa fa-thumbs-up"></i>
                 Join Invite
               </a>
-              <a class="link report">
-                <span>
-                  <i class="fa fa-flag reportButton">
-                    <span class="font">Report</span></i>
-                  <div class="report-container reportDiv" id="reportDiv" hidden>
-                    <form
-                      id="reportForm"
-                      method="post"
-                      action="/report/{{_id}}/post"
-                      onsubmit="return validate()"
-                    >
-                      <div class="input-fields">
-                        <label for="reportComment" class="label">
-                          Problem
-                          <textarea
-                            class="input"
-                            type="text"
-                            name="reportComment"
-                            placeholder="Describe the problem"
-                            required
-                          ></textarea>
-                        </label>
-                        <label
-                          for="reportContentType"
-                          class="label"
-                          style="margin-top: 10px;"
+              <div class="link report">
+                <i class="fa fa-flag reportButton">
+                  <span class="font">Report</span></i>
+                <div class="report-container reportDiv" hidden>
+                  <form
+                    method="post"
+                    action="/report/{{_id}}/post"
+                    onsubmit="return validate()"
+                  >
+                    <div class="input-fields">
+                      <label for="{{_id}}" class="label">
+                        Problem
+                        <textarea
+                          class="input"
+                          name="reportComment"
+                          id="{{_id}}"
+                          placeholder="Describe the problem"
+                          required
+                        ></textarea>
+                      </label>
+                      <label
+                        for="reportType{{_id}}"
+                        class="label"
+                        style="margin-top: 10px;"
+                      >
+                        Report Type
+                        <select
+                          class="input reportType"
+                          name="reportContentType"
+                          id="reportType{{_id}}"
+                          size="1"
                         >
-                          Report Type
-                          <select
-                            class="input reportType"
-                            name="reportContentType"
-                            id="reportType"
-                            required
-                          >
-                          </select>
-                        </label>
-                        <button
-                          type="submit"
-                          class="book-btn"
-                          style="margin-top: 10px; width:100%"
-                        >Report</button>
-                      </div>
-                    </form>
-                  </div>
-                </span>
-
-              </a>
+                        </select>
+                      </label>
+                      <button
+                        type="submit"
+                        class="book-btn"
+                        style="margin-top: 10px; width:100%"
+                      >Report</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
         {{/each}}
