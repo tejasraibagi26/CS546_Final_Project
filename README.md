@@ -31,3 +31,5 @@ Created using HTML | CSS | JS | Express | NodeJs | MongoDB
 - Report posts and venues.
 - Automatically delete post when the deadline is expired.
 - Owners can add a request for their venue to be added in.
+- Implemented comments for reviews (initially it was only reviews which was mentioned as comments in the proposal) 
+- Implemented various filters for both reviews and comments including updating and deleting  the comments
