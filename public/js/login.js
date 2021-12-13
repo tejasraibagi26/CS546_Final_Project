@@ -56,7 +56,6 @@
     //console.log(window.location.href.split("3000")[1]);
     let route = window.location.href.split("3000")[1];
     $.post(route, data, function (data) {
-      console.log(data);
       if (data.auth == true) {
         if (data.user.role == "Admin") {
           window.location.href = "/admin/dashboard";

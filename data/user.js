@@ -118,7 +118,7 @@ async function getUserByEmail(email) {
     }
   }
 
-  throw "No user with email found";
+  throw "No user with email or password found";
 }
 
 async function getFriends(id) {
