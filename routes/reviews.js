@@ -1186,6 +1186,7 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
+        isLoggedIn: req.session.user,
       });
     } catch (e) {
       res.status(500).json({ error: e });
@@ -1294,6 +1295,7 @@ router.get("/newest/:venueId", async (req, res) => {
         venueReview1: mainReview,
         venueName: venuename,
         venueid: venueid,
+        isLoggedIn: req.session.user,
       });
     } catch (e) {
       res.status(500).json({ error: e });

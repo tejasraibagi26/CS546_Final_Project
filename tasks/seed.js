@@ -294,6 +294,8 @@ let bookingId = [];
 let activityId = [];
 let alreadyBooked = [];
 let password = "Project@123";
+let ownerPassword = "Owner@123";
+let alreadyBooked = [];
 
 let reviewsArr = [
   {
