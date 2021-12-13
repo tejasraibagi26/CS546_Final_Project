@@ -142,54 +142,14 @@ router.post("/text/:id/:userId/:venueId", async (req, res) => {
 
 router.get("/getrating/:id/:userId/:venueId", async (req, res) => {
   const id = req.params.id;
-  const venueId = req.params.venueId;
-  const userId = req.params.userId;
-  let inputString = [id, userId, venueId];
-
-  try {
-    errorHandler.checkIfElementsExists(inputString);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-  try {
-    errorHandler.checkIfElementsAreStrings(inputString);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-  try {
-    errorHandler.checkIfElementNotEmptyString(inputString);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-  try {
-    ObjectId(userId);
-  } catch (error) {
-    res.status(400).json({ error: "Id should be valid object ID" });
-    return;
-  }
-  try {
-    ObjectId(venueId);
-  } catch (error) {
-    res.status(400).json({ error: "Id should be valid object ID" });
-    return;
-  }
-  try {
-    ObjectId(id);
-  } catch (error) {
-    res.status(400).json({ error: "Id should be valid object ID" });
-    return;
-  }
   const review = await resData.getReviewById(id);
   const text = review.rating;
   res.render("reviews/reviewrating", {
     title: "Update Review",
-    id: id,
+    id: req.params.id,
     rating: text,
-    userId: userId,
-    venueId: venueId,
+    userId: req.params.userId,
+    venueId: req.params.venueId,
     isLoggedIn: req.session.user,
   });
 });
@@ -360,96 +320,23 @@ router.get("/delete/:id/:userId/:venueId", async (req, res) => {
 
 router.get("/getinfo/:id/:userId/:venueId", async (req, res) => {
   const id = req.params.id;
-  const venueId = req.params.venueId;
-  const userId = req.params.userId;
-  let inputString = [id, userId, venueId];
-  try {
-    errorHandler.checkIfElementsExists(inputString);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-  try {
-    errorHandler.checkIfElementsAreStrings(inputString);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-  try {
-    errorHandler.checkIfElementNotEmptyString(inputString);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-  try {
-    ObjectId(userId);
-  } catch (error) {
-    res.status(400).json({ error: "Id should be valid object ID" });
-    return;
-  }
-  try {
-    ObjectId(venueId);
-  } catch (error) {
-    res.status(400).json({ error: "Id should be valid object ID" });
-    return;
-  }
-  try {
-    ObjectId(id);
-  } catch (error) {
-    res.status(400).json({ error: "Id should be valid object ID" });
-    return;
-  }
-
   const review = await resData.getReviewById(id);
   const text = review.reviewText;
   res.render("reviews/reviewtext", {
     title: "Update Review",
     id: req.params.id,
     text: text,
-    userId: userId,
-    venueId: venueId,
+    userId: req.params.userId,
+    venueId: req.params.venueId,
     isLoggedIn: req.session.user,
   });
 });
 
 router.get("/addreview/:userId/:venueId", async (req, res) => {
-  const userId = req.params.userId;
-  const venueId = req.params.venueId;
-  let inputString = [userId, venueId];
-  try {
-    errorHandler.checkIfElementsExists(inputString);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-  try {
-    errorHandler.checkIfElementsAreStrings(inputString);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-  try {
-    errorHandler.checkIfElementNotEmptyString(inputString);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-  try {
-    ObjectId(userId);
-  } catch (error) {
-    res.status(400).json({ error: "Id should be valid object ID" });
-    return;
-  }
-  try {
-    ObjectId(venueId);
-  } catch (error) {
-    res.status(400).json({ error: "Id should be valid object ID" });
-    return;
-  }
   res.render("reviews/createReview", {
     title: "add Review",
-    userId: userId,
-    venueId: venueId,
+    userId: req.params.userId,
+    venueId: req.params.venueId,
     isLoggedIn: req.session.user,
   });
 });

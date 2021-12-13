@@ -55,9 +55,7 @@
       </div><br />
     {{/if}}
     <div class="posts">
-      <h2 class="act-title">Your Comments </h2>
       {{#each allComments}}
-     
         <div class="card">
           <div class="card-header">
             <div class="row">
@@ -75,6 +73,22 @@
             <p class="desc">{{this.commentText}}
             </p>
           </div>
+          <div class="card-footer">
+            <a
+              href="/comments/upvote/{{this._id}}/{{reviewId}}"
+              class="btn1"
+              aria-label="Upvote"
+            >
+              <i class="fa fa-thumbs-up"></i>
+            </a>
+            <a
+              href="/comments/downvote/{{this._id}}/{{reviewId}}"
+              class="btn1"
+              aria-label="Downvote"
+            >
+              <i class="fa fa-thumbs-down"></i>
+            </a>
+          </div>
         </div>
         <div class="row">
           <a
@@ -91,16 +105,9 @@
             Update Comment</a>
         </div>
       {{/each}}
-      <br>
-      <br>
-      <br>
-   
-      {{#if venueReview}}
-        <h2 class="act-title">All Comments For The Review </h2>
-      {{/if}}
       {{#if venueReview}}
         <div class="card">
-           <h2 class="act-title"> Review </h2>
+
           <div class="card-header">
             <div class="row">
               <img src="/public/images/user.png" alt="avatar" class="avatar" />
@@ -118,9 +125,7 @@
             <p class="desc">{{venueDetails.reviewText}}
             </p>
           </div>
-{{#if venueReview}}
-        <h2 class="act-title"> Comments </h2>
-      {{/if}}
+
           {{#each venueReview}}
             <div class="card comment">
               <div class="card-header">
@@ -144,41 +149,20 @@
                 </p>
               </div>
               <div class="card-footer">
-                <div class="card-footer">
-            {{#if this.upvoted}}
-              <a
-                href="/comments/upvote/{{this._id}}/{{this.reviewId}}"
-                class="btn1 liked"
-                aria-label="Upvote"
-              >
-                <i class="fa fa-thumbs-up"></i>
-              </a>
-            {{else}}
-              <a
-                href="/comments/upvote/{{this._id}}/{{this.reviewId}}"
-                class="btn1"
-                aria-label="Upvote"
-              >
-                <i class="fa fa-thumbs-up"></i>
-              </a>
-            {{/if}}
-            {{#if this.downvoted}}
-              <a
-                href="/comments/downvote/{{this._id}}/{{this.reviewId}}"
-                class="btn1 disliked"
-                aria-label="Downvote"
-              >
-                <i class="fa fa-thumbs-down"></i>
-              </a>
-            {{else}}
-              <a
-                href="/comments/downvote/{{this._id}}/{{this.reviewId}}"
-                class="btn1"
-                aria-label="Downvote"
-              >
-                <i class="fa fa-thumbs-down"></i>
-              </a>
-            {{/if}}
+                <a
+                  href="/comments/upvote/{{this._id}}/{{this.reviewId}}"
+                  class="btn1"
+                  aria-label="Upvote"
+                >
+                  <i class="fa fa-thumbs-up"></i>
+                </a>
+                <a
+                  href="/comments/downvote/{{this._id}}/{{this.reviewId}}"
+                  class="btn1"
+                  aria-label="Downvote"
+                >
+                  <i class="fa fa-thumbs-down"></i>
+                </a>
               </div>
             </div>
           {{/each}}

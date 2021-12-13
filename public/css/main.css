@@ -10,26 +10,6 @@ body {
   background-color: #121212 !important;
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #222;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 6px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #444;
-}
 nav {
   /* background-color: #222; */
   width: 100vw;

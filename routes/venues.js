@@ -28,14 +28,11 @@ router.get("/", async (req, res) => {
 
   if (!searchTerm) {
     try {
-      let fetchVenue = await venue.searchVenue(searchTerm, min, max, rating);
-      if (req.session.user != null && req.session.user.role != "Owner") {
-        fetchVenue = fetchVenue.filter((venue) => venue.venueApproved === true);
-      }
+      const getVenues = await venue.searchVenue(searchTerm, min, max, rating);
       res.render("venue/searchResult", {
         title: "Search Results",
-        venues: fetchVenue,
-        count: fetchVenue.length,
+        venues: getVenues,
+        count: getVenues.length,
         isLoggedIn: req.session.user,
       });
       return;
@@ -70,10 +67,7 @@ router.get("/", async (req, res) => {
       return;
     }
     try {
-      let fetchVenue = await venue.searchVenue(searchTerm, min, max, rating);
-      if (req.session.user != null && req.session.user.role != "Owner") {
-        fetchVenue = fetchVenue.filter((venue) => venue.venueApproved === true);
-      }
+      const fetchVenue = await venue.searchVenue(searchTerm, min, max, rating);
       res.render("venue/searchResult", {
         title: "Search Result",
         venues: fetchVenue,
@@ -95,10 +89,7 @@ router.get("/", async (req, res) => {
   }
 
   try {
-    let fetchVenue = await venue.searchVenue(searchTerm, min, max, rating);
-    if (req.session.user != null && req.session.user.role != "Owner") {
-      fetchVenue = fetchVenue.filter((venue) => venue.venueApproved === true);
-    }
+    const fetchVenue = await venue.searchVenue(searchTerm, min, max, rating);
     res.render("venue/searchResult", {
       title: "Search Result",
       venues: fetchVenue,
@@ -164,14 +155,6 @@ router.get("/:id", async (req, res) => {
       getReviews[i].userId = getReviews[i].reviewerId;
     }
 
-    let isOwner = false;
-    if (
-      req.session.user.role === "Owner" &&
-      req.session.user.id === getVenue.owner.toString()
-    ) {
-      isOwner = true;
-    }
-
     res.status(200).render("venue/venuePage", {
       title: getVenue.venueName,
       venue: getVenue,
@@ -180,7 +163,7 @@ router.get("/:id", async (req, res) => {
       reviewCount: getVenue.reviews.length,
       isLoggedIn: req.session.user,
       userId: req.session.user ? req.session.user.id : "",
-      role: isOwner,
+      role: req.session.user.role === "Owner" ? true : false,
     });
   } catch (error) {
     res.status(404).json({ err: error });
@@ -197,7 +180,6 @@ router.post("/create", upload.single("venueImage"), async (req, res) => {
   let venueImage = xss(req.file.filename);
   let venueTimeArrObj = [];
   let venueApproved = false;
-  let owner = req.session.user.id;
 
   venueTimings = venueTimings.split(",");
   sports = sports.split(",");
@@ -256,8 +238,7 @@ router.post("/create", upload.single("venueImage"), async (req, res) => {
       sports,
       price,
       venueImage,
-      venueApproved,
-      owner
+      venueApproved
     );
 
     res.render("venue/createSucc", {

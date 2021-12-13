@@ -80,7 +80,6 @@ router.get("/profile/:id", async (req, res) => {
   }
 
   let userAccount = true;
-  console.log(req.session.user.role);
   if (req.session.user.role == "Owner") {
     userAccount = false;
   }

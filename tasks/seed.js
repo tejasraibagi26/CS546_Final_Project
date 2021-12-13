@@ -7,7 +7,6 @@ const reviews = data.reviews;
 const booking = data.booking;
 const activity = data.activity;
 const report = data.report;
-const comments = data.comments;
 
 const names = [
   "Adam",
@@ -289,25 +288,12 @@ let reportComment = [
 
 let reportTypes = ["Abusive", "Hate", "Rude", "Sexual", "Other"];
 
-let reviewComments = [
-  "I agree with this review!",
-  "I disagree with this review!",
-  "This review is not helpful",
-  "This review is helpful",
-  "Fake! This is not a real review",
-  "This review is fake",
-  "Paid review!",
-  "Actually could have been better!",
-];
-
 let userId = [];
 let venueId = [];
 let bookingId = [];
 let activityId = [];
-let ownerId = [];
-let reviewId = [];
+let alreadyBooked = [];
 let password = "Project@123";
-let ownerPassword = "Owner@123";
 
 let reviewsArr = [
   {
@@ -402,30 +388,6 @@ const main = async () => {
     console.log(`Created User: ${firstName} ${lastName}`);
   }
 
-  for (let i = 0; i < 2; i++) {
-    let random = Math.round(Math.random() * names.length);
-    let random2 = Math.round(Math.random() * names.length);
-    let firstName = `${names[random]}`;
-    let lastName = `${names[random2]}`;
-    let email = `${names[random].toLowerCase()}@gmail.com`;
-    let role = "Owner";
-    let age = Number(Math.round(Math.random() * (40 - 18) + 18));
-    let genderRandomIdx = Math.round(Math.random() * genders.length);
-    let gender = genders[genderRandomIdx];
-    if (gender == undefined) gender = genders[0];
-    const uploadUser = await user.createUser(
-      firstName,
-      lastName,
-      email,
-      ownerPassword,
-      age,
-      gender,
-      role
-    );
-    ownerId.push(uploadUser.id.toString());
-    console.log(`Created Owner : ${firstName} ${lastName}`);
-  }
-
   //Insert admin
   const uploadUser = await user.createUser(
     "Patrick",
@@ -446,9 +408,7 @@ const main = async () => {
     random = Math.round(Math.random() * addressEnd);
     let add = `${random + addressStart} Main St, Hoboken, NJ`;
     let slots = parseInt(Math.round(Math.random() * 10));
-    let randomOwner = Math.round(Math.random() * ownerId.length);
-    let owner = ownerId[randomOwner];
-    if (owner == undefined) owner = ownerId[0];
+    //let maxTimeObjects = Math.round(Math.random() * time.length);
     let timeObjects = [];
     for (let k = 0; k < time.length; k++) {
       let tempObject = {};
@@ -477,8 +437,7 @@ const main = async () => {
       sportArray,
       price,
       image,
-      venueApprove,
-      owner
+      venueApprove
     );
 
     venueId.push({ id: venueData.toString(), cost: price });
@@ -501,7 +460,6 @@ const main = async () => {
         ""
       );
 
-      reviewId.push(addRev.reviewId.toString());
       console.log(`Added review for ${venue.id}`);
     }
   }
@@ -509,7 +467,10 @@ const main = async () => {
   // This will add bookings
   for (let i = 0; i < maxCount; i++) {
     let random = Math.floor(Math.random() * userId.length);
+    let random2 = Math.floor(Math.random() * venueId.length);
     let user_id = userId[random];
+    // let venue = venueId[random2];
+
     let sT = ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00"];
     let eT = ["13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
     let startTime = sT[Math.floor(Math.random() * sT.length)];
@@ -548,6 +509,7 @@ const main = async () => {
     let random = Math.floor(Math.random() * venueId.length);
     let venueReq = venueId[random].id;
     let booking = bookingId[random];
+    console.log(venueReq, booking);
     const addActivity = await activity.createActivity(
       activityTitle,
       activityDescription,
@@ -602,18 +564,8 @@ const main = async () => {
     }
   }
 
-  // Create comments
-  for (let i = 0; i < venueId.length; i++) {
-    let venue_id = venueId[i].id.toString();
-    let user_id = userId[Math.floor(Math.random() * userId.length)];
-    let review_id = reviewId[i];
-    let txt = reviewComments[Math.floor(Math.random() * reviewComments.length)];
-    const addRev = await comments.addComment(user_id, review_id, venue_id, txt);
-    console.log(`Added comment with ${addRev.id}`);
-  }
-
   console.log("Closing DB Connection");
-  await db.close();
+  await db.serverConfig.close();
   console.log("Done");
 };
 

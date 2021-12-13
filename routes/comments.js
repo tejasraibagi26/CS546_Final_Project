@@ -274,51 +274,11 @@ router.get("/delete/:id/:userId/:reviewId", async (req, res) => {
 //---------------------------------------------------------------------------------------------------------
 
 router.get("/addcomment/:userId/:reviewId/:venueId", async (req, res) => {
-  const userId = req.params.userId;
-  const venueId = req.params.venueId;
-  const reviewId = req.params.reviewId;
-  let inputString = [reviewId, userId, venueId];
-  try {
-    errorHandler.checkIfElementsExists(inputString);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-  try {
-    errorHandler.checkIfElementsAreStrings(inputString);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-  try {
-    errorHandler.checkIfElementNotEmptyString(inputString);
-  } catch (error) {
-    res.status(400).json({ err: error });
-    return;
-  }
-  try {
-    ObjectId(userId);
-  } catch (error) {
-    res.status(400).json({ error: "Id should be valid object ID" });
-    return;
-  }
-  try {
-    ObjectId(venueId);
-  } catch (error) {
-    res.status(400).json({ error: "Id should be valid object ID" });
-    return;
-  }
-  try {
-    ObjectId(reviewId);
-  } catch (error) {
-    res.status(400).json({ error: "Id should be valid object ID" });
-    return;
-  }
   res.render("comments/createComment", {
     title: "Add Comment",
-    userId: userId,
-    reviewId: reviewId,
-    venueId: venueId,
+    userId: req.params.userId,
+    reviewId: req.params.reviewId,
+    venueId: req.params.venueId,
   });
 });
 
@@ -327,45 +287,6 @@ router.get(
   async (req, res) => {
     let id = req.params.id;
     let venueid = req.params.venueId;
-    let userId = req.params.userId;
-    let inputString = [id, venueid, userId];
-
-    try {
-      errorHandler.checkIfElementsExists(inputString);
-    } catch (error) {
-      res.status(400).json({ err: error });
-      return;
-    }
-    try {
-      errorHandler.checkIfElementsAreStrings(inputString);
-    } catch (error) {
-      res.status(400).json({ err: error });
-      return;
-    }
-    try {
-      errorHandler.checkIfElementNotEmptyString(inputString);
-    } catch (error) {
-      res.status(400).json({ err: error });
-      return;
-    }
-    try {
-      ObjectId(userId);
-    } catch (error) {
-      res.status(400).json({ error: "Id should be valid object ID" });
-      return;
-    }
-    try {
-      ObjectId(venueid);
-    } catch (error) {
-      res.status(400).json({ error: "Id should be valid object ID" });
-      return;
-    }
-    try {
-      ObjectId(reviewId);
-    } catch (error) {
-      res.status(400).json({ error: "Id should be valid object ID" });
-      return;
-    }
     let text = await resData.getCommentById(id);
     text = text.commentText;
     res.render("comments/update", {
@@ -445,7 +366,13 @@ router.post("/:userId/:reviewId/:venueId", async (req, res) => {
       venueId,
       commentText
     );
-    res.redirect("/comments/reviewcomments/" + reviewId + "/" + venueId);
+    res.render("comments/createComment", {
+      title: "Success",
+      error2: "Commented Successfully",
+      userId: req.params.userId,
+      reviewId: req.params.reviewId,
+      venueId: venueId,
+    });
   } catch (e) {
     res.render("comments/createComment", {
       title: "Error",
@@ -980,30 +907,6 @@ router.get("/reviewcomments/:reviewId/:venueId", async (req, res) => {
       AllComments[i].reviewId = req.session.user.id;
       AllComments[i].review = reviewId;
       AllComments[i].venueId = venueId;
-    }
-
-    let user_id = req.session.user.id;
-
-    const user_data = await userData.getUserById(user_id.toString());
-    for (let i = 0; i < user_data.upvotedComments.length; i++) {
-      for (let j = 0; j < venueReviews.length; j++) {
-        if (
-          user_data.upvotedComments[i].id.toString() ===
-          venueReviews[j]._id.toString()
-        ) {
-          venueReviews[j].upvoted = true;
-        }
-      }
-    }
-    for (let i = 0; i < user_data.downvotedComments.length; i++) {
-      for (let j = 0; j < venueReviews.length; j++) {
-        if (
-          user_data.downvotedComments[i].id.toString() ===
-          venueReviews[j]._id.toString()
-        ) {
-          venueReviews[j].downvoted = true;
-        }
-      }
     }
 
     res.render("comments/ReviewComment", {
