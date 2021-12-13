@@ -141,7 +141,7 @@ async function addReview(userId, venueId, reviewText, rating, reviewPicture) {
   if (!updateInfo2.matchedCount && !updateInfo2.modifiedCount)
     throw "updating venue rating failed";
 
-  return { msg: "Review Added" };
+  return { msg: "Review Added", reviewId: newId };
 }
 
 //---------------------------------------------------------------------------------------------------------
@@ -212,9 +212,9 @@ async function removeReview(id, userId, venueId) {
     return;
   }
 
-  let temp1,temp2,temp3;
+  let temp1, temp2, temp3;
   let deletecomments = review.commentId;
-  
+
   /* Checking if review deletion was successfull ot not */
 
   const deletionInfo = await reviewCollection.deleteOne({ _id: ObjectId(id) });
@@ -222,25 +222,26 @@ async function removeReview(id, userId, venueId) {
     throw `Could not delete review with id of ${id}`;
   }
 
-   for (let i=0;i<deletecomments.length;i++){
-     temp3 = await user();
-   temp1 = await comments();
-   temp2 = await temp1.findOne({ _id: ObjectId(deletecomments[i]._id) });
-   let temp4 = temp2.reviewerId;
-   let deletionInfo1 = await temp1.deleteOne({ _id: ObjectId(temp2._id.toString()) });
-   const updateInfo24 = await temp3.updateOne(
-    { _id: ObjectId(temp4) },
-    {
-      $pull: {
-        commentId: {
-          _id: temp2._id.toString(),
+  for (let i = 0; i < deletecomments.length; i++) {
+    temp3 = await user();
+    temp1 = await comments();
+    temp2 = await temp1.findOne({ _id: ObjectId(deletecomments[i]._id) });
+    let temp4 = temp2.reviewerId;
+    let deletionInfo1 = await temp1.deleteOne({
+      _id: ObjectId(temp2._id.toString()),
+    });
+    const updateInfo24 = await temp3.updateOne(
+      { _id: ObjectId(temp4) },
+      {
+        $pull: {
+          commentId: {
+            _id: temp2._id.toString(),
+          },
         },
-      },
-    }
-  );
-   }
+      }
+    );
+  }
 
-   
   //   temp2 = await comments.removeComment(temp1._id.toString());
   //   }
   /* Updating the reviews under venue whenever a review is deleted */
@@ -485,7 +486,7 @@ async function updateReviewRating(id, userId, venueId, rating) {
 
 async function getReviewById(id) {
   /* Error Handling */
-//console.log(id);
+  //console.log(id);
   let array1 = [id];
 
   errorHandler.checkIfElementsExists(array1);
@@ -501,8 +502,7 @@ async function getReviewById(id) {
 
   const reviewCollection = await reviews();
   const review = await reviewCollection.findOne({ _id: ObjectId(id) });
- 
-  
+
   if (!review) throw "Review not found";
   return review;
 }
@@ -549,7 +549,7 @@ async function addCommentToReview(reviewId, commentID) {
 
   const updateInfo = await reviewCollection.updateOne(
     { _id: ObjectId(reviewId) },
-    { $addToSet: { commentId: { _id: (commentID) } } }
+    { $addToSet: { commentId: { _id: commentID } } }
   );
   if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
     throw "Comment Addition failed";
@@ -1532,7 +1532,7 @@ async function getAllReviewsByUserId(userId) {
   let reviewArray = [];
   let userReviewCollection = await user1.getUserById(userId);
   let length = userReviewCollection.reviewId.length;
-  if(length === 0){
+  if (length === 0) {
     return false;
   }
   for (let i = 0; i < length; i++) {

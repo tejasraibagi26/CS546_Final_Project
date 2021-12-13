@@ -2,6 +2,7 @@
   top: 60px;
   width: 100vw;
   min-height: calc(100% - 60px);
+  color: white;
 }
 
 #post .container {
@@ -11,6 +12,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: absolute;
 }
 
 #post .container .col {
@@ -49,4 +51,9 @@
 
 .bold {
   font-weight: 700;
+}
+
+.post-back {
+  font-size: 16px;
+  color: lightblue;
 }

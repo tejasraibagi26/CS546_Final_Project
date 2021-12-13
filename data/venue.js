@@ -122,9 +122,34 @@ const searchVenue = async (sportToFind, min, max, rating) => {
   return venueArr;
 };
 
+const updateVenueVisibility = async (id) => {
+  let array = [id];
+  errorHandler.checkIfElementsExists(array);
+  errorHandler.checkIfElementsAreStrings(array);
+  errorHandler.checkIfElementNotEmptyString(array);
+  errorHandler.checkIfValidObjectId(id);
+
+  id = id.trim();
+  id = ObjectId(id);
+
+  const venue = await venueCollection();
+  let venueToUpdate = await venue.findOne({ _id: id });
+
+  if (venueToUpdate === null) throw `Venue with id: ${id} not found`;
+
+  venueToUpdate.venueApproved = !venueToUpdate.venueApproved;
+
+  const updatedVenue = await venue.replaceOne({ _id: id }, venueToUpdate);
+
+  if (updatedVenue.modifiedCount === 0) throw "Error updating venue";
+
+  return venueToUpdate;
+};
+
 module.exports = {
   getAllVenues,
   getVenueById,
   createNewVenue,
   searchVenue,
+  updateVenueVisibility,
 };

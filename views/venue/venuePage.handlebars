@@ -4,11 +4,26 @@
         src="../../public/images/{{venue.venueImage}}"
         alt="{{venue.name}}"
         class="img"
-      /></div>
+      />
+      {{#if role}}
+        <div class="visible">
+          <p>Venue Visible : {{visible}}</p>
+          <form
+            id="updateVis"
+            class="vis"
+            method="get"
+            action="/venues/{{venue._id}}/visibility"
+          >
+            <button type="submit" class="btn">Update</button>
+          </form>
+
+        </div>
+      {{/if}}
+    </div>
     <div class="right">
       <div class="row">
         <h1 class="venue-title">{{venue.venueName}}</h1>
-        <span class="report"><i
+        <div class="report"><i
             class="fa fa-flag reportButton"
             id="reportButton"
           ></i>
@@ -20,18 +35,18 @@
               onsubmit="return validateReport()"
             >
               <div class="input-fields">
-                <label for="reportComment" class="label">
+                <label for="{{venue._id}}" class="label">
                   Problem
                   <textarea
                     class="input"
-                    type="text"
                     name="reportComment"
+                    id="{{venue._id}}"
                     placeholder="Describe the problem"
                     required
                   ></textarea>
                 </label>
                 <label
-                  for="reportContentType"
+                  for="reportType{{venue._id}}"
                   class="label"
                   style="margin-top: 10px;"
                 >
@@ -40,8 +55,8 @@
                     class="input reportType"
                     style="background-color: white;"
                     name="reportContentType"
-                    id="reportType"
-                    required
+                    id="reportType{{venue._id}}"
+                    size="1"
                   >
                   </select>
                 </label>
@@ -53,14 +68,10 @@
               </div>
             </form>
           </div>
-        </span>
+        </div>
 
       </div>
-      <a
-        class="map-hyperlink"
-        href="https://maps.google.com/?q={{venue.venueAddress}}"
-        target="_blank"
-      >
+      <a href="#" class="map-hyperlink" target="_blank">
         <h2 class="venue-address"><span><i
               class="fas fa-map-pin size-xl"
             ></i></span>
@@ -137,31 +148,11 @@
       </div>
     </div>
   </div>
-  <div class="comment">
+  <div class="comments">
     <div class="row">
       <h1 class="comment-header">Reviews</h1>
       <a href="/reviews/venuereviews/{{venue._id}}">See all reviews</a>
     </div>
-    {{! <div class="comment-textbox">
-      <form
-        method="post"
-        onsubmit="return validateComment()"
-        id="comment-form"
-        enctype="multipart/form-data"
-      >
-        <label for="comment-text">
-          <textarea
-            name="comment"
-            id="comment-text"
-            placeholder="Add a comment..."
-            class="comment-text"
-          ></textarea>
-        </label>
-        <button type="submit" class="comment-btn">Comment
-          <span><i class="fas fa-paper-plane"></i></span>
-        </button>
-      </form>
-    </div> }}
     {{#if reviews}}
       {{#each reviews}}
         <div class="user-review">
