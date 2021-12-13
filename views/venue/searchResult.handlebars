@@ -3,16 +3,20 @@
     <div class="left fadeIn">
       <div class="search-bar">
         <form action="/venues" id="search" method="GET" class="form">
-          <input
+          <label for="search-input">
+            <input
             type="text"
             id="search-input"
             name="searchTerm"
             placeholder="Type a sport or click search for all results."
             value="{{searchTerm}}"
           />
-          <button class="search-button" id="search-button" type="submit">
+          </label>
+         <label for="search-button">
+            <button class="search-button" id="search-button" type="submit">
             <i class="fas fa-search"></i>
           </button>
+         </label>
         </form>
       </div>
       <div class="filters">
@@ -23,45 +27,58 @@
           class="form"
           id="filter-form"
         >
-          <input
-            type="text"
-            name="searchTerm"
-            class="hidden"
-            value="{{searchTerm}}"
-          />
-          <input
-            id="min"
-            type="number"
-            name="min"
-            placeholder="Min. Price"
-            class="cost"
-          />
-          <input
-            id="max"
-            type="number"
-            name="max"
-            placeholder="Max. Price"
-            class="cost"
-          />
+          <label for="searchTerm">
+            <input
+              type="text"
+              name="searchTerm"
+              id="searchTerm"
+              class="hidden"
+              value="{{searchTerm}}"
+            />
+          </label>
+          <label for="min">
+            <input
+              id="min"
+              type="number"
+              name="min"
+              placeholder="Min. Price"
+              class="cost"
+            />
+          </label>
+          <label for="max">
+            <input
+              id="max"
+              type="number"
+              name="max"
+              placeholder="Max. Price"
+              class="cost"
+            />
+          </label>
 
           <p class="title">Rating</p>
           <div class="rating">
             <p>4
               <i class="fas fa-star"></i>
               and above
-              <input type="radio" id="r4" name="rating" value="4" /></p>
+              <label for="r4">
+                <input type="radio" id="r4" name="rating" value="4" /></p>
+              </label>
             <p>3
               <i class="fas fa-star"></i>
               and above
-              <input type="radio" id="r3" name="rating" value="3" /></p>
+              <label for="r3"><input type="radio" id="r3" name="rating" value="3" /></p></label>
             <p>2
               <i class="fas fa-star"></i>
               and above
-              <input type="radio" id="r2" name="rating" value="2" /></p>
+              <label for="r2">
+                <input type="radio" id="r2" name="rating" value="2" /></p>
+              </label>
             <p>1
               <i class="fas fa-star"></i>
               and above
-              <input type="radio" id="r1" name="rating" value="1" /></p>
+              <label for="r1">
+                <input type="radio" id="r1" name="rating" value="1" /></p>
+              </label>
           </div>
           <div id="error" hidden>
             <ul id="err-list"></ul>
