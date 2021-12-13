@@ -85,6 +85,27 @@ app.use("/admin/dashboard", (req, res, next) => {
   next();
 });
 
+app.use("/venues/:id", (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("/user/login");
+  }
+  next();
+});
+
+app.use("/reviews", (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("/user/login");
+  }
+  next();
+});
+
+app.use("/comments", (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("/user/login");
+  }
+  next();
+});
+
 //Configure app to the routes
 configRouter(app);
 

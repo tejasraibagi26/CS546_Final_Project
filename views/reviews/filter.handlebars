@@ -10,7 +10,7 @@
         id="open-add-modal2"
         class="btn"
       >
-        <i class="fa fa-plus"></i>
+        <i class="fa fa-times"></i>
         Clear Filters</a>
     </div><br />
     {{#if venueReview}}
@@ -157,42 +157,7 @@
               <p class="desc">{{this.reviewText}}
               </p>
             </div>
-            <div class="card-footer">
-              {{#if this.upvoted}}
-                <a
-                  href="/reviews/upvote/{{this._id}}/{{this.venueId}}"
-                  class="btn1 liked"
-                  aria-label="Upvote"
-                >
-                  <i class="fa fa-thumbs-up"></i>
-                </a>
-              {{else}}
-                <a
-                  href="/reviews/upvote/{{this._id}}/{{this.venueId}}"
-                  class="btn1"
-                  aria-label="Upvote"
-                >
-                  <i class="fa fa-thumbs-up"></i>
-                </a>
-              {{/if}}
-              {{#if this.downvoted}}
-                <a
-                  href="/reviews/downvote/{{this._id}}/{{this.venueId}}"
-                  class="btn1 disliked"
-                  aria-label="Downvote"
-                >
-                  <i class="fa fa-thumbs-down"></i>
-                </a>
-              {{else}}
-                <a
-                  href="/reviews/downvote/{{this._id}}/{{this.venueId}}"
-                  class="btn1"
-                  aria-label="Downvote"
-                >
-                  <i class="fa fa-thumbs-down"></i>
-                </a>
-              {{/if}}
-            </div>
+
           </div>
         {{/each}}
       {{else}}

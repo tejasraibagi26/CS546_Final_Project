@@ -161,3 +161,9 @@
 .disliked {
   color: tomato;
 }
+
+.no-comm {
+  margin: 0;
+  font-size: 18px;
+  color: white;
+}

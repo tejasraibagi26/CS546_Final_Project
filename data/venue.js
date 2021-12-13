@@ -36,7 +36,8 @@ const createNewVenue = async (
   sports,
   price,
   venueImage,
-  venueApproved
+  venueApproved,
+  owner
 ) => {
   let array = [
     venueName,
@@ -45,9 +46,10 @@ const createNewVenue = async (
     sports,
     price,
     venueImage,
+    owner,
   ];
   errorHandler.checkIfElementsExists(array);
-  array = [venueName, venueAddress, venueImage];
+  array = [venueName, venueAddress, venueImage, owner];
   errorHandler.checkIfElementsAreStrings(array);
   errorHandler.checkIfElementNotEmptyString(array);
   errorHandler.checkIfValidArrayObject(venueTimings);
@@ -59,6 +61,7 @@ const createNewVenue = async (
   venueName = venueName.trim();
   venueAddress = venueAddress.trim();
   venueImage = venueImage.trim();
+  owner = owner.trim();
 
   let createVenueObject = {
     venueName,
@@ -71,6 +74,7 @@ const createNewVenue = async (
     reviews,
     venueApproved,
     declineMsg,
+    owner,
   };
 
   let createVenue = await create.insertOne(createVenueObject);
@@ -115,8 +119,6 @@ const searchVenue = async (sportToFind, min, max, rating) => {
   if (rating != null || rating != undefined) {
     venueArr = venueArr.filter((venue) => venue.venueRating >= rating);
   }
-
-  venueArr = venueArr.filter((venue) => venue.venueApproved === true);
 
   if (venueArr.length === 0) throw "No venues found";
   return venueArr;

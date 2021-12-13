@@ -3,6 +3,7 @@
   position: relative;
   top: 60px;
   width: 100%;
+  color: white;
 }
 
 #request .container {
@@ -54,7 +55,7 @@ a .venue-address {
 }
 
 #request .container .venue-title {
-  color: black;
+  color: white;
   font-size: 3em;
   font-weight: bold;
   letter-spacing: -1;
